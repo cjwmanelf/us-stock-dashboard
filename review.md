@@ -1,4 +1,6 @@
-# 코드 리뷰 — us-stock-dashboard
+# AIFFEL Campus Code Peer Review Templete 1
+- 코더 : 최종우
+- 리뷰어 : 이인석 + Claude
 
 - **검토일**: 2026-07-20
 - **검토 대상 커밋**: `3a85a22` (docs: PRD 1-4장 현재 배포 상태로 최신화)
