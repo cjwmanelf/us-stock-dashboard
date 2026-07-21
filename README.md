@@ -3,6 +3,8 @@
 미국주식 투자자용 공개 웹서비스 — 내 자산 현황(총액·변동) + 관심 종목 뉴스/공시/실적 일정.
 PRD: 상위 폴더의 `PRD_미국주식자산뉴스서비스.md` 참고.
 
+웹서비스 링크: https://us-stock-dashboard-modu-rich.vercel.app/
+
 ## 스택
 
 - **Next.js 16** (App Router, TypeScript, Tailwind CSS)
