@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getUsdKrwRate } from "@/lib/fx";
+import { symbolIsKnown, symbolsEnabled } from "@/lib/symbols";
 import {
   parseFxRate,
   parsePrice,
@@ -31,6 +32,15 @@ export async function addHolding(
 
   const t = parseTicker(formData.get("ticker"));
   if (!t.ok) return { error: t.error };
+  // 실제 존재하는 미국 종목인지 확인 (목록을 확보 못하면 통과 — graceful)
+  if (symbolsEnabled()) {
+    const known = await symbolIsKnown(t.value);
+    if (known === false) {
+      return {
+        error: `'${t.value}' 는 검색되지 않는 티커입니다. 자동완성 목록에서 선택하거나 올바른 미국 종목 티커를 입력하세요.`,
+      };
+    }
+  }
   const q = parseQuantity(formData.get("quantity"));
   if (!q.ok) return { error: q.error };
   const p = parsePrice(formData.get("avg_price"));

@@ -37,6 +37,7 @@ type RawSymbol = {
 
 // 프로세스(서버 인스턴스) 수명 동안 유지되는 워밍 캐시
 let INDEX: IndexRow[] | null = null;
+let SYMBOL_SET: Set<string> = new Set(); // 존재 확인용 (심볼 대문자)
 let loadedAt = 0;
 let inflight: Promise<IndexRow[]> | null = null;
 
@@ -71,6 +72,7 @@ async function getIndex(): Promise<IndexRow[]> {
     .then((rows) => {
       if (rows.length) {
         INDEX = rows;
+        SYMBOL_SET = new Set(rows.map((r) => r.su));
         loadedAt = Date.now();
       }
       inflight = null;
@@ -86,6 +88,17 @@ async function getIndex(): Promise<IndexRow[]> {
 /** 목록을 미리 데워둔다(페이지 로드 시 호출 → 첫 검색이 빠름). */
 export async function warmSymbolIndex(): Promise<void> {
   await getIndex();
+}
+
+/**
+ * 티커가 미국 종목 목록에 존재하는지.
+ * - true: 존재함  - false: 존재하지 않음
+ * - null: 목록을 확보하지 못함(키 없음·Finnhub 장애 등) → 호출측이 판단 보류(통과)해야 함
+ */
+export async function symbolIsKnown(ticker: string): Promise<boolean | null> {
+  const index = await getIndex();
+  if (index.length === 0) return null; // 목록 미확보 → 존재 여부 판단 불가
+  return SYMBOL_SET.has(ticker.trim().toUpperCase());
 }
 
 // 정식 보통주를 레버리지 ETP 등보다 우선 노출
