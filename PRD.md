@@ -55,6 +55,7 @@
 ### 3-2. 포트폴리오 (자산 관리)
 - 보유 종목 **추가 / 수정 / 삭제** (RLS로 본인 데이터만, 서버 액션 인증)
   - 필드: 티커 · 수량 · 평균 매수단가(USD) · 매수 시점 환율
+  - **티커 자동완성**: 입력하는 대로 미국 종목(심볼+회사명)을 드롭다운으로 보여주고 골라 넣음. 회사명("apple")으로도 검색. 미국 종목 전체 목록을 서버 메모리에 하루 1회 캐시해 메모리 필터링(~수ms) + 브라우저 쿼리 캐시로 빠르게 응답
   - 각 행 "수정"으로 수량·평균단가·매수환율 일괄 편집
   - 입력 검증(상한·형식) + DB CHECK 제약 이중 방어
 - 종목별 **현재가 · 평가금액 · 평가손익 · 수익률** (지연 시세)
@@ -95,7 +96,7 @@
         ├─ Supabase Postgres    데이터 + RLS
         └─ Vercel Cron          일별 자산 스냅샷 배치 (매일 22:00 UTC, service_role)
                  │
-                 ├─ Finnhub       시세(/quote) · 뉴스 · 실적 캘린더
+                 ├─ Finnhub       시세(/quote) · 뉴스 · 실적 캘린더 · 심볼목록(/stock/symbol, 자동완성)
                  ├─ Marketaux     뉴스 + 감성분석 (선택, 무료 100회/일)
                  ├─ Frankfurter   환율 USD→KRW (키 불필요)
                  └─ SEC EDGAR     공시 (키 불필요, User-Agent 필요)
@@ -112,9 +113,10 @@
 |------|------|
 | Supabase 클라이언트 | `src/lib/supabase/{client,server,admin,proxy}.ts` |
 | 세션/보호경로 | `src/proxy.ts` |
-| 시세·환율·피드·검증 | `src/lib/{quotes,fx,feed,portfolio,validation}.ts` |
+| 시세·환율·피드·검증·심볼검색 | `src/lib/{quotes,fx,feed,portfolio,validation,symbols}.ts` |
 | 인증 UI | `src/app/{login,forgot-password,reset-password}/`, `src/app/auth/confirm/`, `src/components/AuthForm.tsx` |
-| 포트폴리오 | `src/app/portfolio/`, `src/components/{AddHoldingForm,HoldingsTable,EditableHoldingRow,PortfolioSummary}.tsx` |
+| 포트폴리오 | `src/app/portfolio/`, `src/components/{AddHoldingForm,TickerAutocomplete,HoldingsTable,EditableHoldingRow,PortfolioSummary}.tsx` |
+| 심볼 검색 API | `src/app/api/symbols/search/route.ts` (자동완성, 인증 필수) |
 | 대시보드 | `src/app/dashboard/`, `src/components/{WeightDonut,AssetHistoryChart}.tsx` |
 | 피드 | `src/app/feed/`, `src/components/{WatchlistManager,AddWatchForm,FeedList}.tsx` |
 | 배치(cron, 구현완료) | `src/app/api/cron/{snapshot,feed}/route.ts`, `vercel.json` |
@@ -338,6 +340,12 @@ npm run dev        # http://localhost:3000
   - **X축 날짜 라벨**: 각 점 아래 눈금+날짜(-45° 기울임). 라벨이 많으면 양 끝 포함 균등 간격으로 자동 솎음(최소 34px), `overflow=visible`로 첫 라벨 잘림 방지.
   - **기간 단위 전환**: 세그먼트 버튼(일별/주별/월별/연도별). 주/월/연은 각 기간의 **마지막(기간말) 잔액**으로 집계(Map last-wins, 오름차순 입력). 라벨 표기 일·주=`M/D`, 월=`YY.M`, 연=`YYYY`. 타임존 영향 없이 UTC 기준 버킷. 점이 2개 미만이 되는 단위는 버튼 자동 비활성.
 - **검증**: 로컬 임시 라우트(2024-12~2026-07, 60점)로 4단위 전환·집계·라벨 형식·겹침·영역이탈·콘솔에러 확인 후 라우트 삭제.
+
+### 11-27. 티커 자동완성 (심볼 검색)
+- **요청**: 포트폴리오 종목 추가 시 티커를 올바르게 입력하도록 돕는 기능 → 자동완성(심볼 검색)으로 결정.
+- **진행**: `src/lib/symbols.ts`(Finnhub 심볼 검색) + 인증 라우트 `src/app/api/symbols/search/route.ts` + 클라이언트 콤보박스 `TickerAutocomplete`(디바운스·키보드/마우스·대문자정규화·a11y·graceful). `AddHoldingForm`의 티커 입력을 교체(성공 시 리마운트 초기화). 회사명으로도 검색됨. 서버측 `parseTicker` 백스톱 유지.
+- **성능 개선**: 처음엔 Finnhub `/search`를 쿼리마다 호출 → 캐시 미스 시 260~700ms로 느림(측정). **미국 종목 전체 목록(/stock/symbol, ~3만개)을 서버 메모리에 하루 1회 캐시하고 메모리에서 필터링**하는 방식으로 전환 → 검색 3~7ms. 페이지 로드 시 목록 프리워밍(`?warm=1`) + 브라우저 쿼리 캐시 + 디바운스 180ms. 회사명 우선·정식주식 우선·짧은 이름 우선 랭킹으로 실제 회사가 최상위(tesla→TSLA, apple→AAPL, microsoft→MSFT 등).
+- **검증**: 로컬 임시 라우트로 Finnhub 연동·속도(3~7ms)·캐시 히트(재입력 시 네트워크 0)·랭킹·키보드/마우스/Escape/결과없음·인증 401 확인 후 임시 파일 삭제. DB·환경변수 변경 없음(기존 `STOCK_API_KEY` 재사용).
 
 ### 11-25. 진행 중 / 보류
 - **AI 한글 요약**(뉴스 원문 요약): 착수했으나 진행 중 보류. Claude API(사용량 과금, Haiku 후보) + 캐싱·지연호출 설계까지 논의.

@@ -1,18 +1,22 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { addHolding, type AddHoldingState } from "@/app/portfolio/actions";
+import { TickerAutocomplete } from "@/components/TickerAutocomplete";
 
 const initialState: AddHoldingState = {};
 
 export function AddHoldingForm() {
   const [state, formAction, pending] = useActionState(addHolding, initialState);
   const formRef = useRef<HTMLFormElement>(null);
+  // 자동완성 입력은 controlled state 라 form.reset() 으로 안 지워짐 → key 변경으로 리마운트
+  const [resetKey, setResetKey] = useState(0);
 
   // 저장 성공 시 폼 초기화
   useEffect(() => {
     if (state.success) {
       formRef.current?.reset();
+      setResetKey((k) => k + 1);
     }
   }, [state.success]);
 
@@ -27,13 +31,7 @@ export function AddHoldingForm() {
     >
       <label className="flex flex-col gap-1 text-sm">
         <span className="font-medium text-muted">티커</span>
-        <input
-          name="ticker"
-          required
-          placeholder="AAPL"
-          autoComplete="off"
-          className={`w-28 uppercase ${inputCls}`}
-        />
+        <TickerAutocomplete key={resetKey} inputCls={inputCls} className="w-28" />
       </label>
 
       <label className="flex flex-col gap-1 text-sm">
