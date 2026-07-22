@@ -16,10 +16,12 @@ export function TickerAutocomplete({
   inputCls,
   className = "",
   endpoint = "/api/symbols/search",
+  placeholder = "AAPL",
 }: {
   inputCls: string;
   className?: string;
   endpoint?: string;
+  placeholder?: string;
 }) {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<SymbolHit[]>([]);
@@ -135,7 +137,7 @@ export function TickerAutocomplete({
       <input
         name="ticker"
         required
-        placeholder="AAPL"
+        placeholder={placeholder}
         autoComplete="off"
         maxLength={10}
         value={query}

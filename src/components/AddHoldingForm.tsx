@@ -31,7 +31,12 @@ export function AddHoldingForm() {
     >
       <label className="flex flex-col gap-1 text-sm">
         <span className="font-medium text-muted">티커</span>
-        <TickerAutocomplete key={resetKey} inputCls={inputCls} className="w-28" />
+        <TickerAutocomplete
+          key={resetKey}
+          inputCls={inputCls}
+          className="w-28"
+          placeholder="예시) AAPL"
+        />
       </label>
 
       <label className="flex flex-col gap-1 text-sm">
@@ -42,7 +47,7 @@ export function AddHoldingForm() {
           step="any"
           min="0"
           required
-          placeholder="10"
+          placeholder="예시) 10"
           className={`w-28 ${inputCls}`}
         />
       </label>
@@ -55,7 +60,7 @@ export function AddHoldingForm() {
           step="any"
           min="0"
           required
-          placeholder="150.25"
+          placeholder="예시) 150.25"
           className={`w-40 ${inputCls}`}
         />
       </label>
