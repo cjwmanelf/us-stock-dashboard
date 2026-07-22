@@ -4,7 +4,7 @@ import { cache } from "react";
  * 관심/보유 종목의 소식 피드.
  * - 뉴스: Finnhub company-news (STOCK_API_KEY) + Tiingo news (TIINGO_API_KEY, 선택)
  * - 공시: SEC EDGAR (공식, 키 불필요, User-Agent 필요)
- * - 실적: Finnhub earnings calendar (예정 실적)
+ * - 실적: Finnhub earnings calendar (예정 실적) + stock/earnings (발표된 분기 실적 결과)
  * 서버 전용 모듈.
  */
 
@@ -277,13 +277,71 @@ const getEarnings = cache(async (ticker: string): Promise<FeedItem[]> => {
       ticker,
       type: "earnings" as const,
       title: `실적 발표 예정 (Q${e.quarter ?? "?"} ${e.year ?? ""}${
-        e.epsEstimate != null ? `, EPS 예상 $${e.epsEstimate}` : ""
+        e.epsEstimate != null ? `, EPS 예상 $${e.epsEstimate.toFixed(2)}` : ""
       })`,
       url: null,
       source: "Finnhub",
       timestamp: Date.parse(e.date),
       dateLabel: e.date,
     }));
+  } catch {
+    return [];
+  }
+});
+
+// ---------------------------------------------------------------------
+// 실적 (Finnhub stock/earnings) - 발표된 분기 실적 결과
+// ---------------------------------------------------------------------
+const getReportedEarnings = cache(async (ticker: string): Promise<FeedItem[]> => {
+  const key = process.env.STOCK_API_KEY;
+  if (!key) return [];
+
+  try {
+    const res = await fetch(
+      `https://finnhub.io/api/v1/stock/earnings?symbol=${encodeURIComponent(
+        ticker,
+      )}&token=${key}`,
+      {
+        next: { revalidate: 21600 }, // 6시간
+        signal: AbortSignal.timeout(FEED_TIMEOUT_MS),
+      },
+    );
+    if (!res.ok) return [];
+
+    const data: Array<{
+      actual?: number | null;
+      estimate?: number | null;
+      period?: string;
+      quarter?: number;
+      year?: number;
+      surprisePercent?: number | null;
+    }> = await res.json();
+
+    if (!Array.isArray(data)) return [];
+
+    return data
+      .filter((e) => e.period && e.actual != null)
+      .slice(0, 4) // 최근 4개 분기
+      .map((e) => {
+        const parts: string[] = [`EPS $${e.actual!.toFixed(2)}`];
+        if (e.estimate != null) parts.push(`예상 $${e.estimate.toFixed(2)}`);
+        if (e.surprisePercent != null) {
+          const s = e.surprisePercent;
+          parts.push(`서프라이즈 ${s >= 0 ? "+" : ""}${s.toFixed(1)}%`);
+        }
+        return {
+          id: `er-${ticker}-${e.period}`,
+          ticker,
+          type: "earnings" as const,
+          title: `Q${e.quarter ?? "?"} ${e.year ?? ""} 실적 발표: ${parts.join(
+            ", ",
+          )}`,
+          url: null,
+          source: "Finnhub",
+          timestamp: Date.parse(e.period!),
+          dateLabel: e.period!,
+        };
+      });
   } catch {
     return [];
   }
@@ -309,13 +367,21 @@ export async function getFeed(
 
   const perTicker = await Promise.all(
     unique.map(async (t) => {
-      const [news, marketauxNews, filings, earnings] = await Promise.all([
-        getNews(t),
-        getMarketauxNews(t),
-        getFilings(t),
-        getEarnings(t),
-      ]);
-      return [...news, ...marketauxNews, ...filings, ...earnings];
+      const [news, marketauxNews, filings, earnings, reportedEarnings] =
+        await Promise.all([
+          getNews(t),
+          getMarketauxNews(t),
+          getFilings(t),
+          getEarnings(t),
+          getReportedEarnings(t),
+        ]);
+      return [
+        ...news,
+        ...marketauxNews,
+        ...filings,
+        ...earnings,
+        ...reportedEarnings,
+      ];
     }),
   );
 

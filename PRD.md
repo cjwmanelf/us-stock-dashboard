@@ -76,7 +76,7 @@
 - 통합 피드 (원문 그대로, 최신순, 미래 실적 일정 상단):
   - **뉴스**: Finnhub company-news + Marketaux(감성분석 뱃지: 긍정 빨강/부정 파랑, 선택), URL 중복 제거
   - **공시**: SEC EDGAR (8-K, 10-Q, 10-K 등 주요 서식, 실제 문서 링크)
-  - **실적**: Finnhub earnings calendar (예정 실적 + EPS 예상)
+  - **실적**: Finnhub earnings calendar(예정 실적 + EPS 예상) + stock/earnings(**발표된 최근 4개 분기 실적** — 실제 EPS·예상·서프라이즈%)
 - 필터 탭: 전체 / 뉴스 / 공시 / 실적
 - **소스별 5초 타임아웃**: 느린 소스는 건너뛰고 받은 정보부터 표시
 
@@ -97,7 +97,7 @@
         ├─ Supabase Postgres    데이터 + RLS
         └─ Vercel Cron          일별 자산 스냅샷 배치 (매일 22:00 UTC, service_role)
                  │
-                 ├─ Finnhub       시세(/quote) · 뉴스 · 실적 캘린더 · 심볼목록(/stock/symbol, 자동완성)
+                 ├─ Finnhub       시세(/quote) · 뉴스 · 실적 캘린더 · 발표실적(/stock/earnings) · 심볼목록(/stock/symbol, 자동완성)
                  ├─ Marketaux     뉴스 + 감성분석 (선택, 무료 100회/일)
                  ├─ Frankfurter   환율 USD→KRW (키 불필요)
                  └─ SEC EDGAR     공시 (키 불필요, User-Agent 필요)
@@ -352,6 +352,12 @@ npm run dev        # http://localhost:3000
 - **요청**: 검색되지 않는(실존하지 않는) 티커는 포트폴리오에 추가 못하게.
 - **진행**: `src/lib/symbols.ts`에 존재 확인용 `SYMBOL_SET` + `symbolIsKnown(ticker)`(true/false, 목록 미확보 시 null). `addHolding`(`src/app/portfolio/actions.ts`)에서 형식 검증 후 존재 검증 → 없으면 에러 반환. 서버에서 차단(직접 호출 우회 방지). 목록 미확보(키 없음·Finnhub 장애) 시엔 차단하지 않고 통과(graceful). 티커는 추가 후 수정 불가라 `updateHolding`은 변경 없음.
 - **검증**: 임시 라우트로 실제 티커(AAPL·TSLA·GOOGL·NVDA·KO)=허용, 오타/가짜(APPL·ZZZFAKE·XQZ123)=거부 확인 후 삭제. 미국(exchange=US) 목록 기준 = 미국주식 전용 앱 의도에 부합.
+
+### 11-29. 관심&소식 — 발표된 분기 실적 추가
+- **요청**: 포트폴리오 종목의 분기 실적 발표 내용을 소식 페이지에서 보기.
+- **진행**: `src/lib/feed.ts`에 `getReportedEarnings`(Finnhub `/stock/earnings`) 추가 — 발표된 최근 4개 분기의 실제 EPS·예상·서프라이즈%를 `earnings` 타입 FeedItem으로 반환. `getFeed`에 통합해 기존 **"실적" 탭**에 예정 실적과 함께 표시(최신순). 6시간 캐시 + 5초 타임아웃(기존 관례). EPS 표기 소수점 2자리로 정리(예정 실적 포함). 보유 종목은 피드에 자동 포함되므로 포트폴리오 종목 실적이 모두 노출됨.
+- **검증**: 임시 라우트로 AAPL·NVDA·MSFT의 예정 1건 + 발표 4개 분기, EPS·서프라이즈 표기·정렬·타입(earnings) 확인 후 삭제. 무료 엔드포인트라 한도 영향 미미.
+- **범위 밖**: 발표자료 문서(프레스릴리스/IR 프레젠테이션, SEC 8-K EX-99)는 미포함 — 실적 수치만.
 
 ### 11-25. 진행 중 / 보류
 - **AI 한글 요약**(뉴스 원문 요약): 착수했으나 진행 중 보류. Claude API(사용량 과금, Haiku 후보) + 캐싱·지연호출 설계까지 논의.
