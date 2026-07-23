@@ -77,8 +77,9 @@
   - **뉴스**: Finnhub company-news + Marketaux(감성분석 뱃지: 긍정 빨강/부정 파랑, 선택), URL 중복 제거
   - **공시**: SEC EDGAR (8-K, 10-Q, 10-K 등 주요 서식, 실제 문서 링크)
   - **실적**: Finnhub earnings calendar(예정 실적 + EPS 예상) + stock/earnings(**발표된 최근 4개 분기 실적** — 실제 EPS·예상·서프라이즈%)
-- 필터 탭: 전체 / 뉴스 / 공시 / 실적
-- **소스별 5초 타임아웃**: 느린 소스는 건너뛰고 받은 정보부터 표시
+- **증시뉴스 탭**(종목 무관, 항상 표시): 매체별 헤드라인 5개씩 — CNBC·Bloomberg는 공식 **Top/Markets RSS**(주요뉴스), Reuters는 Finnhub 최신(공개 Top 피드 없음)
+- 필터 탭: 전체 / 뉴스 / 공시 / 실적 / 증시뉴스
+- **날짜 라벨은 한국시간(KST)** 기준 표시(뉴스). **소스별 5초 타임아웃**: 느린 소스는 건너뛰고 받은 정보부터 표시
 
 ### 3-5. 디자인 · UX
 - **토스풍 테마**: 토큰 기반(카드·라운드·그림자), 등락색 한국식. 라이트/다크 + 시스템 자동 + 토글(쿠키)
@@ -362,6 +363,14 @@ npm run dev        # http://localhost:3000
 ### 11-30. 입력칸 예시 표기 (UX)
 - **요청**: 포트폴리오 추가 폼의 회색 예시가 예시임을 쉽게 알도록 표기 추가(`EX>` 제안 → 더 나은 안 검토).
 - **진행**: 한국어 UI에 자연스러운 `예시)` 표기로 확정. 티커 `예시) AAPL`, 수량 `예시) 10`, 평균 매수단가 `예시) 150.25`. 매수 환율은 안내문(`비우면 현재 환율`)이라 유지. `TickerAutocomplete`에 `placeholder` prop 추가.
+
+### 11-31. 증시뉴스 탭 (매체별 주요뉴스) + 뉴스 날짜 KST
+- **요청**: 관심&소식에서 CNBC·Reuters·Bloomberg 매체별 헤드라인 5개씩, "TOP HEADLINES(주요뉴스)"로.
+- **진행**: `feed.ts`에 `getMarketHeadlines` 추가 + 새 **증시뉴스 탭**(`type=market`, 종목 무관 항상 표시), `MarketNewsList` 컴포넌트.
+  - CNBC(Top News RSS)·Bloomberg(Markets RSS)는 공식 편집국 **주요뉴스** — 간단 RSS 파서(`<item>` title/link/pubDate, HTML 엔티티 디코드). Reuters는 공개 Top 피드가 없어(discontinued) Finnhub 일반뉴스 최신 5개("최신 뉴스" 라벨). 15분 캐시 + 5초 타임아웃, 매체별 graceful(실패 시 그 섹션만 빠짐).
+  - **날짜 KST 수정**: 뉴스 dateLabel 을 UTC→`Asia/Seoul` 로 포맷(`ymdSeoul`). 한국 새벽 뉴스가 어제로 보이던 문제 해결. 종목뉴스·Marketaux·증시뉴스에 적용.
+- **검증**: 임시 라우트로 세 매체 각 5건·KST 날짜·링크·엔티티 디코드·채널제목 제외·라벨 확인 후 삭제.
+- **주의**: RSS는 공식 API 아님 — 매체가 형식 변경/차단 시 해당 매체만 빈 상태(나머지 정상).
 
 ### 11-25. 진행 중 / 보류
 - **AI 한글 요약**(뉴스 원문 요약): 착수했으나 진행 중 보류. Claude API(사용량 과금, Haiku 후보) + 캐싱·지연호출 설계까지 논의.

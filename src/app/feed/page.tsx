@@ -2,14 +2,22 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { WatchlistManager } from "@/components/WatchlistManager";
 import { FeedList } from "@/components/FeedList";
-import { getFeed, feedEnabled, type FeedType } from "@/lib/feed";
+import { MarketNewsList } from "@/components/MarketNewsList";
+import {
+  getFeed,
+  getMarketHeadlines,
+  feedEnabled,
+  type FeedType,
+} from "@/lib/feed";
 
-const TABS: { key: FeedType | "all"; label: string; href: string }[] = [
-  { key: "all", label: "전체", href: "/feed" },
-  { key: "news", label: "뉴스", href: "/feed?type=news" },
-  { key: "filing", label: "공시", href: "/feed?type=filing" },
-  { key: "earnings", label: "실적", href: "/feed?type=earnings" },
-];
+const TABS: { key: FeedType | "all" | "market"; label: string; href: string }[] =
+  [
+    { key: "all", label: "전체", href: "/feed" },
+    { key: "news", label: "뉴스", href: "/feed?type=news" },
+    { key: "filing", label: "공시", href: "/feed?type=filing" },
+    { key: "earnings", label: "실적", href: "/feed?type=earnings" },
+    { key: "market", label: "증시뉴스", href: "/feed?type=market" },
+  ];
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
@@ -66,13 +74,17 @@ export default async function FeedPage({
 
   const sp = await searchParams;
   const rawType = sp.type;
+  const isMarket = rawType === "market";
   const filter: FeedType | undefined =
     rawType === "news" || rawType === "filing" || rawType === "earnings"
       ? rawType
       : undefined;
 
+  // 증시뉴스 탭은 보유 종목과 무관하게 소스별 헤드라인을 보여준다.
+  const marketGroups = isMarket ? await getMarketHeadlines() : [];
   // 소스별 5초 타임아웃(feed.ts) → 느린 소스는 건너뛰고 받은 것부터. 최대 ~5초 내 반환.
-  const items = tickers.length > 0 ? await getFeed(tickers, filter) : [];
+  const items =
+    !isMarket && tickers.length > 0 ? await getFeed(tickers, filter) : [];
 
   return (
     <Shell>
@@ -89,7 +101,9 @@ export default async function FeedPage({
       <div className="flex gap-1 border-b border-line text-sm">
         {TABS.map((tab) => {
           const active =
-            (tab.key === "all" && !filter) || tab.key === filter;
+            (tab.key === "all" && !filter && !isMarket) ||
+            (tab.key === "market" && isMarket) ||
+            tab.key === filter;
           return (
             <Link
               key={tab.key}
@@ -106,7 +120,9 @@ export default async function FeedPage({
         })}
       </div>
 
-      {tickers.length === 0 ? (
+      {isMarket ? (
+        <MarketNewsList groups={marketGroups} />
+      ) : tickers.length === 0 ? (
         <div className="themed rounded-2xl border border-dashed border-line bg-surface p-10 text-center text-muted">
           보유·관심 종목을 추가하면 소식이 여기에 표시됩니다.
         </div>

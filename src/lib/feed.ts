@@ -26,6 +26,13 @@ function ymd(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
 
+// 표시용 날짜(YYYY-MM-DD)를 한국시간(KST) 기준으로 포맷.
+// UTC 로 찍으면 한국 기준 오늘 새벽 뉴스가 어제로 보이므로 표시 라벨은 KST 로 맞춘다.
+const ymdSeoul = (ms: number): string =>
+  new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(
+    new Date(ms),
+  );
+
 const secHeaders = () => ({
   "User-Agent":
     process.env.SEC_USER_AGENT ?? "us-stock-dashboard example@example.com",
@@ -76,7 +83,7 @@ const getNews = cache(async (ticker: string): Promise<FeedItem[]> => {
         url: a.url ?? null,
         source: a.source ?? "News",
         timestamp: (a.datetime ?? 0) * 1000,
-        dateLabel: ymd(new Date((a.datetime ?? 0) * 1000)),
+        dateLabel: ymdSeoul((a.datetime ?? 0) * 1000),
       }));
   } catch {
     return [];
@@ -131,7 +138,7 @@ const getMarketauxNews = cache(async (ticker: string): Promise<FeedItem[]> => {
           url: a.url ?? null,
           source: a.source ?? "Marketaux",
           timestamp: Date.parse(a.published_at!),
-          dateLabel: (a.published_at ?? "").slice(0, 10),
+          dateLabel: ymdSeoul(Date.parse(a.published_at!)),
           sentiment: ent?.sentiment_score ?? null,
         };
       });
@@ -353,6 +360,136 @@ const getReportedEarnings = cache(async (ticker: string): Promise<FeedItem[]> =>
 export function feedEnabled(): boolean {
   return !!process.env.STOCK_API_KEY; // 뉴스·실적용 (공시는 키 불필요)
 }
+
+// ---------------------------------------------------------------------
+// 증시 헤드라인 - 매체별 주요/최신 뉴스. 종목과 무관.
+//   CNBC · Bloomberg : 공식 Top/Markets RSS (편집국 주요뉴스)
+//   Reuters          : 공개 Top 피드가 없어 Finnhub 일반뉴스 최신 5개
+// ---------------------------------------------------------------------
+export type MarketNewsGroup = { source: string; label: string; items: FeedItem[] };
+
+const HEADLINES_PER_SOURCE = 5;
+const RSS_UA = "Mozilla/5.0 (compatible; modu-rich/1.0)";
+
+const CNBC_TOP_RSS = "https://www.cnbc.com/id/100003114/device/rss/rss.html";
+const BLOOMBERG_MARKETS_RSS = "https://feeds.bloomberg.com/markets/news.rss";
+
+// RSS 엔티티(&amp; &#39; &#x2019; 등) 디코드
+function decodeEntities(s: string): string {
+  return s
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(parseInt(d, 10)))
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&");
+}
+
+// 간단 RSS 2.0 파서 (<item> 의 title/link/pubDate 추출)
+function parseRss(
+  xml: string,
+  max: number,
+): { title: string; url: string | null; ts: number }[] {
+  const blocks = [...xml.matchAll(/<item[\s>][\s\S]*?<\/item>/g)].map((m) => m[0]);
+  const pick = (block: string, tag: string): string => {
+    const m = block.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`));
+    if (!m) return "";
+    return m[1].replace(/<!\[CDATA\[|\]\]>/g, "").trim();
+  };
+  const out: { title: string; url: string | null; ts: number }[] = [];
+  for (const block of blocks) {
+    const title = decodeEntities(pick(block, "title"));
+    if (!title) continue;
+    const url = pick(block, "link") || pick(block, "guid") || null;
+    const pub = pick(block, "pubDate");
+    const ts = pub ? Date.parse(pub) : 0;
+    out.push({ title, url: url || null, ts });
+    if (out.length >= max) break;
+  }
+  return out;
+}
+
+async function fetchRssHeadlines(url: string, source: string): Promise<FeedItem[]> {
+  try {
+    const res = await fetch(url, {
+      next: { revalidate: 900 }, // 15분 캐시
+      signal: AbortSignal.timeout(FEED_TIMEOUT_MS),
+      headers: { "User-Agent": RSS_UA },
+    });
+    if (!res.ok) return [];
+    const xml = await res.text();
+    return parseRss(xml, HEADLINES_PER_SOURCE).map((it, i) => ({
+      id: `rss-${source}-${it.ts || i}-${i}`,
+      ticker: "",
+      type: "news" as const,
+      title: it.title,
+      url: it.url,
+      source,
+      timestamp: it.ts || 0,
+      dateLabel: it.ts ? ymdSeoul(it.ts) : "",
+    }));
+  } catch {
+    return [];
+  }
+}
+
+// Reuters: 공개 Top 피드가 없어 Finnhub 일반뉴스에서 최신 5개
+async function fetchFinnhubHeadlines(source: string): Promise<FeedItem[]> {
+  const key = process.env.STOCK_API_KEY;
+  if (!key) return [];
+  try {
+    const res = await fetch(
+      `https://finnhub.io/api/v1/news?category=general&token=${key}`,
+      { next: { revalidate: 900 }, signal: AbortSignal.timeout(FEED_TIMEOUT_MS) },
+    );
+    if (!res.ok) return [];
+    const data: Array<{
+      id?: number;
+      headline?: string;
+      source?: string;
+      datetime?: number;
+      url?: string;
+    }> = await res.json();
+    if (!Array.isArray(data)) return [];
+    return data
+      .filter(
+        (a) =>
+          a.headline &&
+          a.datetime &&
+          (a.source ?? "").toUpperCase() === source.toUpperCase(),
+      )
+      .sort((a, b) => (b.datetime ?? 0) - (a.datetime ?? 0))
+      .slice(0, HEADLINES_PER_SOURCE)
+      .map((a) => ({
+        id: `mkt-${source}-${a.id ?? a.datetime}`,
+        ticker: "",
+        type: "news" as const,
+        title: a.headline!,
+        url: a.url ?? null,
+        source,
+        timestamp: (a.datetime ?? 0) * 1000,
+        dateLabel: ymdSeoul((a.datetime ?? 0) * 1000),
+      }));
+  } catch {
+    return [];
+  }
+}
+
+export const getMarketHeadlines = cache(
+  async (): Promise<MarketNewsGroup[]> => {
+    const [cnbc, reuters, bloomberg] = await Promise.all([
+      fetchRssHeadlines(CNBC_TOP_RSS, "CNBC"),
+      fetchFinnhubHeadlines("Reuters"),
+      fetchRssHeadlines(BLOOMBERG_MARKETS_RSS, "Bloomberg"),
+    ]);
+    return [
+      { source: "CNBC", label: "주요뉴스", items: cnbc },
+      { source: "Reuters", label: "최신 뉴스", items: reuters },
+      { source: "Bloomberg", label: "주요뉴스", items: bloomberg },
+    ].filter((g) => g.items.length > 0);
+  },
+);
 
 const MAX_TICKERS = 15;
 
