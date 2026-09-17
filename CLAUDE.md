@@ -53,5 +53,5 @@
 - 개선 여지: quotes_cache/feed_items DB캐싱 + 수집 cron, 커스텀 도메인.
 
 ## 작업 방식 (사용자 선호)
-- 변경 후 대개 "PRD 정리 + 커밋 & 배포"를 원함. 커밋 메시지 한국어 OK, 끝에 `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`.
+- 변경 후 대개 "PRD 정리 + 커밋 & 배포"를 원함. 커밋 메시지 한국어 OK, 끝에 `Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>`.
 - 미리보기로 실제 동작/색상 검증 후 보고. 임시 검증 파일은 삭제.
