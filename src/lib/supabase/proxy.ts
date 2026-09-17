@@ -44,7 +44,7 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const path = request.nextUrl.pathname;
-  const protectedPaths = ["/dashboard", "/portfolio"];
+  const protectedPaths = ["/dashboard", "/portfolio", "/feed"];
   const isProtected = protectedPaths.some((p) => path.startsWith(p));
 
   // 비로그인 사용자가 보호된 경로 접근 → 로그인으로
