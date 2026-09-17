@@ -46,6 +46,7 @@
 9. 비밀번호 재설정(Gmail SMTP + token_hash)
 10. 디자인: 토스풍 테마 + 다크토글(쿠키·시스템자동) + 공용헤더 + CKF 로고 + 홈 골드 아이콘. "둘러보기" 버튼 제거
 11. 보안점검(4항목 통과) + cron/feed 인증 가드 강화. DB는 전부 파라미터화(ORM/쿼리빌더), 비번 bcrypt(Supabase)
+12. 보호 라우트 일관화: Proxy(`src/lib/supabase/proxy.ts`)에 `/feed` 추가해 비로그인 접근 시 `/login` 리다이렉트 통일
 
 ## 백로그 / 보류
 - **뉴스 AI 한글 요약** (보류): Claude API(claude-opus-4-8 기본, Haiku 후보) + 지연호출·DB캐싱 설계 논의됨. 유료 `ANTHROPIC_API_KEY` 필요. 재개 시 사용자 확인 후.

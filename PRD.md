@@ -49,7 +49,7 @@
 - 이메일/비밀번호 **회원가입 · 로그인 · 로그아웃** (Supabase Auth, bcrypt 해시)
 - **비밀번호 재설정**: `/forgot-password` → 메일 링크 → `/reset-password` (Gmail SMTP + token_hash)
 - 이메일 확인 흐름(`/auth/confirm`) — 개발 편의로 현재 OFF, **정식 오픈 전 ON 권장**
-- Proxy(구 Middleware)로 세션 갱신 + 보호 경로(`/dashboard`, `/portfolio`) 접근 제어
+- Proxy(구 Middleware)로 세션 갱신 + 보호 경로(`/dashboard`, `/portfolio`, `/feed`) 접근 제어
 - 입력 검증: 이메일·비밀번호 서버 검증(`validation.ts`)
 
 ### 3-2. 포트폴리오 (자산 관리)
@@ -135,7 +135,7 @@
 |--------|------|------|
 | `holdings` | 보유 종목 (ticker, quantity, avg_price, **buy_fx_rate**) | RLS: 본인만 |
 | `watchlist` | 관심 종목 (user_id, ticker) | RLS: 본인만 |
-| `portfolio_snapshots` | 일별 자산 스냅샷 | 배치 미구현(테이블만) |
+| `portfolio_snapshots` | 일별 자산 스냅샷 | 구현 완료 (방문 기반 + cron 매일 22:00 UTC) |
 | `quotes_cache` | 시세 캐시 | 현재 미사용(향후 cron) |
 | `feed_items` | 뉴스/공시/실적 캐시 | 현재 미사용(현재는 실시간 fetch) |
 
@@ -172,20 +172,23 @@
 ## 8. 로드맵 (남은 작업)
 
 ### 배포
-- [ ] **Vercel 배포** + 환경변수 등록
-- [ ] Supabase **이메일 확인 재활성화**
-- [ ] `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET` 설정
+- [x] **Vercel 배포** + 환경변수 등록 (완료)
+- [ ] Supabase **이메일 확인 재활성화** (정식 오픈 시 권장)
+- [x] `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET` 설정 (완료)
 
-### v1.1 (안정화)
+### v1.1 (안정화 & 캐싱)
+- [x] 일별 **자산 스냅샷 배치** (`portfolio_snapshots` 채우기 및 방문 기반 기록)
+- [x] 보호 라우트 일관화 (`/dashboard`, `/portfolio`, `/feed` Proxy 보호)
 - [ ] `quotes_cache` DB 캐싱 + 시세 수집 cron (service_role)
 - [ ] `feed_items` 캐싱 (현재 실시간 fetch → 캐시로)
-- [ ] 일별 **자산 스냅샷 배치** (`portfolio_snapshots` 채우기)
 
 ### v2 (확장)
-- [ ] 자산 총액 **과거 추이 그래프** (스냅샷 활용)
+- [x] 자산 총액 **과거 추이 그래프** (스냅샷 활용, 일/주/월/연 단위 전환)
+- [ ] 배당 캘린더, 월별 예상 배당소득 추정
+- [ ] 지수 대비 벤치마크 수익률 비교 (vs S&P 500 / QQQ)
 - [ ] **AI 한글 요약·번역** (뉴스·공시)
+- [ ] 해외주식 양도소득세(250만원 공제) 절세 시뮬레이터
 - [ ] 주가 급등락 알림
-- [ ] 배당 캘린더, 세금(양도세) 추정
 
 ---
 
@@ -204,7 +207,7 @@
 | 비밀값을 코드가 아닌 환경변수로 | ✅ | 하드코딩 0건, 전부 `process.env`. service_role 키는 `NEXT_PUBLIC_` 아님·cron 라우트(서버)에서만 사용. `.env*`/`.vercel` git 제외 |
 | 백엔드 입력 검증 | ✅ | `"use server"` 액션이 `validation.ts`로 재검증(티커·수량·단가·환율 상한 포함) + DB CHECK 제약(`quantity>0`, `avg_price>=0`) 이중 방어 |
 | Supabase RLS | ✅ | 5개 테이블 모두 RLS 활성. holdings/watchlist/snapshots는 `auth.uid()=user_id`, quotes_cache/feed_items는 읽기만(쓰기 정책 없음 → service_role만) |
-| 인가(권한 확인) | ✅ | 모든 액션이 `auth.getUser()` 확인 후 거부, 변경은 `.eq("user_id", user.id)`+RLS 이중. Proxy가 `/dashboard`·`/portfolio` 보호. `getSession` 대신 `getUser()` 사용 |
+| 인가(권한 확인) | ✅ | 모든 액션이 `auth.getUser()` 확인 후 거부, 변경은 `.eq("user_id", user.id)`+RLS 이중. Proxy가 `/dashboard`·`/portfolio`·`/feed` 보호. `getSession` 대신 `getUser()` 사용 |
 
 - **적용된 하드닝**: `cron/feed` 라우트가 `CRON_SECRET` 미설정 시 `Bearer undefined`로 우회되던 문제 수정 → `if (!process.env.CRON_SECRET || ...)` 가드로 전원 차단(snapshot 라우트와 동일). 401 차단 검증 완료.
 - **남은 권장**: 배포 전 Supabase "Confirm email" 재활성화, 공유 캐시 테이블 쓰기는 계속 service_role로만.
