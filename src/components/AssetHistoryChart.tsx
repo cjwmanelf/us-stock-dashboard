@@ -1,5 +1,6 @@
 "use client";
 
+import { aggregateHistory as aggregate, periodKey } from "@/lib/history";
 import { useState } from "react";
 import { formatKRW, formatKRWCompact } from "@/lib/format";
 
@@ -13,22 +14,6 @@ const RANGES: { key: Range; label: string }[] = [
   { key: "year", label: "연도별" },
 ];
 
-// 기간 버킷 키. 같은 버킷의 점들은 하나로 묶인다. (타임존 영향 없이 UTC 기준)
-function periodKey(date: string, range: Range): string {
-  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(date);
-  if (!m) return date; // "시작" 등 날짜가 아닌 값은 그대로
-  const y = Number(m[1]);
-  const mo = Number(m[2]);
-  const d = Number(m[3]);
-  if (range === "year") return `${y}`;
-  if (range === "month") return `${y}-${mo}`;
-  if (range === "week") {
-    const dayNum = Math.floor(Date.UTC(y, mo - 1, d) / 86400000);
-    return `w${Math.floor((dayNum + 3) / 7)}`; // 월요일 기준 주 버킷
-  }
-  return date;
-}
-
 // x축 라벨 표기. 일/주 = 월/일, 월 = 'YY.M', 연 = 'YYYY'
 function fmtLabel(date: string, range: Range): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(date);
@@ -39,15 +24,6 @@ function fmtLabel(date: string, range: Range): string {
   if (range === "year") return `${y}`;
   if (range === "month") return `${String(y).slice(2)}.${mo}`;
   return `${mo}/${d}`;
-}
-
-// 기간별 집계: 각 버킷의 '마지막(가장 최근) 스냅샷' 잔액을 대표값으로.
-// 입력이 날짜 오름차순이라 나중 값이 뒤에 오므로 Map의 last-wins가 곧 기간말 잔액.
-function aggregate(points: Point[], range: Range): Point[] {
-  if (range === "day") return points;
-  const m = new Map<string, Point>();
-  for (const p of points) m.set(periodKey(p.date, range), p);
-  return [...m.values()];
 }
 
 export function AssetHistoryChart({ points }: { points: Point[] }) {

@@ -1,8 +1,9 @@
-import { type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/proxy";
 
 // Next.js 16 부터 Middleware 는 Proxy 로 이름이 바뀌었다. (기능은 동일, Node.js 런타임)
 export async function proxy(request: NextRequest) {
+  if (request.nextUrl.pathname.startsWith("/api/game/")) return NextResponse.next();
   return await updateSession(request);
 }
 

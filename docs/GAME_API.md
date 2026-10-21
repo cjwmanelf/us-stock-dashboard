@@ -40,3 +40,10 @@ items: id/ticker/type/title/source/dateLabel는 string, type=news|filing|earning
 
 ## 1단계 한계
 투자/주문 기능 없음. 거래 의사결정용 실시간 시세가 아니다. Finnhub 무료 키 공유·재배포·상업 이용 권한은 별도 약관/계약 확인 필요. CNBC/Bloomberg RSS 헤드라인 재표시 역시 약관 확인 전 광범위 공개 금지. Marketaux 무료 100회/일 한도는 기존 캐시만으로 다수 사용자를 수용하지 못한다. 공급자 약관을 충족했다고 단정하지 않으며 1단계는 본인·소수 지인용이다. Supabase 이메일 인증 등 운영 설정을 변경하지 않는다.
+
+## 검증 / 운영 전 남은 일 (2026-10-21)
+- `node --test tests/game-api.test.cjs`: 인증 실패, 두 사용자 분리(가짜 PostgREST/RLS 모델), CORS, 한도, UTC 버킷, 각 라우트 계약 검증. 실제 Supabase의 두 사용자 계정으로 RLS 통합 확인은 아직 하지 않았으며 운영 전 별도 확인 필요.
+- 로컬 dev curl: missing/fake Bearer 401, 허용 출처 OPTIONS 204, 불허 출처 403 및 no-store 확인. 실제 사용자 비밀번호/토큰을 저장하거나 출력하지 않음.
+- 변경 파일 eslint와 production build 통과. 전체 npm run lint는 사전부터 있던 AddHoldingForm, EditableHoldingRow, ThemeToggle, TickerAutocomplete(set-state-in-effect), WeightDonut(immutability) 오류 5건으로 실패. 코디네이터 지시에 따라 UI 변경 없이 잔여로 남김.
+- 기존 미추적 `/api/portfolio/summary`는 외부 백업 보존 후 쿠키/snapshot 계약을 유지해 통합. 게임 API는 해당 쓰기 옵션을 노출하지 않음. 양쪽은 computePortfolio/getQuotes/getUsdKrwRate를 공유.
+- 푸시·Vercel 배포는 수행하지 않음. 운영 환경 CORS/한도 설정 확인과 코디네이터 승인 배포 후 게임에서 정상 로그인 조회 확인 필요.

@@ -8,6 +8,7 @@ import { cache } from "react";
 
 export type Quote = {
   ticker: string;
+  asOf?: string | null;
   price: number; // 현재가 (USD)
   prevClose: number | null; // 전일 종가
 };
@@ -31,12 +32,13 @@ const fetchOne = cache(async (ticker: string): Promise<Quote | null> => {
     );
     if (!res.ok) return null;
 
-    const data: { c?: number; pc?: number } = await res.json();
+    const data: { c?: number; pc?: number; t?: number } = await res.json();
     // Finnhub 는 잘못된 티커에도 c=0 을 반환한다 → 0 이면 실패로 간주
     if (typeof data.c !== "number" || data.c === 0) return null;
 
     return {
       ticker,
+      asOf: typeof data.t === "number" && data.t > 0 ? new Date(data.t * 1000).toISOString() : null,
       price: data.c,
       prevClose: typeof data.pc === "number" && data.pc > 0 ? data.pc : null,
     };

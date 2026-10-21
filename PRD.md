@@ -384,3 +384,9 @@ npm run dev        # http://localhost:3000
 - **공개 URL**: https://us-stock-dashboard-modu-rich.vercel.app
 - **저장소**: github.com/cjwmanelf/us-stock-dashboard (비공개), `main` push 시 Vercel 자동 배포
 - **외부 연동**: Supabase(인증·DB), Finnhub(시세·뉴스·실적), Frankfurter(환율), SEC EDGAR(공시), Gmail SMTP(메일)
+
+
+### 2026-10-21 FarmTwin read-only game API (P751a, deployment pending)
+- Added Bearer-validated GET /api/game/summary, /history and /feed; Supabase Auth REST direct login/refresh. Contract: docs/GAME_API.md.
+- Per-request user verification, anon client + RLS + user_id filters, origin allowlist, no-store and instance-local rate limit; no server secrets exposed.
+- Existing cookie summary retained, history buckets shared with web chart. No push or deployment; existing unrelated UI lint failures remain per coordinator scope decision.
