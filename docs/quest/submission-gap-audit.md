@@ -12,7 +12,7 @@
 
 [최종 코드검증](final-validation.md):12스크립트/25테스트/typecheck 통과, 변경 production·새 tooling lint0; whole-repo는 확인된 기존 오류5개가 남는다. 예전 tooling lint 실패 기록은 해결 이력을 포함한 역사적 기록이며 최종 상태와 구별한다.
 
-**현재 남은 공백:** 실제 PR 링크와 요청된 독립 Claude 검토는 코디네이터 후속이다. 최종 UI 배포·390px 브라우저 검증은 완료했고 [별도 smoke](evidence/deployed-ui-smoke.json) 1모델/input2979/output446/USD0.0005209를 전후 원격6건과 분리한다. 알려진 로컬+원격6+UI1 비용 합은 USD0.0498650이다. [공개 최종 입력·rubric·응답·판정](evidence/final-README.md)과 v1/v2 원본 소스28개가 제공되어 과거 fixture 부재 공백은 해소됐다. native 원문은 의도적으로 비공개이며 모델 재실행 답변 동일성을 보장하지 않는다. 초기 focus는 모달의 원문 링크, Escape/focus 복귀는 확인했고 DOM click만 사용했다. 아래 중간 기록의 미완료 표시는 당시 상태다.
+**현재 남은 공백:** [PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)은 생성했으며 요청된 독립 Claude 검토는 후속이다. 최종 UI 배포·390px 브라우저 검증은 완료했고 [별도 smoke](evidence/deployed-ui-smoke.json) 1모델/input2979/output446/USD0.0005209를 전후 원격6건과 분리한다. 알려진 로컬+원격6+UI1 비용 합은 USD0.0498650이다. [공개 최종 입력·rubric·응답·판정](evidence/final-README.md)과 v1/v2 원본 소스28개가 제공되어 과거 fixture 부재 공백은 해소됐다. native 원문은 의도적으로 비공개이며 모델 재실행 답변 동일성을 보장하지 않는다. 초기 focus는 모달의 원문 링크, Escape/focus 복귀는 확인했고 DOM click만 사용했다. 아래 중간 기록의 미완료 표시는 당시 상태다.
 
 ## 아래 기록은 이전 단계의 역사적 감사
 

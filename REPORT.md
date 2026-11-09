@@ -1,6 +1,6 @@
 # Main Quest AI 브리핑 개선 보고서
 
-2026-11-09 실측 통합본. 한국어 자산 대시보드의 종목 뉴스·공시·실적 메타데이터 브리핑을 개선했다([제품 정의](PRD.md)). 기사 본문·실시간 가격·개인 보유내역 분석은 범위 밖이다. **v2·v3·v4·v5는 게이트 실패, v6는 독립 평가 PASS 후 배포 및 새 대화3건 검증 완료**다. 실제 사용자 정성 피드백1건과 AI 운영자 피드백 저장 테스트1건을 구별한다. 출처 표시 UI 배포·브라우저 검증도 완료했다. 실제 PR 링크와 요청된 독립 Claude 검토는 코디네이터 후속이며 과제 전체 완료를 단정하지 않는다.
+2026-11-09 실측 통합본. 한국어 자산 대시보드의 종목 뉴스·공시·실적 메타데이터 브리핑을 개선했다([제품 정의](PRD.md)). 기사 본문·실시간 가격·개인 보유내역 분석은 범위 밖이다. **v2·v3·v4·v5는 게이트 실패, v6는 독립 평가 PASS 후 배포 및 새 대화3건 검증 완료**다. 실제 사용자 정성 피드백1건과 AI 운영자 피드백 저장 테스트1건을 구별한다. 출처 표시 UI 배포·브라우저 검증도 완료했다. [제출 PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)을 생성했으며, 요청된 독립 Claude 검토는 별도 후속이다.
 
 ## 1. 로그 수와 직접 평가 대화 제작 방법
 
@@ -79,7 +79,7 @@ v4의 여러 변수를 함께 변경했으므로 효과를 단일 프롬프트 �
 | briefing-v5-partial-evidence | `b11adf3a17fb1b52b7d8a2e3ada353da68f9a01e0a76919169b76dba0a4dd03a` |
 | briefing-v6-temporal-notice | `3ace4794db84368aa2350ada962e5d6bad4c4dcd85f21a7bdc8c9a8040742753` |
 
-[v1/v2 manifest](docs/quest/evidence/q610-source-manifests.json), [v3 source hash 정의](docs/quest/v3-contract-source-hashes.json), [v4 실험](docs/quest/v4-output-experiment.md), [v5 실험](docs/quest/v5-partial-evidence-experiment.md). v3 승인 aggregate와 실행 artifact는 파일 목록·알고리즘 범위가 달라 값이 다르다. v1/v2는 service.ts만 같고 imported adapter가 달라 전체 artifact로 구별한다. **PR URL·최종 commit·리뷰 승인은 아직 미제공**이며 로컬 소스·해시를 PR로 대체했다고 하지 않는다.
+[v1/v2 manifest](docs/quest/evidence/q610-source-manifests.json), [v3 source hash 정의](docs/quest/v3-contract-source-hashes.json), [v4 실험](docs/quest/v4-output-experiment.md), [v5 실험](docs/quest/v5-partial-evidence-experiment.md). v3 승인 aggregate와 실행 artifact는 파일 목록·알고리즘 범위가 달라 값이 다르다. v1/v2는 service.ts만 같고 imported adapter가 달라 전체 artifact로 구별한다. [PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)의 구현·실험 증거 commit은 `0fcb396b28c435362ed5dc053a48d473f41538bc`이며 후속 문서 commit은 PR에서 확인할 수 있다. PR 생성은 리뷰 승인이나 main 병합을 의미하지 않는다.
 
 ## 6. 배포 뒤 버전별 새 대화·지연·비용·화면 증빙
 
@@ -89,7 +89,7 @@ v6 Cloud Build `405955c5-572a-415c-b5c9-981da6c5d247` SUCCESS 후 revision **mod
 
 ![배포 v6 실제 정상 응답](docs/quest/evidence/screenshots/candidate-live-ok.png)
 
-피드백 API 기능 시험은 AI 운영자 up1건으로 HTTP202 뒤 동일 trace의 Cloud Logging score1 read-back까지 확인했다. 실제 사용자 만족도 투표가 아니다. **실제 사용자 정성 의견은1건**으로 긴 출처ID 대신 짧은 [근거] 버튼을 요청했고 numeric vote는 없다. 메시지 알림은 설문 응답으로 세지 않았다. UI 변경·별도 배포/캡처는 완료했고 독립 Claude Fable 검토와 PR URL은 후속이다.
+피드백 API 기능 시험은 AI 운영자 up1건으로 HTTP202 뒤 동일 trace의 Cloud Logging score1 read-back까지 확인했다. 실제 사용자 만족도 투표가 아니다. **실제 사용자 정성 의견은1건**으로 긴 출처ID 대신 짧은 [근거] 버튼을 요청했고 numeric vote는 없다. 메시지 알림은 설문 응답으로 세지 않았다. UI 변경·별도 배포/캡처는 완료했고 [PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)은 생성했고 독립 Claude Fable 검토는 후속이다.
 
 [실제 배포 검증](docs/quest/deployment-verification.md): baseline `briefing-v1`, revision `modu-rich-quest06-00003-sfx`, 수정 build `70159e67-6fe8-4bcc-9908-5bb7bd2589cc`가 확인됐다. [앱](https://modu-rich-quest06-fyzai5fn7a-du.a.run.app) 및 /login은200, 비로그인 보호 경로는 로그인 redirect, 정확한 Origin의 무세션 API는401, 다른 Origin은403이었다. 이는 원래 baseline 복구이며 후보 배포 완료가 아니다.
 
@@ -129,4 +129,4 @@ baseline 원격 browser 경과는10501.8/6589.3/5602ms, server 경과9640/5908/5
 
 배포에서는 빌드 시 고정되는 공개 설정과 runtime 설정을 구별해야 했다. BOM 파싱과 callback의 신뢰 origin 문제는 모델 품질과 분리해 원래 archive로 재현했다. 모델 소스와 관측 도구를 동시에 바꾸면 전후 비교의 정체성이 흐려지므로 동결 artifact·실제 버전·새 trace를 연결했다. 이는 관찰한 기술적 회고이며 사용자의 개인적 느낌이나 직접 수행한 경험을 대신 창작한 것이 아니다.
 
-독립 gate·배포·버전별 새 대화·실제 로그 대조는 완료했다. 실제 사용자 정성 의견1건을 반영한 출처 버튼 UI의 별도 배포·시각 검증도 완료했고 PR/독립 검토 마무리가 남았다. 만족/보통/불만족 numeric 설문 응답은 아직 없으며 운영자 up 테스트를 사용자 만족으로 합산하지 않는다. 앞으로 동의한 실제 질문과 평가를 최소 범위로 수집하고 보존기간/삭제·접근권한을 정하며, 합성 입력·AI 분석자 판정·사용자 의견을 분리한다. 남은 항목은 [제출 공백 감사](docs/quest/submission-gap-audit.md)에 명시한다.
+독립 gate·배포·버전별 새 대화·실제 로그 대조는 완료했다. 실제 사용자 정성 의견1건을 반영한 출처 버튼 UI의 별도 배포·시각 검증도 완료했고 [PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)을 생성했고 독립 검토가 남았다. 만족/보통/불만족 numeric 설문 응답은 아직 없으며 운영자 up 테스트를 사용자 만족으로 합산하지 않는다. 앞으로 동의한 실제 질문과 평가를 최소 범위로 수집하고 보존기간/삭제·접근권한을 정하며, 합성 입력·AI 분석자 판정·사용자 의견을 분리한다. 남은 항목은 [제출 공백 감사](docs/quest/submission-gap-audit.md)에 명시한다.
