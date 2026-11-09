@@ -147,7 +147,7 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
   <div class="facts">
     <div class="fact"><div class="k">검토 대상 커밋</div><div class="v">구현·증거 <a href="https://github.com/cjwmanelf/us-stock-dashboard/commit/0fcb396b28c435362ed5dc053a48d473f41538bc"><code>0fcb396</code></a> · 보고서 링크 갱신 <a href="https://github.com/cjwmanelf/us-stock-dashboard/commit/a97527ac3638146b5fee398a73b84d71f0e5f56f"><code>a97527a</code></a> (HEAD = origin = PR head)</div></div>
     <div class="fact"><div class="k">PR</div><div class="v"><a href="https://github.com/cjwmanelf/us-stock-dashboard/pull/7">PR #7</a> OPEN · base <code>main</code> · 커밋 2 · 184파일 · 리뷰 0 · 코멘트 1(Vercel 봇)</div></div>
-    <div class="fact"><div class="k">라이브 배포</div><div class="v"><a href="https://modu-rich-quest06-fyzai5fn7a-du.a.run.app/briefing">modu-rich-quest06 /briefing</a><br>현재 100% 트래픽 <code>modu-rich-quest06-v6-ui-20261109</code></div></div>
+    <div class="fact"><div class="k">라이브 배포</div><div class="v"><a href="https://modu-rich-quest06-fyzai5fn7a-du.a.run.app/briefing">modu-rich-quest06 /briefing</a><br>초기 검토 당시 100% 트래픽 <code>modu-rich-quest06-v6-ui-20261109</code>; 최신 배포는 아래 반영 블록 참조</div></div>
     <div class="fact"><div class="k">검토자 모델</div><div class="v">요청: Claude Fable 5.1, effort max<br>관측: 하네스 보고 모델 ID <code>claude-fable-5-1</code>, 환경변수 <code>CLAUDE_EFFORT=max</code>. API 메타데이터로 교차 확인한 것은 아님</div></div>
   </div>
 
@@ -168,16 +168,27 @@ footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line);
 
 <main id="main">
 <section class="card" id="remediation" aria-labelledby="remediation-title">
-<h2 id="remediation-title">검토 후 보완 결과</h2>
-<p>2026-11-09 코디네이터가 반영했습니다. 아래 최초 검토 발견은 당시 상태로 보존했으며, 검토자가 수정본을 다시 승인한 것은 아닙니다.</p>
+<h2 id="remediation-title">최신 반영: 코드·의존성·운영·배포·브라우저 검증 완료</h2>
+<p><strong>아래 초기 독립 검토 표의 ‘미적용’과 lint 5/1은 당시 발견입니다.</strong> 이 블록이 현재 조치 상태이며 Fable의 수정본 재승인은 아닙니다. 결합 수정본 modu-rich-quest06-reviewed-20261109 (Next16.4.5)는 Ready·100% traffic입니다. Build773b9b97-2216-4690-9e8f-2267e2b9e41d, digest b4372f6496eb8f68e0d6dcc55c67c18c56c9c5e9550d206b0372b8bd9da4082f로 확인했습니다.</p>
 <ul>
-<li><strong>P1-1 · 반영:</strong> 최종 lint는 기존 오류 5개·export 경고 1개로 문서 정정. 동결 파일과 해시는 보존했습니다.</li>
-<li><strong>P1-2 · 반영:</strong> REPORT 후보 표에 사용자 피드백·관련 trace·의견 1건의 분모·UI 단계와 후속 우선순위를 추가했습니다.</li>
-<li><strong>P2-1~P2-4 · 반영:</strong> 현재 배포 버전, 잠재 오류 노출 여부·공개 재현 한계, 별도 AI 평가자·단일 차폐, 배포 누적 효과를 명시했습니다.</li>
-<li><strong>P3-2~P3-4 · 반영:</strong> 미실행 사용자 로그 수집 계획, 화면의 공개 헤드라인 정책, Cloud Run 평가 범위를 추가했습니다.</li>
-<li><strong>P3-1 · 선택적 후속:</strong> 모달 초기 focus는 원문 링크이며 Escape·포커스 복귀는 검증됐습니다. 제목이나 닫기 버튼으로 초기 focus를 바꾸는 제품 개선은 수행하지 않았습니다.</li>
+<li><strong>P1-1:</strong> 문서 정정 뒤 코드 수정까지 완료. 전체 ESLint 0오류/0경고, typecheck·평가25/25 및 UI 회귀 통과. 원본 hash는 역사적 증거로 보존하고 수정본 digest는 별도 기록했습니다.</li>
+<li><strong>P1-2:</strong> 피드백 후보·trace·1/1 분모·UI 단계 및 최초 선정 당시 사용자 의견0을 REPORT에 반영했습니다.</li>
+<li><strong>P2-1:</strong> 당시 v6-ui와 비교 v6 리비전을 구분했습니다. 현재 reviewed 리비전 배포와 새3건 smoke도 완료했습니다.</li>
+<li><strong>P2-2:</strong> 잠재 오류 노출 여부와 공개 재현 범위를 명시했습니다.</li>
+<li><strong>P2-3:</strong> 별도 AI 평가·사람 채점0·단일 라벨 차폐 한계를 명시했습니다.</li>
+<li><strong>P2-4:</strong> 원격 실패 현상 감소를 누적 변경 및 피드 차이와 구분했습니다.</li>
+<li><strong>P3-1:</strong> showModal 직후 닫기 버튼 focus 구현·오프라인 검증 완료. 기존 원문 링크 focus 화면은 이전 버전 증거이며 실제 Orca 클릭과 activeElement 확인으로 닫기 BUTTON 초기 focus·Enter 닫기/외부이동 없음·복귀 및 Escape 복귀를 확인했습니다.</li>
+<li><strong>P3-2:</strong> 수집·동의·보존·중복·표본 계획 표 작성 완료. 실제 신규 수집, 3단계 평가 UI, 동의/삭제 backend 구현은 아닙니다.</li>
+<li><strong>P3-3:</strong> 구조화 export와 화면의 공개 헤드라인 정책을 구분했습니다.</li>
+<li><strong>P3-4:</strong> Cloud Run 평가 범위와 공개 저장소 표기를 반영했습니다.</li>
 </ul>
-<p>모델·배포본·동결 증거 변경 없음. <a href="../final-review.md">독립 검토 원문과 교정 기록</a> · <a href="https://github.com/cjwmanelf/us-stock-dashboard/blob/feat/main-quest-06-briefing-observability/REPORT.md">최종 REPORT.md</a></p>
+<p><strong>Astra 후속:</strong> 기존 보안·평가·trace·auth·feedback·공개 재현 발견의 수정 근거는 <a href="../review-reconciliation.md">전수 대조</a>에 연결했습니다. 의존성 full/prod audit는 각각0입니다(과거18/production6 보존). Next/config16.4.5 및 scoped minimatch override의 호환 검사를 완료했지만 기존 모델 품질 결과는 새 dependency graph 평가가 아닙니다.</p>
+<p>기존 Next16.2.10 리비전의 메모리79관측·startup3건·인스턴스2 overlap을 확인했습니다. 현재 제한은 process/module별 best-effort이며 maxScale1도 global 요청/비용 상한이 아닙니다. hard global 정책에는 shared atomic 제한과 별도 provider 비용 통제가 필요합니다. 새 인프라를 만들거나 새 배포의 성능을 측정한 것은 아닙니다.</p>
+<p>실제 정성 의견1건·운영자 시험vote1건·사람 numeric 평가0건은 그대로입니다. 새 실제3건은 모두200/ok·Cloud Logging exact join3/3, input9087/output1186·USD0.0015017입니다. 알려진 누계USD0.0513667이며 기존 로컬183/171·원격6·UI1과 분리합니다. 과거 hold-out 재채점이 아닙니다.</p>
+<p><a href="../review-code-followup.md">코드 후속 검사</a> · <a href="../dependency-review.md">의존성 수정</a> · <a href="../evidence/dependency-audit.json">audit 증거</a> · <a href="../runtime-review.md">운영 실측</a> · <a href="../evidence/runtime-review.json">runtime 증거</a> · <a href="../final-review.md#9-교정-상태-기록코디네이터-갱신용">독립 검토 교정 이력</a></p>
+<p>390px 넘침 없음, 테마 변경/기본값 복구, 실제 AAPL 자동완성·키보드 선택·지우기, 빈 수량 차단, 행 편집·취소·재열기 확인 완료. Console0, 포트폴리오 DB쓰기0, 새 투표0. 성공/실패 저장은 오프라인 검사 범위입니다.</p>
+<p><a href="../review-deployment.md">최신 배포</a> · <a href="../reviewed-live-verification.md">실제 브라우저 확인</a> · <a href="../evidence/reviewed-smoke.json">새3건 안전 증거</a></p>
+<div class="tiles"><figure><img loading="lazy" src="../evidence/screenshots/reviewed-citation-close-focus.png" width="390" height="844" alt="검토 수정본 출처 모달: 닫기 버튼 초기 focus 실측"><figcaption>현재 reviewed 리비전: 닫기 focus 검증</figcaption></figure><figure><img loading="lazy" src="../evidence/screenshots/reviewed-live-ok.png" width="390" height="844" alt="검토 수정본 AAPL 정상 응답"><figcaption>새 배포 AAPL 실제 응답</figcaption></figure></div>
 </section>
 
 <h2 id="rubric">1. 루브릭 5항목 판정</h2>

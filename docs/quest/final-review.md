@@ -168,3 +168,30 @@ briefing_feedback 1건: trace b7e3c76e…, version v6, score 1, 03:25:26.921Z �
 | 2026-11-09 | P3-1 | **선택적 후속**: 현재 모달 focus는 원문 링크 안에 있고 Escape·복귀 검증됨. 명시적 제목/닫기 focus 변경은 이번 배포에서 수행하지 않음. | 코디네이터 |
 
 위 교정은 코디네이터가 적용했으며 Q611이 수정본을 재검토했다고 주장하지 않는다. 초기 독립 발견·판정은 그대로 보존했다. 수정 범위는 문서와 검토 웹페이지이며 모델/추론 소스·배포본·공개 동결 증거를 변경하지 않았다.
+
+### 후속 코드·의존성·운영 반영 — 2026-11-09
+
+[코드 후속](review-code-followup.md)은 전체 lint **0 errors / 0 warnings**, typecheck·평가25/25·UI callback/hook 회귀 통과를 기록한다. 닫기 버튼을 showModal 직후 명시적으로 focus하고, 폼 연속 성공 reset·편집 오류 수명·theme 구독·autocomplete 취소·donut 순수 계산 및 exporter 미사용 변수를 수정했다. 초기 5/0→5/1은 역사적 관측으로 유지한다.
+
+[의존성 후속](dependency-review.md)과 [audit JSON](evidence/dependency-audit.json)은 Next/config **16.4.5**, 호환 transitive 갱신 및 estree에 한정한 minimatch11.0.1 override 후 **full0 / production0**을 확인한다. 원래18개 package-entry 발견과 당시 production6은 보존한다. 오늘 DB로 baseline/current 취약점 객체와 영향20노드가 같음을 확인했으며 과거 당시 알려진 advisory까지 같았다는 뜻은 아니다. scoped major override의 사용 경로 호환 검사는 통과했으나 upstream semver 보장은 아니므로 후속 재검토한다.
+
+[runtime review](runtime-review.md)와 [실측 JSON](evidence/runtime-review.json)은 **기존 Next16.2.10 v6-ui 리비전**의 메모리79관측(가중평균27.694%)·startup3건(평균1073.265ms) 및 maxScale1 설정에서도 instance_count2를 관측했다. 새 수정본의 성능 인증이나 통제 부하 시험이 아니다. 현재 정책은 인증된 사용자에 대한 **process/module별 best-effort**이며 재시작 시 초기화되고 global 요청/비용 상한을 보장하지 않는다. hard global 정책에는 현재 max1에서도 shared atomic limiter와 별도 provider 비용 통제가 필요하다. provider spend cap은 확인하지 않았고 새 인프라·메모리 증설을 실행하거나 필요하다고 단정하지 않는다.
+
+**완료:** 결합 수정본 `modu-rich-quest06-reviewed-20261109`(Next16.4.5)가 Ready·100% traffic으로 배포됐다. Build `773b9b97-2216-4690-9e8f-2267e2b9e41d`, digest `sha256:b4372f6496eb8f68e0d6dcc55c67c18c56c9c5e9550d206b0372b8bd9da4082f`다. 새 AAPL/MSFT/NVDA 실제3호출 모두200/ok·Cloud Logging exact join3/3이며 input9087/output1186·추정USD0.0015017, 알려진 누계USD0.0513667이다. 기존 로컬183서비스/171모델·원격6·UI1은 별도 분모로 보존한다. 새3건은 배포 smoke이며 과거 hold-out 재채점이 아니다. 실제 Orca 클릭 후 닫기 BUTTON 초기 focus, Enter 닫기/외부이동 없음/복귀, 재열기와 Escape 복귀,390px 넘침 없음이 확인됐다. 테마 변경/기본값 복구, 실제 AAPL 자동완성·ArrowDown/Enter·지우기, 빈 수량 유효성 차단, 행 편집/취소/재열기도 확인했고 console0·포트폴리오 DB쓰기0·투표0이다. [배포](review-deployment.md)·[실제 확인](reviewed-live-verification.md)·[안전 증거](evidence/reviewed-smoke.json)를 참조한다. v6 추론14파일은 불변이지만 새 의존성 그래프의 독립 품질 평가나 교차 브라우저/실물 터치 검증은 아니다.
+
+Fable의 최초 발견과 Astra 기록은 보존하며 아래의 예전 미적용·실패·hash는 당시 상태다. 실제 정성 의견1건·운영자 시험vote1건·사람 numeric 평가0건은 그대로다. P3-2는 **계획 구체화 완료**일 뿐 새 사용자 수집·3단계 평가UI·동의/삭제 backend 구현 완료가 아니다.
+
+| ID | 현재 대응 |
+| --- | --- |
+| P1-1 | 문서 정정 뒤 코드 해결: 전체 lint 0/0; 원본 exporter hash는 historical snapshot으로 보존하고 새 digest는 코드 후속 보고에 별도 기록 |
+| P1-2 | REPORT §2·3 피드백 후보/trace/분모/선정 당시0 명시 완료 |
+| P2-1 | 당시 v6-ui와 비교 v6 구분 완료; reviewed 리비전 Ready100%·새 smoke3/3 확인 완료 |
+| P2-2 | 잠재 오류 노출 여부·공개 재현 범위 명시 완료 |
+| P2-3 | 별도 AI 평가·사람 채점0·단일 라벨 차폐 한계 명시 완료 |
+| P2-4 | 원격 현상 감소와 누적 변경·근거 차이 명시 완료 |
+| P3-1 | 명시적 닫기 focus 구현·오프라인 검증 완료; 실제 닫기 focus·Enter/Escape·복귀 확인 완료 |
+| P3-2 | 수집/동의/보존/중복/표본 계획 표 완료; 실제 수집·추가 backend는 미구현 |
+| P3-3 | 구조화 export와 화면 공개 헤드라인 정책 구분 완료 |
+| P3-4 | Cloud Run 평가 범위와 공개 저장소 표기 반영 완료 |
+
+[Astra 전수 대응 및 최신 상태](review-reconciliation.md)를 함께 참조한다. 이는 후속 구현자/통합자의 기록이며 Fable의 수정본 재승인이나 새 모델 품질 채점을 뜻하지 않는다. §1–8과 §9의 초기 기록은 변경하지 않았다.

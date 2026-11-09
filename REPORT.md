@@ -1,6 +1,6 @@
 # Main Quest AI 브리핑 개선 보고서
 
-2026-11-09 실측 통합본. 한국어 자산 대시보드의 종목 뉴스·공시·실적 메타데이터 브리핑을 개선했다([제품 정의](PRD.md)). 기사 본문·실시간 가격·개인 보유내역 분석은 범위 밖이다. **v2·v3·v4·v5는 게이트 실패, v6는 독립 평가 PASS 후 배포 및 새 대화3건 검증 완료**다. 실제 사용자 정성 피드백1건과 AI 운영자 피드백 저장 테스트1건을 구별한다. 출처 표시 UI 배포·브라우저 검증도 완료했다. [제출 PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)을 생성했으며, [Claude Fable 5.1 독립 검토](docs/quest/final-review.md)도 완료했으며 평가기준 충족·제출 가능(한계 명시) 판정을 받았다. 검토 후 문서 보완은 별도 교정 기록으로 남겼다.
+2026-11-09 실측 통합본. 한국어 자산 대시보드의 종목 뉴스·공시·실적 메타데이터 브리핑을 개선했다([제품 정의](PRD.md)). 기사 본문·실시간 가격·개인 보유내역 분석은 범위 밖이다. **v2·v3·v4·v5는 게이트 실패, v6는 독립 평가 PASS 후 배포 및 새 대화3건 검증 완료**다. 실제 사용자 정성 피드백1건과 AI 운영자 피드백 저장 테스트1건을 구별한다. 출처 표시 UI 배포·브라우저 검증도 완료했다. [제출 PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)을 생성했으며, [Claude Fable 5.1 독립 검토](docs/quest/final-review.md)도 완료했으며 평가기준 충족·제출 가능(한계 명시) 판정을 받았다. 검토 후 코드·의존성·운영 권고도 후속 반영했다. 현재 전체 lint 0/0·full/prod dependency audit 0이며 결합 수정본 `modu-rich-quest06-reviewed-20261109`(Next16.4.5)의 Ready100% 배포·새3호출·브라우저 검증도 완료했다.
 
 ## 1. 로그 수와 직접 평가 대화 제작 방법
 
@@ -19,6 +19,7 @@
 | 별도: 배포 baseline 새 대화 | **3** | **3** | **0.0020803** |
 | 별도: 배포 v6 새 대화 | **3** | **3** | **0.0015708** |
 | 별도: 최종 UI smoke | **1** | **1** | **0.0005209** |
+| 별도: 검토 수정본 배포 smoke | **3** | **3** | **0.0015017** |
 
 초기 provider smoke·Models GET은 위 로컬 합계에 포함하지 않으며 프로젝트 청구 총액이 아니다. 원격6건은 별도 행이며 실시간 제공자 피드로 실행했다. v3 비교의 v2 응답은 재사용했으므로 v2 20회를 다시 더하지 않는다. v4 파일럿3건은 같은 개발 사례의 별도 호출이며 신규 사례가 아니다. 로컬 서로 다른 입력은 **개발20+각기 다른 hold-out10개씩3셋=50개**다. v3/v4의 독립셋 미실행은 당시 상태였고 이후 v5가 소비했다. v6는 또 다른 평가자가 만든 새10개를 사용했으며 이제 그 셋도 미노출 셋이라고 재사용할 수 없다.
 
@@ -89,9 +90,27 @@ v4의 여러 변수를 함께 변경했으므로 효과를 단일 프롬프트 �
 
 ## 6. 배포 뒤 버전별 새 대화·지연·비용·화면 증빙
 
-**현재 라이브 리비전은 `modu-rich-quest06-v6-ui-20261109`, 트래픽 100%다.** 아래 v6 리비전은 전후 비교 당시 배포이며, 현재본은 UI 두 파일만 바뀌고 추론 소스는 같다. 평가 대상은 [Cloud Run 앱](https://modu-rich-quest06-fyzai5fn7a-du.a.run.app/briefing)이며 GitHub PR의 Vercel preview는 검증 범위 밖이다.
+### 최신 리뷰 반영 상태 — 코드·의존성·운영 및 결합 배포·브라우저 검증 완료
 
-v6 Cloud Build `405955c5-572a-415c-b5c9-981da6c5d247` SUCCESS 후 revision **modu-rich-quest06-v6-20261109**가 Ready=True·100% traffic으로 확인됐다. image digest는 `sha256:ed253c7921dcad7b2c8f3845a65c4dd33cb64504669a2f2b07da35a3bd2993cf`이며 실제 archive의14개 inference 파일과 동결 manifest가 일치한다. [최종 검증](docs/quest/final-validation.md)은12개 검사 스크립트·25개 테스트·typecheck 통과, 새 production/tooling lint 오류0을 보고한다. 최종 공개 export 스크립트 추가 후 독립 검토에서는 전체 lint가 기존 production 오류5개와 미사용 변수 경고1개로 확인됐다. 완전 통과라고 쓰지 않으며 동결 증거를 유지하고 문서 상태를 정정했다.
+[코드 후속](docs/quest/review-code-followup.md)은 전체 lint **0 errors / 0 warnings**, typecheck·평가25/25·UI callback/hook 회귀 통과를 기록한다. 닫기 버튼을 showModal 직후 명시적으로 focus하고, 폼 연속 성공 reset·편집 오류 수명·theme 구독·autocomplete 취소·donut 순수 계산 및 exporter 미사용 변수를 수정했다. 초기 5/0→5/1은 역사적 관측으로 유지한다.
+
+[의존성 후속](docs/quest/dependency-review.md)과 [audit JSON](docs/quest/evidence/dependency-audit.json)은 Next/config **16.4.5**, 호환 transitive 갱신 및 estree에 한정한 minimatch11.0.1 override 후 **full0 / production0**을 확인한다. 원래18개 package-entry 발견과 당시 production6은 보존한다. 오늘 DB로 baseline/current 취약점 객체와 영향20노드가 같음을 확인했으며 과거 당시 알려진 advisory까지 같았다는 뜻은 아니다. scoped major override의 사용 경로 호환 검사는 통과했으나 upstream semver 보장은 아니므로 후속 재검토한다.
+
+[runtime review](docs/quest/runtime-review.md)와 [실측 JSON](docs/quest/evidence/runtime-review.json)은 **기존 Next16.2.10 v6-ui 리비전**의 메모리79관측(가중평균27.694%)·startup3건(평균1073.265ms) 및 maxScale1 설정에서도 instance_count2를 관측했다. 새 수정본의 성능 인증이나 통제 부하 시험이 아니다. 현재 정책은 인증된 사용자에 대한 **process/module별 best-effort**이며 재시작 시 초기화되고 global 요청/비용 상한을 보장하지 않는다. hard global 정책에는 현재 max1에서도 shared atomic limiter와 별도 provider 비용 통제가 필요하다. provider spend cap은 확인하지 않았고 새 인프라·메모리 증설을 실행하거나 필요하다고 단정하지 않는다.
+
+**완료:** 결합 수정본 `modu-rich-quest06-reviewed-20261109`(Next16.4.5)가 Ready·100% traffic으로 배포됐다. Build `773b9b97-2216-4690-9e8f-2267e2b9e41d`, digest `sha256:b4372f6496eb8f68e0d6dcc55c67c18c56c9c5e9550d206b0372b8bd9da4082f`다. 새 AAPL/MSFT/NVDA 실제3호출 모두200/ok·Cloud Logging exact join3/3이며 input9087/output1186·추정USD0.0015017, 알려진 누계USD0.0513667이다. 기존 로컬183서비스/171모델·원격6·UI1은 별도 분모로 보존한다. 새3건은 배포 smoke이며 과거 hold-out 재채점이 아니다. 실제 Orca 클릭 후 닫기 BUTTON 초기 focus, Enter 닫기/외부이동 없음/복귀, 재열기와 Escape 복귀,390px 넘침 없음이 확인됐다. 테마 변경/기본값 복구, 실제 AAPL 자동완성·ArrowDown/Enter·지우기, 빈 수량 유효성 차단, 행 편집/취소/재열기도 확인했고 console0·포트폴리오 DB쓰기0·투표0이다. [배포](docs/quest/review-deployment.md)·[실제 확인](docs/quest/reviewed-live-verification.md)·[안전 증거](docs/quest/evidence/reviewed-smoke.json)를 참조한다. v6 추론14파일은 불변이지만 새 의존성 그래프의 독립 품질 평가나 교차 브라우저/실물 터치 검증은 아니다.
+
+Fable의 최초 발견과 Astra 기록은 보존하며 아래의 예전 미적용·실패·hash는 당시 상태다. 실제 정성 의견1건·운영자 시험vote1건·사람 numeric 평가0건은 그대로다. P3-2는 **계획 구체화 완료**일 뿐 새 사용자 수집·3단계 평가UI·동의/삭제 backend 구현 완료가 아니다.
+
+
+
+![검토 수정본 닫기 버튼 focus](docs/quest/evidence/screenshots/reviewed-citation-close-focus.png)
+
+![검토 수정본 실제 응답](docs/quest/evidence/screenshots/reviewed-live-ok.png)
+
+**현재 라이브 리비전은 `modu-rich-quest06-reviewed-20261109`(Next16.4.5), Ready·트래픽100%다.** 아래 v6와 v6-ui는 과거 실험·UI 배포 기록이다. 현재본은 검토된 UI6파일과 package/lock 변경을 포함하며 추론14파일은 동일하다. 평가 대상은 [Cloud Run 앱](https://modu-rich-quest06-fyzai5fn7a-du.a.run.app/briefing)이며 Vercel preview는 범위 밖이다.
+
+v6 Cloud Build `405955c5-572a-415c-b5c9-981da6c5d247` SUCCESS 후 revision **modu-rich-quest06-v6-20261109**가 Ready=True·100% traffic으로 확인됐다. image digest는 `sha256:ed253c7921dcad7b2c8f3845a65c4dd33cb64504669a2f2b07da35a3bd2993cf`이며 실제 archive의14개 inference 파일과 동결 manifest가 일치한다. [최종 검증](docs/quest/final-validation.md)은12개 검사 스크립트·25개 테스트·typecheck 통과, 새 production/tooling lint 오류0을 보고한다. 공개 export 추가 당시 독립 검토는 lint 5오류/1경고였으나, 후속 코드 수정 및 갱신 의존성 검증에서는 전체 lint 0오류/0경고로 해소됐다. 초기 발견과 동결 증거는 유지한다.
 
 후보의 같은 질문3개를 새 시각/UUID로 실행해 **200/ok3건, Cloud Logging exact join3/3**을 확인했다. baseline unavailable3/3→candidate0/3이다. 이는 생성 실패 현상의 감소이며 v1 대비 v2~v6 누적 변경 결과다. 단일 추출 수정의 효과나 동일 내부 원인 해소만으로 귀속하지 않는다. AAPL은 근거11→12 및hash변경, MSFT/NVDA는12→12/hash동일이므로 전체를 통제된 동일근거 인과 비교로 표현하지 않는다. 후보 서버5137/3554/3464ms, 브라우저5570.7/3984.2/4197.9ms, input9113/output1319·추정USD0.0015708이다([원격 전후/피드백 증빙](docs/quest/deployed-live-verification.md)).
 

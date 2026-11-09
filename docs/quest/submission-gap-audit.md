@@ -1,5 +1,18 @@
 # 제출 근거·공백 감사 — 2026-11-09 중간 통합
 
+## 최신 리뷰 반영 상태 — 코드·의존성·운영 및 결합 배포·브라우저 검증 완료
+
+[코드 후속](review-code-followup.md)은 전체 lint **0 errors / 0 warnings**, typecheck·평가25/25·UI callback/hook 회귀 통과를 기록한다. 닫기 버튼을 showModal 직후 명시적으로 focus하고, 폼 연속 성공 reset·편집 오류 수명·theme 구독·autocomplete 취소·donut 순수 계산 및 exporter 미사용 변수를 수정했다. 초기 5/0→5/1은 역사적 관측으로 유지한다.
+
+[의존성 후속](dependency-review.md)과 [audit JSON](evidence/dependency-audit.json)은 Next/config **16.4.5**, 호환 transitive 갱신 및 estree에 한정한 minimatch11.0.1 override 후 **full0 / production0**을 확인한다. 원래18개 package-entry 발견과 당시 production6은 보존한다. 오늘 DB로 baseline/current 취약점 객체와 영향20노드가 같음을 확인했으며 과거 당시 알려진 advisory까지 같았다는 뜻은 아니다. scoped major override의 사용 경로 호환 검사는 통과했으나 upstream semver 보장은 아니므로 후속 재검토한다.
+
+[runtime review](runtime-review.md)와 [실측 JSON](evidence/runtime-review.json)은 **기존 Next16.2.10 v6-ui 리비전**의 메모리79관측(가중평균27.694%)·startup3건(평균1073.265ms) 및 maxScale1 설정에서도 instance_count2를 관측했다. 새 수정본의 성능 인증이나 통제 부하 시험이 아니다. 현재 정책은 인증된 사용자에 대한 **process/module별 best-effort**이며 재시작 시 초기화되고 global 요청/비용 상한을 보장하지 않는다. hard global 정책에는 현재 max1에서도 shared atomic limiter와 별도 provider 비용 통제가 필요하다. provider spend cap은 확인하지 않았고 새 인프라·메모리 증설을 실행하거나 필요하다고 단정하지 않는다.
+
+**완료:** 결합 수정본 `modu-rich-quest06-reviewed-20261109`(Next16.4.5)가 Ready·100% traffic으로 배포됐다. Build `773b9b97-2216-4690-9e8f-2267e2b9e41d`, digest `sha256:b4372f6496eb8f68e0d6dcc55c67c18c56c9c5e9550d206b0372b8bd9da4082f`다. 새 AAPL/MSFT/NVDA 실제3호출 모두200/ok·Cloud Logging exact join3/3이며 input9087/output1186·추정USD0.0015017, 알려진 누계USD0.0513667이다. 기존 로컬183서비스/171모델·원격6·UI1은 별도 분모로 보존한다. 새3건은 배포 smoke이며 과거 hold-out 재채점이 아니다. 실제 Orca 클릭 후 닫기 BUTTON 초기 focus, Enter 닫기/외부이동 없음/복귀, 재열기와 Escape 복귀,390px 넘침 없음이 확인됐다. 테마 변경/기본값 복구, 실제 AAPL 자동완성·ArrowDown/Enter·지우기, 빈 수량 유효성 차단, 행 편집/취소/재열기도 확인했고 console0·포트폴리오 DB쓰기0·투표0이다. [배포](review-deployment.md)·[실제 확인](reviewed-live-verification.md)·[안전 증거](evidence/reviewed-smoke.json)를 참조한다. v6 추론14파일은 불변이지만 새 의존성 그래프의 독립 품질 평가나 교차 브라우저/실물 터치 검증은 아니다.
+
+Fable의 최초 발견과 Astra 기록은 보존하며 아래의 예전 미적용·실패·hash는 당시 상태다. 실제 정성 의견1건·운영자 시험vote1건·사람 numeric 평가0건은 그대로다. P3-2는 **계획 구체화 완료**일 뿐 새 사용자 수집·3단계 평가UI·동의/삭제 backend 구현 완료가 아니다.
+
+
 ## 최종 실측 갱신: v6 PASS·원격 양쪽 및 UI 완료, PR·독립 검토 완료
 
 이 절이 아래 역사적 중간 상태를 대체한다. [v6 독립 평가](v6-live-evaluation.md)는40서비스37모델, 개발20/20·새 독립 hold-out v2 8/10→v6 10/10·중대0·정상회귀0으로 사전 gate PASS다. 추가 추정USD0.0095987, 로컬 누계 **183서비스171모델 USD0.0456930**이며 다른 smoke/계정 청구는 제외다. 원격은 baseline3건USD0.0020803+candidate3건USD0.0015708=**USD0.0036511**로 별도 표시한다. 알려진 로컬+원격 합USD0.0493441은 전체 계정 청구가 아니다.
@@ -10,9 +23,9 @@
 
 [피드백 안전 요약](evidence/deployed-feedback-summary.json)은 **운영자 기능 테스트1건**(202/accepted 후 Cloud Logging score1 read-back)과 **실제 사용자 정성 의견1건**(긴ID 대신 짧은 근거버튼 요청)을 분리한다. 숫자 만족도표로 바꾸지 않았고 메시지 도착 알림은 응답에서 제외했다. raw 사용자 문장·기사 본문·native reasoning·인증정보를 공개하지 않았다.
 
-[최종 코드검증](final-validation.md):12스크립트/25테스트/typecheck 통과, 변경 production 검사 통과; 최종 독립 검토의 whole-repo lint는 기존 오류5개·공개 export 도구 경고1개다. 예전 tooling lint 실패 기록은 해결 이력을 포함한 역사적 기록이며 최종 상태와 구별한다.
+[최종 코드검증](final-validation.md):12스크립트/25테스트/typecheck 통과, 변경 production 검사 통과; 초기 독립 검토의 whole-repo lint는 5/1이었으며 현재 Q612·Q613 검증은 0/0이다. 예전 tooling lint 실패 기록은 해결 이력을 포함한 역사적 기록이며 최종 상태와 구별한다.
 
-**현재 남은 공백:** [PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)은 생성했으며 [독립 Claude 검토](final-review.md)는 제출 가능(한계 명시)으로 완료됐다. P1 문서 정정·피드백 후보 추가 및 주요 서술 보완을 반영했고, 모달 초기 focus 변경 등 선택적 제품 개선은 미실행으로 남긴다. 최종 UI 배포·390px 브라우저 검증은 완료했고 [별도 smoke](evidence/deployed-ui-smoke.json) 1모델/input2979/output446/USD0.0005209를 전후 원격6건과 분리한다. 알려진 로컬+원격6+UI1 비용 합은 USD0.0498650이다. [공개 최종 입력·rubric·응답·판정](evidence/final-README.md)과 v1/v2 원본 소스28개가 제공되어 과거 fixture 부재 공백은 해소됐다. native 원문은 의도적으로 비공개이며 모델 재실행 답변 동일성을 보장하지 않는다. 초기 focus는 모달의 원문 링크, Escape/focus 복귀는 확인했고 DOM click만 사용했다. 아래 중간 기록의 미완료 표시는 당시 상태다.
+**현재 남은 공백:** [PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)은 생성했으며 [독립 Claude 검토](final-review.md)는 제출 가능(한계 명시)으로 완료됐다. P1 문서 정정·피드백 후보 추가 및 주요 서술 보완을 반영했고, 모달 명시적 닫기 focus는 구현·오프라인 검증 완료이며 새 결합 배포/실제 브라우저 확인도 완료됐다. 최종 UI 배포·390px 브라우저 검증은 완료했고 [별도 smoke](evidence/deployed-ui-smoke.json) 1모델/input2979/output446/USD0.0005209를 전후 원격6건과 분리한다. 알려진 로컬+원격6+UI1 비용 합은 USD0.0498650이다. [공개 최종 입력·rubric·응답·판정](evidence/final-README.md)과 v1/v2 원본 소스28개가 제공되어 과거 fixture 부재 공백은 해소됐다. native 원문은 의도적으로 비공개이며 모델 재실행 답변 동일성을 보장하지 않는다. 초기 focus는 모달의 원문 링크, Escape/focus 복귀는 확인했고 DOM click만 사용했다. 아래 중간 기록의 미완료 표시는 당시 상태다.
 
 ## 아래 기록은 이전 단계의 역사적 감사
 

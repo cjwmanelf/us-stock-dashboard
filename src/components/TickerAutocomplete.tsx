@@ -31,54 +31,45 @@ export function TickerAutocomplete({
 
   const listboxId = useId();
   const blurTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // 선택 직후 그 값으로 다시 검색하지 않도록 무시할 쿼리
-  const skipQuery = useRef<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string | null>(null);
 
-  // 디바운스 검색
+  // Input events own synchronous resets and cache hits; the effect owns network work.
+  function changeQuery(value: string) {
+    setQuery(value);
+    const q = value.trim();
+    const cached = resultCache.get(`${endpoint}:${q}`);
+    setActiveIndex(-1);
+    setSuggestions(cached ?? []);
+    setOpen(q.length > 0 && cached !== undefined);
+    setLoading(q.length > 0 && cached === undefined);
+    setSearchQuery(q.length > 0 && cached === undefined ? q : null);
+  }
+
   useEffect(() => {
-    const q = query.trim();
-    if (skipQuery.current === q) {
-      skipQuery.current = null;
-      return;
-    }
-    if (q.length < 1) {
-      setSuggestions([]);
-      setOpen(false);
-      setLoading(false);
-      return;
-    }
-
-    // 캐시 히트: 네트워크 없이 즉시 표시
-    const cached = resultCache.get(q);
-    if (cached) {
-      setSuggestions(cached);
-      setActiveIndex(-1);
-      setOpen(true);
-      setLoading(false);
-      return;
-    }
-
+    if (searchQuery === null) return;
+    const q = searchQuery;
     const controller = new AbortController();
-    setLoading(true);
     const timer = setTimeout(async () => {
       try {
         const res = await fetch(`${endpoint}?q=${encodeURIComponent(q)}`, {
           signal: controller.signal,
         });
+        if (controller.signal.aborted) return;
         if (!res.ok) {
           setSuggestions([]);
           setOpen(false);
           return;
         }
         const hits: SymbolHit[] = await res.json();
-        resultCache.set(q, hits);
+        if (controller.signal.aborted) return;
+        resultCache.set(`${endpoint}:${q}`, hits);
         setSuggestions(hits);
         setActiveIndex(-1);
         setOpen(true); // 결과 없으면 "결과 없음" 안내를 띄운다
       } catch {
         // 취소(AbortError)·네트워크 오류: 조용히 무시하고 일반 입력칸처럼 동작
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     }, 180);
 
@@ -86,7 +77,7 @@ export function TickerAutocomplete({
       clearTimeout(timer);
       controller.abort();
     };
-  }, [query, endpoint]);
+  }, [searchQuery, endpoint]);
 
   // 마운트 시 서버 목록을 미리 데워둔다(첫 검색이 빠르도록). 실패는 무시.
   useEffect(() => {
@@ -100,7 +91,8 @@ export function TickerAutocomplete({
   }, []);
 
   function select(hit: SymbolHit) {
-    skipQuery.current = hit.symbol; // 이 값으로는 재검색 안 함
+    setSearchQuery(null);
+    setLoading(false);
     setQuery(hit.symbol);
     setOpen(false);
     setActiveIndex(-1);
@@ -141,9 +133,10 @@ export function TickerAutocomplete({
         autoComplete="off"
         maxLength={10}
         value={query}
-        onChange={(e) => setQuery(e.target.value.toUpperCase())}
+        onChange={(e) => changeQuery(e.target.value.toUpperCase())}
         onKeyDown={onKeyDown}
         onFocus={() => {
+          if (blurTimer.current) clearTimeout(blurTimer.current);
           if (suggestions.length > 0) setOpen(true);
         }}
         onBlur={() => {

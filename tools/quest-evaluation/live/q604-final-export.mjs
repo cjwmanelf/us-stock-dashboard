@@ -3,7 +3,7 @@ import {readFileSync,writeFileSync,mkdirSync,existsSync} from 'node:fs';
 import {join,resolve} from 'node:path';
 import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
-const root=process.cwd(),out='docs/quest/evidence',priv='tools/quest-evaluation/private';
+const out='docs/quest/evidence',priv='tools/quest-evaluation/private';
 const sha=b=>createHash('sha256').update(b).digest('hex');
 const read=p=>JSON.parse(readFileSync(p,'utf8'));
 const pick=(x,keys)=>Object.fromEntries(keys.filter(k=>x[k]!==undefined).map(k=>[k,x[k]]));

@@ -1,24 +1,24 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useRef, useState } from "react";
 import { addHolding, type AddHoldingState } from "@/app/portfolio/actions";
 import { TickerAutocomplete } from "@/components/TickerAutocomplete";
 
 const initialState: AddHoldingState = {};
 
 export function AddHoldingForm() {
-  const [state, formAction, pending] = useActionState(addHolding, initialState);
   const formRef = useRef<HTMLFormElement>(null);
-  // 자동완성 입력은 controlled state 라 form.reset() 으로 안 지워짐 → key 변경으로 리마운트
   const [resetKey, setResetKey] = useState(0);
-
-  // 저장 성공 시 폼 초기화
-  useEffect(() => {
-    if (state.success) {
-      formRef.current?.reset();
-      setResetKey((k) => k + 1);
-    }
-  }, [state.success]);
+  const [state, formAction, pending] = useActionState(
+    async (previous: AddHoldingState, data: FormData) => {
+      const next = await addHolding(previous, data);
+      if (next.success) {
+        formRef.current?.reset();
+        setResetKey(key => key + 1);
+      }
+      return next;
+    }, initialState,
+  );
 
   const inputCls =
     "rounded-lg border border-line bg-surface px-3 py-2 text-fg placeholder:text-muted/60 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20";

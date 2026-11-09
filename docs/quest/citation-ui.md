@@ -1,5 +1,11 @@
 # Briefing citation UI
 
+## 최신 후속 — 검토 수정본 배포 확인
+
+**완료:** 결합 수정본 `modu-rich-quest06-reviewed-20261109`(Next16.4.5)가 Ready·100% traffic으로 배포됐다. Build `773b9b97-2216-4690-9e8f-2267e2b9e41d`, digest `sha256:b4372f6496eb8f68e0d6dcc55c67c18c56c9c5e9550d206b0372b8bd9da4082f`다. 새 AAPL/MSFT/NVDA 실제3호출 모두200/ok·Cloud Logging exact join3/3이며 input9087/output1186·추정USD0.0015017, 알려진 누계USD0.0513667이다. 기존 로컬183서비스/171모델·원격6·UI1은 별도 분모로 보존한다. 새3건은 배포 smoke이며 과거 hold-out 재채점이 아니다. 실제 Orca 클릭 후 닫기 BUTTON 초기 focus, Enter 닫기/외부이동 없음/복귀, 재열기와 Escape 복귀,390px 넘침 없음이 확인됐다. 테마 변경/기본값 복구, 실제 AAPL 자동완성·ArrowDown/Enter·지우기, 빈 수량 유효성 차단, 행 편집/취소/재열기도 확인했고 console0·포트폴리오 DB쓰기0·투표0이다. [배포](review-deployment.md)·[실제 확인](reviewed-live-verification.md)·[안전 증거](evidence/reviewed-smoke.json)를 참조한다. v6 추론14파일은 불변이지만 새 의존성 그래프의 독립 품질 평가나 교차 브라우저/실물 터치 검증은 아니다.
+
+아래 과거 실험·초기 focus·해시·smoke는 당시 증거로 보존하며 최신 상태를 대체하지 않는다.
+
 UI-only change: exact `[id]` matches against current result.sources render as short `[근거]` buttons. Unknown brackets and all surrounding answer text (including prices, dates and server temporal notices) remain unchanged. React text nodes are used; no HTML injection or substring rewriting of the server response. Repeated references work independently.
 
 A native modal dialog presents the selected title, original date metadata, safe credential-free HTTPS source link (when present), and original ID. It has a labelled heading, initial focus on the source link inside the dialog (observed in the final browser smoke), browser-native modal keyboard containment/Escape handling, explicit close button, and focus return to the invoking button. Mobile width, viewport height, scrolling and long-token wrapping are bounded. Selection resolves against current sources and closes if its source disappears. The component is keyed by response traceId and unmounts during a new request, preventing cross-response selection reuse. Existing loading/error/feedback behavior is retained.

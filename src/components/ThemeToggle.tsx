@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 function systemDark() {
   return (
@@ -17,20 +17,27 @@ function resolveDark() {
   return systemDark();
 }
 
-export function ThemeToggle() {
-  const [dark, setDark] = useState<boolean | null>(null);
+function subscribeTheme(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  media.addEventListener("change", onChange);
+  return () => {
+    observer.disconnect();
+    media.removeEventListener("change", onChange);
+  };
+}
 
-  // 서버가 쿠키로 이미 data-theme을 렌더했으므로 여기선 아이콘 상태만 맞춘다.
-  useEffect(() => {
-    setDark(resolveDark());
-  }, []);
+const serverTheme = () => null;
+
+export function ThemeToggle() {
+  const dark = useSyncExternalStore(subscribeTheme, resolveDark, serverTheme);
 
   function toggle() {
     const next = !resolveDark();
     document.documentElement.dataset.theme = next ? "dark" : "light";
     // 쿠키에 저장 → 다음 로드부터 서버가 곧바로 반영 (1년)
     document.cookie = `theme=${next ? "dark" : "light"}; path=/; max-age=31536000; samesite=lax`;
-    setDark(next);
   }
 
   return (

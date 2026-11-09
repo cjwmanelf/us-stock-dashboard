@@ -4,3 +4,5 @@ src/components/BriefingForm.tsx -text
 src/components/BriefingCitations.tsx -text
 tools/quest-evaluation/versions/** -text
 docs/quest/evidence/** -text
+package.json -text
+package-lock.json -text

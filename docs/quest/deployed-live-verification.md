@@ -1,5 +1,11 @@
 # 배포 후 새 대화 검증 — baseline·v6 각3건 완료
 
+## 최신 후속 — 검토 수정본 배포 확인
+
+**완료:** 결합 수정본 `modu-rich-quest06-reviewed-20261109`(Next16.4.5)가 Ready·100% traffic으로 배포됐다. Build `773b9b97-2216-4690-9e8f-2267e2b9e41d`, digest `sha256:b4372f6496eb8f68e0d6dcc55c67c18c56c9c5e9550d206b0372b8bd9da4082f`다. 새 AAPL/MSFT/NVDA 실제3호출 모두200/ok·Cloud Logging exact join3/3이며 input9087/output1186·추정USD0.0015017, 알려진 누계USD0.0513667이다. 기존 로컬183서비스/171모델·원격6·UI1은 별도 분모로 보존한다. 새3건은 배포 smoke이며 과거 hold-out 재채점이 아니다. 실제 Orca 클릭 후 닫기 BUTTON 초기 focus, Enter 닫기/외부이동 없음/복귀, 재열기와 Escape 복귀,390px 넘침 없음이 확인됐다. 테마 변경/기본값 복구, 실제 AAPL 자동완성·ArrowDown/Enter·지우기, 빈 수량 유효성 차단, 행 편집/취소/재열기도 확인했고 console0·포트폴리오 DB쓰기0·투표0이다. [배포](review-deployment.md)·[실제 확인](reviewed-live-verification.md)·[안전 증거](evidence/reviewed-smoke.json)를 참조한다. v6 추론14파일은 불변이지만 새 의존성 그래프의 독립 품질 평가나 교차 브라우저/실물 터치 검증은 아니다.
+
+아래 과거 실험·초기 focus·해시·smoke는 당시 증거로 보존하며 최신 상태를 대체하지 않는다.
+
 ## v6 최종 원격 결과와 피드백 구분
 
 후보 revision **modu-rich-quest06-v6-20261109**는 Ready=True,100% traffic이며 image digest는 `sha256:ed253c7921dcad7b2c8f3845a65c4dd33cb64504669a2f2b07da35a3bd2993cf`다([배포 검증](deployment-verification.md)). 실제 새 대화3건 모두 API200/status ok이고 response trace와 Cloud Logging exact join은3/3이다. baseline 일반 생성실패는3/3, 후보는0/3이다. 이는 현장 동작 확인이며 실사용 정확도100% 보증은 아니다.
@@ -20,7 +26,7 @@
 
 AAPL 후보 trace에 대해 **AI 운영자 기능 테스트**가 up/score1을 제출해 HTTP202/accepted를 받았다. 당시 delivery는 stdout_written_unverified였으나, 이후 Cloud Logging에서 같은 trace/version의 briefing_feedback1건과 score1을 확인해 실제 read-back을 검증했다. 이것은 사용자 만족도 투표가 아니다([안전한 피드백 요약](evidence/deployed-feedback-summary.json)).
 
-별도로 **실제 사용자 정성 의견1건**이 도착했다: 긴 출처 ID가 읽기를 방해하므로 짧은 [근거] 버튼으로 상세 출처를 열어 달라는 요청이다. numeric vote는 없으며 만족도 점수로 환산하지 않는다. 메시지 도착 알림 자체는 설문 응답에서 제외했다. 원문 메시지는 비공개로 유지하고 요청 취지만 요약했다. 표시 UI의 별도 배포·브라우저 확인·스크린샷은 완료했으며 독립 Claude Fable 검토는 후속이다. backend v6의 동결 실험 결과를 UI 수정의 재실험처럼 중복 집계하지 않는다.
+별도로 **실제 사용자 정성 의견1건**이 도착했다: 긴 출처 ID가 읽기를 방해하므로 짧은 [근거] 버튼으로 상세 출처를 열어 달라는 요청이다. numeric vote는 없으며 만족도 점수로 환산하지 않는다. 메시지 도착 알림 자체는 설문 응답에서 제외했다. 원문 메시지는 비공개로 유지하고 요청 취지만 요약했다. 표시 UI의 별도 배포·브라우저 확인·스크린샷은 완료했으며 독립 Claude Fable 검토도 완료됐다([초기 독립 판정과 교정 기록](final-review.md)). backend v6의 동결 실험 결과를 UI 수정의 재실험처럼 중복 집계하지 않는다.
 
 아래 baseline 기록은 원형을 보존한 역사적 결과이며 candidate 대기 문구는 이 최신 절로 대체된다.
 
@@ -36,7 +42,7 @@ AAPL 후보 trace에 대해 **AI 운영자 기능 테스트**가 up/score1을 �
 | MSFT | 공개 근거에서 확인되는 최근 소식과 확인할 수 없는 내용을 구분해 주세요. |12|200/unavailable|638483c5-dada-4c37-b8b1-54af5973e6c0|
 | NVDA | 공개 근거에서 이미 발표된 실적과 앞으로 예정된 일정을 구분해 주세요. |12|200/unavailable|a3f3c5f0-c3c1-4b03-ae9c-07a9070fffa2|
 
-요청/응답의 traceId를 Cloud Logging event와 정확히 join하여 **3/3 일치**를 확인했다. 반환 version/status/source count와 로그 contractVersion/status/evidenceCount, 로그 revision과 Cloud Run resource revision도 일치한다. 공개 [JSON](evidence/deployed-baseline.json)과 [CSV](evidence/deployed-baseline.csv)는 허용된 필드만 내보냈다. 원본은 `.briefing-eval/deployed-baseline-browser.json` 및 `deployed-baseline-cloudlogs.json`에 비공개 보존한다. 헤더·쿠키·토큰·개인 경로·기사 전문·native reasoning을 내보내지 않았다. 제목·URL도 공개 export에서 제외하고 근거 종류/개수와 hash만 유지했다.
+요청/응답의 traceId를 Cloud Logging event와 정확히 join하여 **3/3 일치**를 확인했다. 반환 version/status/source count와 로그 contractVersion/status/evidenceCount, 로그 revision과 Cloud Run resource revision도 일치한다. 공개 [JSON](evidence/deployed-baseline.json)과 [CSV](evidence/deployed-baseline.csv)는 허용된 필드만 내보냈다. 원본은 `.briefing-eval/deployed-baseline-browser.json` 및 `deployed-baseline-cloudlogs.json`에 비공개 보존한다. 헤더·쿠키·토큰·개인 경로·기사 전문·native reasoning을 내보내지 않았다. 제목·URL도 구조화된 공개 CSV/JSON export에서 제외하고 근거 종류/개수와 hash만 유지했다. 화면 증빙에 보이는 공개 뉴스 제목·원문 링크는 이 구조화 export 제외 규칙의 대상이 아니며, 비밀키·사용자 계정 정보를 공개한 것은 아니다.
 
 ## 단계·지연·비용
 

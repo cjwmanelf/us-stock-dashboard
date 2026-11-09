@@ -13,11 +13,15 @@ export function sourceHref(value: string | null) {
 export function BriefingCitations({ answer, sources }: { answer: string; sources: Evidence[] }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
+  const closeButton = useRef<HTMLButtonElement>(null);
   const opener = useRef<HTMLButtonElement | null>(null);
   const panelId = useId();
   const selected = sources.find(source => source.id === selectedId);
   useEffect(() => {
-    if (selected && !dialog.current?.open) dialog.current?.showModal();
+    if (selected && dialog.current && !dialog.current.open) {
+      dialog.current.showModal();
+      closeButton.current?.focus({ preventScroll: true });
+    }
     else if (!selected && dialog.current?.open) dialog.current.close();
   }, [selected]);
   const href = selected ? sourceHref(selected.url) : null;
@@ -35,7 +39,7 @@ export function BriefingCitations({ answer, sources }: { answer: string; sources
         {selected && <><p>{selected.title}</p><p className="text-sm text-muted">날짜 메타데이터: {selected.publishedAt ?? "확인 불가"}</p>
           {href ? <a href={href} target="_blank" rel="noopener noreferrer" className="text-brand underline">원문 보기 (새 탭)</a> : <p className="text-sm text-muted">원문 URL 없음</p>}
           <p className="break-all text-xs text-muted">원본 ID: {selected.id}</p></>}
-        <button type="button" autoFocus onClick={() => dialog.current?.close()} className="rounded border border-line px-4 py-2 focus-visible:outline-2">닫기</button>
+        <button ref={closeButton} type="button" autoFocus onClick={() => dialog.current?.close()} className="rounded border border-line px-4 py-2 focus-visible:outline-2">닫기</button>
       </div>
     </dialog>
   </>;
