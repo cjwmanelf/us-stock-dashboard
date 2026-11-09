@@ -1,0 +1,6 @@
+# Preserve evaluated/deployed source and evidence bytes across Git checkouts.
+src/lib/briefing/** -text
+src/components/BriefingForm.tsx -text
+src/components/BriefingCitations.tsx -text
+tools/quest-evaluation/versions/** -text
+docs/quest/evidence/** -text

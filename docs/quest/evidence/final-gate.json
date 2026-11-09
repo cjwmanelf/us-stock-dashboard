@@ -1,0 +1,20 @@
+{
+  "reviewedAt": "2026-11-09T03:16:51.864Z",
+  "reviewer": "independent assistant analyst; real user feedback0",
+  "paired": 10,
+  "baselinePass": 8,
+  "candidatePass": 10,
+  "denominator": 10,
+  "criticalFailures": 0,
+  "normalRegressions": 0,
+  "thresholds": {
+    "atLeast9of10": "PASS",
+    "zeroCritical": "PASS",
+    "zeroNormalRegression": "PASS"
+  },
+  "gate": "PASS",
+  "reason": "Frozen blind judgments: all candidate cases pass, zero critical and normal regression; no rubric rewrite",
+  "limitations": "Synthetic10, single sample per version, analyst review, multiple version changes; no universal accuracy/safety claim or statistical significance.",
+  "retries": 0,
+  "authQuotaTransportTimeoutFailures": 0
+}

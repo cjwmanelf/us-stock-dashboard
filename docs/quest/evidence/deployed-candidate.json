@@ -1,0 +1,190 @@
+{
+  "schema": "deployed-safe-evidence-v1",
+  "notice": "No source titles, URLs, raw native bodies, reasoning, credentials or headers exported. Cross-clock timestamps are retained without correction.",
+  "totals": {
+    "requests": 3,
+    "traceJoins": 3,
+    "inputTokens": 9113,
+    "outputTokens": 1319,
+    "estimatedUSD": 0.0015708
+  },
+  "rows": [
+    {
+      "phase": "candidate",
+      "ticker": "AAPL",
+      "question": "최근 공개 소식을 근거와 함께 요약해 주세요.",
+      "questionProvenance": "assistant-authored synthetic evaluation question submitted by coordinator in authenticated browser session",
+      "evidenceProvenance": "live public-feed provider metadata; not independently verified market facts",
+      "sourceCount": 12,
+      "sourceKinds": {
+        "earnings": 3,
+        "news": 4,
+        "filing": 5
+      },
+      "evidenceHash": "036205398f9614043ba4cf1dbfe946014850f39aa0d1c52903d8b856322f9d83",
+      "traceId": "b7e3c76e-d71a-4d87-a3cc-e549d04e9a5c",
+      "version": "briefing-v6-temporal-notice",
+      "revision": "modu-rich-quest06-v6-20261109",
+      "promptVersion": "briefing-prompt-v5-partial",
+      "model": "claude-haiku-5-5",
+      "httpStatus": 200,
+      "status": "ok",
+      "errorCode": null,
+      "asOf": "2026-11-09T03:22:26.214Z",
+      "browserStartedAt": "2026-11-09T03:22:22.851Z",
+      "browserEndedAt": "2026-11-09T03:22:28.421Z",
+      "browserDurationMs": 5570.699999928474,
+      "serverDurationMs": 5137,
+      "logTimestamp": "2026-11-09T03:22:29.432314Z",
+      "stages": [
+        {
+          "name": "retrieval",
+          "status": "ok",
+          "startedAt": "2026-11-09T03:22:24.295Z",
+          "endedAt": "2026-11-09T03:22:26.214Z",
+          "durationMs": 1919
+        },
+        {
+          "name": "input_assembly",
+          "status": "ok",
+          "startedAt": "2026-11-09T03:22:26.214Z",
+          "endedAt": "2026-11-09T03:22:26.214Z",
+          "durationMs": 0
+        },
+        {
+          "name": "generation",
+          "status": "ok",
+          "startedAt": "2026-11-09T03:22:26.215Z",
+          "endedAt": "2026-11-09T03:22:29.432Z",
+          "durationMs": 3217
+        }
+      ],
+      "inputTokens": 2979,
+      "outputTokens": 543,
+      "cacheCreationTokens": 0,
+      "cacheReadTokens": 0,
+      "estimatedUSD": 0.0005694000000000001,
+      "billedUSD": null,
+      "nativeStopReason": null,
+      "exactTraceJoin": true
+    },
+    {
+      "phase": "candidate",
+      "ticker": "MSFT",
+      "question": "공개 근거에서 확인되는 최근 소식과 확인할 수 없는 내용을 구분해 주세요.",
+      "questionProvenance": "assistant-authored synthetic evaluation question submitted by coordinator in authenticated browser session",
+      "evidenceProvenance": "live public-feed provider metadata; not independently verified market facts",
+      "sourceCount": 12,
+      "sourceKinds": {
+        "earnings": 3,
+        "news": 4,
+        "filing": 5
+      },
+      "evidenceHash": "bce9c46b80340c6b5e0a8579129c53cd5912452795e953a8b8e90c6d10eaca93",
+      "traceId": "13edaad6-0c6a-476e-85f5-7b2bf2cbef89",
+      "version": "briefing-v6-temporal-notice",
+      "revision": "modu-rich-quest06-v6-20261109",
+      "promptVersion": "briefing-prompt-v5-partial",
+      "model": "claude-haiku-5-5",
+      "httpStatus": 200,
+      "status": "ok",
+      "errorCode": null,
+      "asOf": "2026-11-09T03:23:01.448Z",
+      "browserStartedAt": "2026-11-09T03:22:59.101Z",
+      "browserEndedAt": "2026-11-09T03:23:03.085Z",
+      "browserDurationMs": 3984.2000000476837,
+      "serverDurationMs": 3554,
+      "logTimestamp": "2026-11-09T03:23:04.098802Z",
+      "stages": [
+        {
+          "name": "retrieval",
+          "status": "ok",
+          "startedAt": "2026-11-09T03:23:00.544Z",
+          "endedAt": "2026-11-09T03:23:01.448Z",
+          "durationMs": 904
+        },
+        {
+          "name": "input_assembly",
+          "status": "ok",
+          "startedAt": "2026-11-09T03:23:01.448Z",
+          "endedAt": "2026-11-09T03:23:01.448Z",
+          "durationMs": 0
+        },
+        {
+          "name": "generation",
+          "status": "ok",
+          "startedAt": "2026-11-09T03:23:01.448Z",
+          "endedAt": "2026-11-09T03:23:04.098Z",
+          "durationMs": 2650
+        }
+      ],
+      "inputTokens": 3004,
+      "outputTokens": 497,
+      "cacheCreationTokens": 0,
+      "cacheReadTokens": 0,
+      "estimatedUSD": 0.0005489000000000001,
+      "billedUSD": null,
+      "nativeStopReason": null,
+      "exactTraceJoin": true
+    },
+    {
+      "phase": "candidate",
+      "ticker": "NVDA",
+      "question": "공개 근거에서 이미 발표된 실적과 앞으로 예정된 일정을 구분해 주세요.",
+      "questionProvenance": "assistant-authored synthetic evaluation question submitted by coordinator in authenticated browser session",
+      "evidenceProvenance": "live public-feed provider metadata; not independently verified market facts",
+      "sourceCount": 12,
+      "sourceKinds": {
+        "earnings": 3,
+        "news": 4,
+        "filing": 5
+      },
+      "evidenceHash": "4e184bbb434cee8605189df973a9e448ea663822c6e8abc3adab1dbd1d8e9f4a",
+      "traceId": "1c5b8b4b-c0c6-4dde-a10b-5354b277bd96",
+      "version": "briefing-v6-temporal-notice",
+      "revision": "modu-rich-quest06-v6-20261109",
+      "promptVersion": "briefing-prompt-v5-partial",
+      "model": "claude-haiku-5-5",
+      "httpStatus": 200,
+      "status": "ok",
+      "errorCode": null,
+      "asOf": "2026-11-09T03:24:06.226Z",
+      "browserStartedAt": "2026-11-09T03:24:03.483Z",
+      "browserEndedAt": "2026-11-09T03:24:07.680Z",
+      "browserDurationMs": 4197.899999976158,
+      "serverDurationMs": 3464,
+      "logTimestamp": "2026-11-09T03:24:08.693090Z",
+      "stages": [
+        {
+          "name": "retrieval",
+          "status": "ok",
+          "startedAt": "2026-11-09T03:24:05.229Z",
+          "endedAt": "2026-11-09T03:24:06.226Z",
+          "durationMs": 997
+        },
+        {
+          "name": "input_assembly",
+          "status": "ok",
+          "startedAt": "2026-11-09T03:24:06.226Z",
+          "endedAt": "2026-11-09T03:24:06.226Z",
+          "durationMs": 0
+        },
+        {
+          "name": "generation",
+          "status": "ok",
+          "startedAt": "2026-11-09T03:24:06.226Z",
+          "endedAt": "2026-11-09T03:24:08.693Z",
+          "durationMs": 2467
+        }
+      ],
+      "inputTokens": 3130,
+      "outputTokens": 279,
+      "cacheCreationTokens": 0,
+      "cacheReadTokens": 0,
+      "estimatedUSD": 0.0004525,
+      "billedUSD": null,
+      "nativeStopReason": null,
+      "exactTraceJoin": true
+    }
+  ]
+}

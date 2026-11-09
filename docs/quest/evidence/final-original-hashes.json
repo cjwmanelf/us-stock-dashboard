@@ -1,0 +1,18 @@
+{
+  "q606-holdout-v6": {
+    "manifestSha256": "2bb1eb087e07454f83b0321d2b7713a7b74c68b0744406bdbea7de9302935787",
+    "files": {
+      "cases.json": "24b07961f774cfbf1fa5d16e369e6a870e1955d0e42941f28dcf21056f59628e",
+      "rubrics.json": "ba80c71e819092586d6a578bd18a2325e504b1ba95b3de0d3ffdc0e16db4da3b",
+      "protocol.json": "1268e40b54f2fbb4f7e68c321934f5bd96ecc14933093a9519799cb5e8516858"
+    }
+  },
+  "q604-holdout-v3": {
+    "manifestSha256": "c58f3ddc8bb939829d08a7827a130d7bded63a9fbae8b4f17fdb0e7516b45768",
+    "files": {
+      "cases.json": "a5670c40781d545512b2a4839355640d73af54f227bf8687078c52943fde756b",
+      "rubrics.json": "b3d34838269ffad2efc5019a67fc14d378a09e52dcdd097d49f39412900d59e3",
+      "protocol.json": "8e008c516ac64bb62519e9e0230e8d748c3e5b908dff389eead1ddf8074ff2c2"
+    }
+  }
+}

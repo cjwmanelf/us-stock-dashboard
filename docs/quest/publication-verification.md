@@ -1,0 +1,13 @@
+﻿# Publication verification
+
+Publication scope: explicit file-by-file allowlist of the reviewed task source, tests, generic deployment tooling, documentation, sanitized evidence, five screenshots, and 28 historical v1/v2 source files plus manifests. Private raw evidence and real environment files remain ignored. No model or build call was made for publication.
+
+The exact Git index is checked against that allowlist before commit. Checks cover local environment secret values (compared only in memory), high-risk credential formats, private-key blocks, personal filesystem paths, forbidden private/raw paths and staged whitespace. Public JSON evidence is separately verified for hash integrity and forbidden fields. Source code references to thinking/signature and synthetic test literals are not native model reasoning. Operational project IDs, service-account identifiers, trace UUIDs and image digests are intentionally public.
+
+Offline public verification passed: 41 manifest-listed public files, 10 final cases, 20 final responses and 28 historical source files; hashes and forbidden-field checks passed, model calls zero. The unchanged v6 service and the two deployed UI source hashes are checked again at publication. This is a scoped pattern and exact-value audit, not proof against arbitrary encoded secrets, a dependency security audit, or a new quality experiment.
+
+Existing full-repository lint has five preexisting errors; the final validation report retains that limitation. PR URL and requested independent Claude review remain coordinator follow-ups. Commit and pushed branch are reported through the coordinator; this record does not invent a PR or review approval.
+
+Final index audit: 184 explicitly listed files; three private environment files and five credential values compared in memory, zero matches or credential/path/forbidden-data findings. Exact staged hashes match all 41 public manifest entries and the deployed service/UI files. Git newline normalization initially changed two frozen hashes; scoped `.gitattributes` now preserves source/evidence bytes and the final index matches the originals. No runtime source was changed by this correction.
+
+Whitespace: default diff check reports preserved CRLF bytes and 14 existing EOF blank-line findings. With CRLF recognized as line endings and only blank-at-EOF excluded, the staged diff check passes. Frozen source bytes were intentionally retained rather than silently changing evaluated code. This exception is not a claim that the default check passed.

@@ -1,0 +1,16 @@
+﻿{
+  "project": "approved-project-id",
+  "region": "asia-northeast3",
+  "service": "quest-cloud-run-test",
+  "repository": "approved-repository",
+  "tag": "q608-test",
+  "runtimeServiceAccount": "quest-runtime@approved-project-id.iam.gserviceaccount.com",
+  "access": "private",
+  "memory": "512Mi",
+  "supabaseUrl": "https://placeholder.supabase.co",
+  "supabaseAnonKey": "sb_publishable_placeholder",
+  "env": {},
+  "secrets": {
+    "BRIEFING_FEEDBACK_SECRET": "quest-feedback:1"
+  }
+}

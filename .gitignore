@@ -42,3 +42,28 @@ next-env.d.ts
 
 .vercel
 .env*
+!/.env.briefing.example
+/.briefing-eval/
+
+# Private evidence and raw captures at any repository depth.
+private/
+raw/
+*.private.json
+*.private.jsonl
+*.private.log
+*.raw.json
+*.raw.jsonl
+*.thinking.json
+*.thinking.jsonl
+# Credential artifacts; public synthetic evidence/fixtures remain eligible.
+*.key
+*.p12
+*.pfx
+*service-account*.json
+credentials.json
+application_default_credentials.json
+# Historical one-off deployment records: preserve locally, omit from submission.
+/scripts/cloud-run/deploy-baseline.mjs
+/scripts/cloud-run/deploy-configfix.mjs
+/scripts/cloud-run/rebuild-baseline-config.mjs
+/scripts/cloud-run/verify-baseline.mjs

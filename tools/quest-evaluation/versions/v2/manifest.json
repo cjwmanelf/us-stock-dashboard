@@ -1,0 +1,65 @@
+{
+  "schema": "offline-legacy-source-v1",
+  "version": "v2",
+  "originalArtifactHash": "61f76983786f448e6cb55c7301d43dc9078632a12d64089e32d60714cdfe547d",
+  "originalCapturedAt": "2026-11-09T02:30:58.761Z",
+  "role": "Historical offline evaluation artifact, not current production",
+  "files": [
+    {
+      "path": "anthropic-provider.ts",
+      "sha256": "05409172a0bba2f162b88ff420f428f5eb81d0f7d3232757dc9b60e7b0d61f6f"
+    },
+    {
+      "path": "evaluation-auth.ts",
+      "sha256": "a24f246587afbefc31b510c80c4cc013e4b3975ddf79113ae9824a65eccef15e"
+    },
+    {
+      "path": "evaluation.ts",
+      "sha256": "173e87b06606070d8c9a898b25b023ddcbaf56fa28bf62437c82d00c7c491bfe"
+    },
+    {
+      "path": "feedback.ts",
+      "sha256": "8fc8032dc7ae5b0937310713e074ce213058c58265cd40ac2a2af357ed1f7b1f"
+    },
+    {
+      "path": "guards.ts",
+      "sha256": "5b657df618145d1f31ee7e815815525d42003748843dacd37f86746b17ffb75b"
+    },
+    {
+      "path": "http.ts",
+      "sha256": "1f402fcf351802f8b7f265b61745562d746a332dc4c567e1cabf2d0289e37461"
+    },
+    {
+      "path": "observability.ts",
+      "sha256": "0e58f8c848369b472ff230b9dd9baf52fae508639dbb6b2deba061f4a89de411"
+    },
+    {
+      "path": "provider-config.ts",
+      "sha256": "1814bff2dc8d5d7c22c0a37e027f0992af6b395c167c2049fa346a50539a0fd0"
+    },
+    {
+      "path": "service.ts",
+      "sha256": "9f1352bf4837ae4433494a47f8a691911489dd008176fc47bde0f39487a4771b"
+    },
+    {
+      "path": "telemetry/adapter.ts",
+      "sha256": "6839fc5baa67eb2bd8790b538fa43eddcdd88f8a694b6a16866c7411037195bb"
+    },
+    {
+      "path": "telemetry/index.ts",
+      "sha256": "abb3d4759f991be318870e7fe5bdecbff94251e1b1f844a71d9346ac86fc4fcc"
+    },
+    {
+      "path": "telemetry/sdk.ts",
+      "sha256": "c33ae2b8b285a32eac9b7ea2ba08936b6d4c0ed1c3c21aee8b62f370249e7eb1"
+    },
+    {
+      "path": "types.ts",
+      "sha256": "8efd8019b5f9e4bdd3e20827c2c5008785d05cb65a44dc15d4b02ce1ff3ab983"
+    },
+    {
+      "path": "vertex-provider.ts",
+      "sha256": "30c9f2c71dfdb475485539f634b39a1f6f634e06e024c167d08ee5617d6fd398"
+    }
+  ]
+}
