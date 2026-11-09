@@ -4,6 +4,8 @@
 
 ## 1. 로그 수와 직접 평가 대화 제작 방법
 
+분석 범위는 아래의 **로컬 서비스 실행 기록183건(실제 모델 호출171건)**과 **배포 후 트레이스10건(비교3+3, UI 확인1, 검토 수정본 확인3)**이다. 모델을 호출하지 않고 빈 근거 등을 처리한 실행도 서비스 기록에는 포함한다. 피드백은 **실제 사용자 정성 의견1건**, **AI 운영자의 저장 기능 시험1건**, **사람의 숫자 만족도 평가0건**으로 구분한다. 새로 만든 평가 질문과 실제 사용자 의견을 같은 종류의 데이터로 합산하지 않는다.
+
 실제 `generateBriefingFromEvidence`를 동결된 TypeScript 소스에서 호출했다. 질문·근거·asOf를 사전에 고정하고 호출마다 새 trace/conversation UUID를 생성해 결과와 대조했다. 합성 질문과 합성 제목·수치에 대한 **실제 모델 응답**이며 실사용자 대화나 실제 시장 뉴스 수집이라고 부르지 않는다. 입력·원본·usage·종료 이유·시간·실패는 ignored private 저장소에 보존하고 공개에는 안전한 집계와 trace 연결만 제공한다.
 
 | 완료 배치 | 서비스 실행 | 실제 모델 호출 | 토큰 단가 추정 USD |
@@ -55,11 +57,41 @@
 
 영향과 비용은 정성 판단이며 측정하지 않은 작업시간이나 가중 점수를 만들지 않았다. v2는 알려진 reasoning 메타데이터를 건너뛰고 text만 순서대로 읽는 변경 하나로 한정했다. 이후 v3·v4·v5는 새로운 실험으로 구분했으며 누적 변경 전체를 단일 수정의 효과라고 설명하지 않는다.
 
+첫 개선 대상으로 native 추출 실패를 고른 이유는 **모델 응답19건 모두에서 반복됐고, 유효한 응답도 사용자에게 전달하지 못하게 하며, 추출기 한 곳의 작은 변경으로 먼저 검증할 수 있었기 때문**이다. 빈도가 낮은 의미·날짜 문제는 별도 후속 실험으로 다뤘다.
+
 ## 4. 데이터 분리·통과 조건·사전 출시 게이트
 
 개발20은 정상10/문제10, 기존 hold-out10은 정상5/문제5였다. 같은 분석자가 작성한 기존 hold-out은 완전 독립 맹검이 아니다. v2 실패 후 새 독립 hold-out10을 별도 평가자가 봉인했고 개발 gate가 실패한 v3/v4에서는 실행하지 않았다. 코더는 새 입력·rubric을 보지 않았으며 이전 hold-out을 다음 수정의 튜닝 자료로 사용하지 않았다.
 
+| 데이터셋 | 정상 | 문제 | 합계 | 실제 사용과 공개 근거 |
+| --- | ---: | ---: | ---: | --- |
+| 공통 개발셋 | 10 | 10 | 20 | v1~v6 개발 비교; [입력](docs/quest/evidence/q610-synthetic-cases.json) |
+| 최초 hold-out | 5 | 5 | 10 | v1/v2 비교, v2 품질8/10; [입력](docs/quest/evidence/q610-synthetic-cases.json)의 held-out 항목 |
+| 두 번째 hold-out | 5 | 5 | 10 | v2/v5 비교, v5 품질9/10이나 정상 회귀1건으로 실패; [입력](docs/quest/evidence/final-consumed-q604-cases.json) |
+| 최종 새 hold-out | 5 | 5 | 10 | v2/v6 비교, v6 품질10/10; [입력](docs/quest/evidence/final-q606-cases.json) |
+
+각 hold-out은 서로 다른 입력이다. 서로 다른 입력의 총수는50개이며, 같은 사례를 여러 버전에서 실행한 횟수와 구분한다.
+
+**항목별 통과 조건의 예**는 최종 실행 전에 동결한 [rubric](docs/quest/evidence/final-q606-rubrics.json)에 따른다. 다음은 새로 만든 채점 기준이 아니라 기존 기준을 본문에 옮긴 것이다.
+
+| 실제 사례 ID·분류 | 통과 조건 | 실패 예 |
+| --- | --- | --- |
+| `ind6-n01` · 정상 | 계약 체결 발표를 관련 근거 ID와 함께 요약하고, 공개되지 않은 계약 금액은 확인할 수 없다고 구분 | 금액을 만들어내거나, 확인 가능한 계약 소식까지 모두 답변 거부 |
+| `ind6-p02` · 문제 | 요청은 PEP인데 유일한 자료는 KO임을 구분하고 PEP 근거 부족을 설명 | KO의 출시 소식을 PEP의 사실로 답함 |
+| `ind6-p05` · 문제 | 예정된 행사와 완료를 구분하고, 자료 시각이 기준시각 이후라는 한계를 설명 | 자료 시각을 행사 완료 시각으로 단정하거나 미래 자료라는 경고를 누락 |
+
+실제 존재하는 근거 ID 인용, 제공 자료 범위 안의 사실, 유용한 한국어 답변 등의 공통 조건도 함께 만족해야 통과다. HTTP200이나 `ok` 상태만으로 의미 품질 통과를 판정하지 않는다.
+
 사전 조건은 동일한 frozen request/evidence/asOf, 서로 다른 VERSION와 전체 소스 hash, 새 UUID, 선택 오류 엄격 감소, 정상 사례 회귀0, 중대 오류0, 운영 가용성 회귀 없음, hold-out 수동 품질 **9/10 이상**이었다. 적절한 보류는 질문과 근거를 검토해 판정하며 `insufficient_evidence` 라벨만으로 통과시키지 않는다. auth/billing/quota 등 운영 실패는 별도 분류하고 즉시 중단한다. 누적 추정 USD1 상한과 배치별 호출 상한은 완료량과 구별한다.
+
+최종 v6의 내보낼 기준은 **실행 전인 2026-11-09T03:11:41Z에 동결**했다. 아래 네 조건을 모두 만족해야 배포 가능한 PASS이고, 일부 쌍이 없거나 판정이 미결이면 PENDING이다([사전 protocol](docs/quest/evidence/final-q606-protocol.json), [실행 후 gate](docs/quest/evidence/final-gate.json)). protocol의 `not-run`은 동결 당시 상태이며 실행 결과는 별도 gate에 보존했다.
+
+| 사전에 정한 내보낼 기준 | 최종 v6 관측 | 판정 |
+| --- | ---: | --- |
+| 개선 전후 완전한 비교 쌍10개 | 10쌍 | 통과 |
+| 후보 의미 품질9/10 이상 | 10/10 | 통과 |
+| 중대 오류0건 | 0건 | 통과 |
+| 정상 사례에서 개선 전 통과→개선 후 실패0건 | 0건 | 통과 |
 
 최초 계획의 3회 반복·50% 감소·비용/지연20% 증가 이내를 이번 변경된 설계로 검증했다고 주장하지 않는다. v4 파일럿의 선택된 실패3개는 전체 품질 대표 표본이 아니다. [v2 사전 기준과 결과](docs/quest/live-baseline-analysis.md), [v3 조건부 중단](docs/quest/v3-live-evaluation.md), [v4 독립 평가](docs/quest/v4-live-evaluation.md)를 함께 읽어야 한다.
 
@@ -89,6 +121,27 @@ v4의 여러 변수를 함께 변경했으므로 효과를 단일 프롬프트 �
 [v1/v2 manifest](docs/quest/evidence/q610-source-manifests.json), [v3 source hash 정의](docs/quest/v3-contract-source-hashes.json), [v4 실험](docs/quest/v4-output-experiment.md), [v5 실험](docs/quest/v5-partial-evidence-experiment.md). v3 승인 aggregate와 실행 artifact는 파일 목록·알고리즘 범위가 달라 값이 다르다. v1/v2는 service.ts만 같고 imported adapter가 달라 전체 artifact로 구별한다. [PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)의 구현·실험 증거 commit은 `0fcb396b28c435362ed5dc053a48d473f41538bc`이며 후속 문서 commit은 PR에서 확인할 수 있다. PR 생성은 리뷰 승인이나 main 병합을 의미하지 않는다.
 
 ## 6. 배포 뒤 버전별 새 대화·지연·비용·화면 증빙
+
+### 같은 현상의 버전별 관측 요약
+
+비교한 현상은 **브리핑을 생성하지 못해 `unavailable`로 응답하는 것**이다. AAPL·MSFT·NVDA의 같은 질문을 배포 버전별로 새 대화·새 UUID로 실행했다. 서버 지연은 조회·생성을 포함한 요청 처리 시간이며, 표의 세 값은 AAPL/MSFT/NVDA 순서다. 비용은 각 배치 전체의 토큰 단가 추정치다.
+
+| 배포 배치·버전 / 리비전 | 새 대화 | 같은 현상 발생 | 서버 지연(ms) | 추정 USD | 근거 |
+| --- | ---: | ---: | --- | ---: | --- |
+| 개선 전 `briefing-v1` / `00004-72l` | 3 | **3/3** | 9640 / 5908 / 5297 | 0.0020803 | [trace CSV](docs/quest/evidence/deployed-baseline.csv) |
+| 개선 후 `briefing-v6-temporal-notice` / `v6-20261109` | 3 | **0/3** | 5137 / 3554 / 3464 | 0.0015708 | [trace CSV](docs/quest/evidence/deployed-candidate.csv) |
+| 같은 v6 추론, 출처 UI 배포 / `v6-ui-20261109` | 1(AAPL) | 0/1 | 3961 | 0.0005209 | [별도 UI 확인](docs/quest/evidence/deployed-ui-smoke.json) |
+| 같은 v6 추론, 검토 수정본 / `reviewed-20261109` | 3 | 0/3 | 3876 / 3249 / 2424 | 0.0015017 | [별도 배포 확인](docs/quest/evidence/reviewed-smoke.json) |
+
+리비전의 공통 접두사는 `modu-rich-quest06-`이다. 최초 비교의 근거 트레이스는 아래와 같으며, 각 UUID로 실제 응답과 Cloud Logging을 연결했다.
+
+| 질문 종목 | 개선 전 v1 trace | 개선 후 v6 trace | 같은 현상 변화 |
+| --- | --- | --- | --- |
+| AAPL | `6dad8e19-bdd9-4e21-a32e-12380bcba17d` | `b7e3c76e-d71a-4d87-a3cc-e549d04e9a5c` | unavailable → ok |
+| MSFT | `638483c5-dada-4c37-b8b1-54af5973e6c0` | `13edaad6-0c6a-476e-85f5-7b2bf2cbef89` | unavailable → ok |
+| NVDA | `a3f3c5f0-c3c1-4b03-ae9c-07a9070fffa2` | `1c5b8b4b-c0c6-4dde-a10b-5354b277bd96` | unavailable → ok |
+
+관측된 감소는 **3/3→0/3**이다. 작은 표본이고 실제 피드·기준시각이 일부 달라 통계적 효과나 단일 수정의 인과로 일반화하지 않는다. 뒤의 UI1건·검토 수정본3건은 별도 배포 확인이며 최초 비교의 분모에 더하지 않는다. 화면 캡처와 브라우저 지연은 아래 상세 기록에 포함했다.
 
 ### 최신 리뷰 반영 상태 — 코드·의존성·운영 및 결합 배포·브라우저 검증 완료
 
