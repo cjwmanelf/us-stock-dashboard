@@ -157,9 +157,9 @@ Fable의 최초 발견과 Astra 기록은 보존하며 아래의 예전 미적�
 
 
 
-![검토 수정본 닫기 버튼 focus](docs/quest/evidence/screenshots/reviewed-citation-close-focus.png)
-
-![검토 수정본 실제 응답](docs/quest/evidence/screenshots/reviewed-live-ok.png)
+| 검토 수정본의 실제 응답 | 출처 모달과 닫기 버튼 포커스 |
+| --- | --- |
+| [![검토 수정본 실제 응답](docs/quest/evidence/screenshots/reviewed-live-ok.png)](docs/quest/evidence/screenshots/reviewed-live-ok.png) | [![검토 수정본 닫기 버튼 focus](docs/quest/evidence/screenshots/reviewed-citation-close-focus.png)](docs/quest/evidence/screenshots/reviewed-citation-close-focus.png) |
 
 **현재 라이브 리비전은 `modu-rich-quest06-reviewed-20261109`(Next16.4.5), Ready·트래픽100%다.** 아래 v6와 v6-ui는 과거 실험·UI 배포 기록이다. 현재본은 검토된 UI6파일과 package/lock 변경을 포함하며 추론14파일은 동일하다. 평가 대상은 [Cloud Run 앱](https://modu-rich-quest06-fyzai5fn7a-du.a.run.app/briefing)이며 Vercel preview는 범위 밖이다.
 
@@ -167,7 +167,9 @@ v6 Cloud Build `405955c5-572a-415c-b5c9-981da6c5d247` SUCCESS 후 revision **mod
 
 후보의 같은 질문3개를 새 시각/UUID로 실행해 **200/ok3건, Cloud Logging exact join3/3**을 확인했다. baseline unavailable3/3→candidate0/3이다. 이는 생성 실패 현상의 감소이며 v1 대비 v2~v6 누적 변경 결과다. 단일 추출 수정의 효과나 동일 내부 원인 해소만으로 귀속하지 않는다. AAPL은 근거11→12 및hash변경, MSFT/NVDA는12→12/hash동일이므로 전체를 통제된 동일근거 인과 비교로 표현하지 않는다. 후보 서버5137/3554/3464ms, 브라우저5570.7/3984.2/4197.9ms, input9113/output1319·추정USD0.0015708이다([원격 전후/피드백 증빙](docs/quest/deployed-live-verification.md)).
 
-![배포 v6 실제 정상 응답](docs/quest/evidence/screenshots/candidate-live-ok.png)
+| 개선 전: baseline 생성 실패 | 개선 후: v6 정상 응답 |
+| --- | --- |
+| [![배포 baseline 실제 unavailable 화면](docs/quest/evidence/screenshots/baseline-live-unavailable.png)](docs/quest/evidence/screenshots/baseline-live-unavailable.png) | [![배포 v6 실제 정상 응답](docs/quest/evidence/screenshots/candidate-live-ok.png)](docs/quest/evidence/screenshots/candidate-live-ok.png) |
 
 피드백 API 기능 시험은 AI 운영자 up1건으로 HTTP202 뒤 동일 trace의 Cloud Logging score1 read-back까지 확인했다. 실제 사용자 만족도 투표가 아니다. **실제 사용자 정성 의견은1건**으로 긴 출처ID 대신 짧은 [근거] 버튼을 요청했고 numeric vote는 없다. 메시지 알림은 설문 응답으로 세지 않았다. UI 변경·별도 배포/캡처는 완료했고 [PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)은 생성했고 [독립 Claude Fable 검토](docs/quest/final-review.md)도 완료했다.
 
@@ -176,8 +178,6 @@ v6 Cloud Build `405955c5-572a-415c-b5c9-981da6c5d247` SUCCESS 후 revision **mod
 초기 동적500은 UTF-8 BOM 때문에 Next 공개 build 값이 누락된 운영 문제였다. 원래 archive를 재사용해 복구하여 모델 변경과 섞지 않았다. auth callback의 내부 origin redirect는 로컬43검사 후 계측 baseline의 실제 canonical redirect 검증으로 해결됐다. 계측 baseline과 v6 build·배포 완료는 위 실제 revision/image와 배포 보고로 확인한다.
 
 코디네이터의 인증된 UI 확인 이후 계측 baseline revision `modu-rich-quest06-00004-72l`에서 AAPL/MSFT/NVDA 새 대화3건을 실행했다. 모두 API200/unavailable, 근거11/12/12건이며 실제 response trace와 Cloud Logging이 **3/3 exact join**됐다. [원격 실측 문서](docs/quest/deployed-live-verification.md), [공개 CSV](docs/quest/evidence/deployed-baseline.csv), [단계 JSON](docs/quest/evidence/deployed-baseline.json)에 질문 작성 provenance·버전·revision·usage·시간을 보존했다. 질문은 코디네이터 작성 합성 평가이고 근거는 실제 조회한 제공자 메타데이터로, 독립 사실검증된 시장 정보가 아니다.
-
-![배포 baseline 실제 unavailable 화면](docs/quest/evidence/screenshots/baseline-live-unavailable.png)
 
 ![인증된 baseline 입력 폼](docs/quest/evidence/screenshots/baseline-authenticated-form.png)
 
@@ -199,9 +199,9 @@ baseline 원격 browser 경과는10501.8/6589.3/5602ms, server 경과9640/5908/5
 
 근거 버튼5개·긴 ID 숨김·출처 연결 일치·가로 넘침 없음·Escape 닫기·호출 버튼으로 focus 복귀를 확인했다. 모달 초기 focus는 닫기 버튼이 아니라 **모달 안 원문 링크**였다. 렌더된 버튼의 DOM click으로 확인했으며 물리적 터치나 전 브라우저 호환성을 검증했다고 주장하지 않는다. 제공자 자료를 독립 검증된 시장 사실로 보증하지 않는다. 구조화된 원격 CSV/JSON의 제목·URL 제외 정책과 달리, 화면 증빙에는 공개 뉴스 제목과 공개 원문 링크가 보인다. 비밀키·사용자 계정 정보는 포함하지 않는다.
 
-![최종 모바일 근거 버튼](docs/quest/evidence/screenshots/citation-compact-mobile.png)
-
-![최종 모바일 출처 모달](docs/quest/evidence/screenshots/citation-source-dialog-mobile.png)
+| 짧은 근거 버튼으로 표시한 본문 | 버튼을 눌러 확인하는 출처 상세 |
+| --- | --- |
+| [![최종 모바일 근거 버튼](docs/quest/evidence/screenshots/citation-compact-mobile.png)](docs/quest/evidence/screenshots/citation-compact-mobile.png) | [![최종 모바일 출처 모달](docs/quest/evidence/screenshots/citation-source-dialog-mobile.png)](docs/quest/evidence/screenshots/citation-source-dialog-mobile.png) |
 
 ## 7. 관찰한 회고와 다음 실사용자 로그·피드백 계획
 
