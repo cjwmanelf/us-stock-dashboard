@@ -1,6 +1,6 @@
 # Main Quest AI 브리핑 개선 보고서
 
-2026-11-09 실측 통합본. 한국어 자산 대시보드의 종목 뉴스·공시·실적 메타데이터 브리핑을 개선했다([제품 정의](PRD.md)). 기사 본문·실시간 가격·개인 보유내역 분석은 범위 밖이다. **v2·v3·v4·v5는 게이트 실패, v6는 독립 평가 PASS 후 배포 및 새 대화3건 검증 완료**다. 실제 사용자 정성 피드백1건과 AI 운영자 피드백 저장 테스트1건을 구별한다. 출처 표시 UI 배포·브라우저 검증도 완료했다. [제출 PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)을 생성했으며, 요청된 독립 Claude 검토는 별도 후속이다.
+2026-11-09 실측 통합본. 한국어 자산 대시보드의 종목 뉴스·공시·실적 메타데이터 브리핑을 개선했다([제품 정의](PRD.md)). 기사 본문·실시간 가격·개인 보유내역 분석은 범위 밖이다. **v2·v3·v4·v5는 게이트 실패, v6는 독립 평가 PASS 후 배포 및 새 대화3건 검증 완료**다. 실제 사용자 정성 피드백1건과 AI 운영자 피드백 저장 테스트1건을 구별한다. 출처 표시 UI 배포·브라우저 검증도 완료했다. [제출 PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)을 생성했으며, [Claude Fable 5.1 독립 검토](docs/quest/final-review.md)도 완료했으며 평가기준 충족·제출 가능(한계 명시) 판정을 받았다. 검토 후 문서 보완은 별도 교정 기록으로 남겼다.
 
 ## 1. 로그 수와 직접 평가 대화 제작 방법
 
@@ -28,14 +28,17 @@
 
 ## 2. 독립 실패 후보와 실제 trace·반복·첫 단계
 
-v1의 실제 첫 실패는 추출기 한 종류다. 아래 후속 후보는 원문 최종 text의 잠재 오류이며 baseline UI에서 노출됐다고 주장하지 않는다. [상세 분석](docs/quest/live-baseline-analysis.md)과 CSV에서 아래 trace를 확인할 수 있다.
+최초 문제 선정 시점의 실사용자 피드백은 0건이었다. v1의 실제 첫 실패는 추출기 한 종류다. 아래 후속 후보는 원문 최종 text의 잠재 오류이며 baseline UI에서 노출됐다고 주장하지 않는다. [상세 분석](docs/quest/live-baseline-analysis.md)과 CSV에서 아래 trace를 확인할 수 있다.
 
-| 후보 | 사례·실제 trace 예시 | 반복·분모 | 최초 문제 단계 |
-| --- | --- | --- | --- |
-| 알려진 thinking 블록을 거부 | 01: `c0587089-1a29-484a-8c2f-f05d674d3d3e` | 19/19 모델 응답 | native text 추출, JSON 파싱 전 |
-| Markdown 코드펜스 | 10: `830e83ba-164c-497e-ac2b-109d3fd1473c` | 1/19 원문 | 잠재 출력 형식→JSON 파싱 |
-| 적절한 타 종목 보류와 빈 인용 계약 충돌 | 15: `236471bb-11f1-4ab5-b254-9fa7c2faa082` | 타 종목1/1, 전체1/19 | 잠재 스키마→인용 검증 |
-| 날짜 메타데이터 과해석 | 13: `7176acec-5149-4558-a98b-668c61956ca7`; 18: `c0a962ef-df66-49fd-ba4b-83e06fffc81f` | 날짜 사례2/6, 전체2/19 | 잠재 생성 의미 오류 |
+| 후보 | 사례·실제 trace 예시 | 반복·분모 | 최초 문제 단계 | 사용자 노출 여부 |
+| --- | --- | --- | --- | --- |
+| 알려진 thinking 블록을 거부 | 01: `c0587089-1a29-484a-8c2f-f05d674d3d3e` | 19/19 모델 응답 | native text 추출, JSON 파싱 전 | 생성 실패로 노출 |
+| Markdown 코드펜스 | 10: `830e83ba-164c-497e-ac2b-109d3fd1473c` | 1/19 원문 | 잠재 출력 형식→JSON 파싱 | 추출 실패에 가려진 잠재 오류 |
+| 적절한 타 종목 보류와 빈 인용 계약 충돌 | 15: `236471bb-11f1-4ab5-b254-9fa7c2faa082` | 타 종목1/1, 전체1/19 | 잠재 스키마→인용 검증 | 추출 실패에 가려진 잠재 오류 |
+| 날짜 메타데이터 과해석 | 13: `7176acec-5149-4558-a98b-668c61956ca7`; 18: `c0a962ef-df66-49fd-ba4b-83e06fffc81f` | 날짜 사례2/6, 전체2/19 | 잠재 생성 의미 오류 | 추출 실패에 가려진 잠재 오류 |
+| 긴 출처 ID가 본문 읽기를 방해 | 배포 후 사용자 정성 의견, 관련 trace `b7e3c76e-d71a-4d87-a3cc-e549d04e9a5c`; [피드백 기록](docs/quest/evidence/deployed-feedback-summary.json) | 받은 정성 의견 1건 중 1건; 발생률 추정 아님 | UI 출처 표시 | 사용자 직접 관찰; v6-ui에서 근거 버튼으로 수정 |
+
+잠재 후보의 공개 재현 범위는 CSV 판정 주석과 상세 분석의 최종 text 발췌이며, native 원문 전체는 공개하지 않는다. 사용자 의견은 2026-11-09T03:27:11Z에 기록한 배포 후 후속 후보로, 최초 우선순위 결정의 근거로 소급하지 않는다.
 
 19/19는 서로 다른 입력19개에서 반복된 같은 원인이지 독립 오류19종이나 동일 입력19회 안정성 시험이 아니다. 후속 v3에서는 제목용 대괄호(04), max_tokens(06/11), 인용 배열만 있고 본문 인용이 없음(07/08/09/16)이 관찰됐다. 이것을 과거 thinking 오류로 다시 분류하지 않았다. v4에서는 기술 생성 실패가0이어도 일반 filing 날짜 명명(03/14)과 과도한 보류(07)가 남았다.
 
@@ -47,6 +50,7 @@ v1의 실제 첫 실패는 추출기 한 종류다. 아래 후속 후보는 원�
 | 코드펜스 | 1/19 | 형식만 다른 응답이 소실 | 작음; v3의 별도 계약 실험 |
 | 빈 인용 보류 | 1/19 | 적절한 불확실성 답변이 오류로 표시 | 중간; 안전한 보류 계약 필요 |
 | 날짜·부분근거 의미 | 2/19 및 후속 개발 회귀 | 잘못된 사건일 또는 불필요한 정보 손실 | 중간; 의미 평가·새 hold-out 필요 |
+| 출처 ID 가독성(배포 후 추가) | 실사용자 정성 의견 1건 | 요약 읽기 방해 | 작음; 추론을 바꾸지 않는 근거 버튼 UI로 후속 개선 |
 
 영향과 비용은 정성 판단이며 측정하지 않은 작업시간이나 가중 점수를 만들지 않았다. v2는 알려진 reasoning 메타데이터를 건너뛰고 text만 순서대로 읽는 변경 하나로 한정했다. 이후 v3·v4·v5는 새로운 실험으로 구분했으며 누적 변경 전체를 단일 수정의 효과라고 설명하지 않는다.
 
@@ -57,6 +61,8 @@ v1의 실제 첫 실패는 추출기 한 종류다. 아래 후속 후보는 원�
 사전 조건은 동일한 frozen request/evidence/asOf, 서로 다른 VERSION와 전체 소스 hash, 새 UUID, 선택 오류 엄격 감소, 정상 사례 회귀0, 중대 오류0, 운영 가용성 회귀 없음, hold-out 수동 품질 **9/10 이상**이었다. 적절한 보류는 질문과 근거를 검토해 판정하며 `insufficient_evidence` 라벨만으로 통과시키지 않는다. auth/billing/quota 등 운영 실패는 별도 분류하고 즉시 중단한다. 누적 추정 USD1 상한과 배치별 호출 상한은 완료량과 구별한다.
 
 최초 계획의 3회 반복·50% 감소·비용/지연20% 증가 이내를 이번 변경된 설계로 검증했다고 주장하지 않는다. v4 파일럿의 선택된 실패3개는 전체 품질 대표 표본이 아니다. [v2 사전 기준과 결과](docs/quest/live-baseline-analysis.md), [v3 조건부 중단](docs/quest/v3-live-evaluation.md), [v4 독립 평가](docs/quest/v4-live-evaluation.md)를 함께 읽어야 한다.
+
+평가자는 같은 오케스트레이션 안의 별도 AI 워커이며 사람 채점은 0건이다. 최종 평가는 버전 라벨을 가린 단일 차폐이고, 답변 문체나 날짜 안내로 버전을 추정할 수 있으므로 이중맹검으로 부르지 않는다.
 
 ## 5. 바꾼 것·실패 실험·전후 결과·PR
 
@@ -83,13 +89,15 @@ v4의 여러 변수를 함께 변경했으므로 효과를 단일 프롬프트 �
 
 ## 6. 배포 뒤 버전별 새 대화·지연·비용·화면 증빙
 
-v6 Cloud Build `405955c5-572a-415c-b5c9-981da6c5d247` SUCCESS 후 revision **modu-rich-quest06-v6-20261109**가 Ready=True·100% traffic으로 확인됐다. image digest는 `sha256:ed253c7921dcad7b2c8f3845a65c4dd33cb64504669a2f2b07da35a3bd2993cf`이며 실제 archive의14개 inference 파일과 동결 manifest가 일치한다. [최종 검증](docs/quest/final-validation.md)은12개 검사 스크립트·25개 테스트·typecheck 통과, 새 production/tooling lint 오류0을 보고한다. 전체 lint는 확인된 기존 production 오류5개가 남아 완전 통과라고 쓰지 않는다.
+**현재 라이브 리비전은 `modu-rich-quest06-v6-ui-20261109`, 트래픽 100%다.** 아래 v6 리비전은 전후 비교 당시 배포이며, 현재본은 UI 두 파일만 바뀌고 추론 소스는 같다. 평가 대상은 [Cloud Run 앱](https://modu-rich-quest06-fyzai5fn7a-du.a.run.app/briefing)이며 GitHub PR의 Vercel preview는 검증 범위 밖이다.
 
-후보의 같은 질문3개를 새 시각/UUID로 실행해 **200/ok3건, Cloud Logging exact join3/3**을 확인했다. baseline unavailable3/3→candidate0/3이다. AAPL은 근거11→12 및hash변경, MSFT/NVDA는12→12/hash동일이므로 전체를 통제된 동일근거 인과 비교로 표현하지 않는다. 후보 서버5137/3554/3464ms, 브라우저5570.7/3984.2/4197.9ms, input9113/output1319·추정USD0.0015708이다([원격 전후/피드백 증빙](docs/quest/deployed-live-verification.md)).
+v6 Cloud Build `405955c5-572a-415c-b5c9-981da6c5d247` SUCCESS 후 revision **modu-rich-quest06-v6-20261109**가 Ready=True·100% traffic으로 확인됐다. image digest는 `sha256:ed253c7921dcad7b2c8f3845a65c4dd33cb64504669a2f2b07da35a3bd2993cf`이며 실제 archive의14개 inference 파일과 동결 manifest가 일치한다. [최종 검증](docs/quest/final-validation.md)은12개 검사 스크립트·25개 테스트·typecheck 통과, 새 production/tooling lint 오류0을 보고한다. 최종 공개 export 스크립트 추가 후 독립 검토에서는 전체 lint가 기존 production 오류5개와 미사용 변수 경고1개로 확인됐다. 완전 통과라고 쓰지 않으며 동결 증거를 유지하고 문서 상태를 정정했다.
+
+후보의 같은 질문3개를 새 시각/UUID로 실행해 **200/ok3건, Cloud Logging exact join3/3**을 확인했다. baseline unavailable3/3→candidate0/3이다. 이는 생성 실패 현상의 감소이며 v1 대비 v2~v6 누적 변경 결과다. 단일 추출 수정의 효과나 동일 내부 원인 해소만으로 귀속하지 않는다. AAPL은 근거11→12 및hash변경, MSFT/NVDA는12→12/hash동일이므로 전체를 통제된 동일근거 인과 비교로 표현하지 않는다. 후보 서버5137/3554/3464ms, 브라우저5570.7/3984.2/4197.9ms, input9113/output1319·추정USD0.0015708이다([원격 전후/피드백 증빙](docs/quest/deployed-live-verification.md)).
 
 ![배포 v6 실제 정상 응답](docs/quest/evidence/screenshots/candidate-live-ok.png)
 
-피드백 API 기능 시험은 AI 운영자 up1건으로 HTTP202 뒤 동일 trace의 Cloud Logging score1 read-back까지 확인했다. 실제 사용자 만족도 투표가 아니다. **실제 사용자 정성 의견은1건**으로 긴 출처ID 대신 짧은 [근거] 버튼을 요청했고 numeric vote는 없다. 메시지 알림은 설문 응답으로 세지 않았다. UI 변경·별도 배포/캡처는 완료했고 [PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)은 생성했고 독립 Claude Fable 검토는 후속이다.
+피드백 API 기능 시험은 AI 운영자 up1건으로 HTTP202 뒤 동일 trace의 Cloud Logging score1 read-back까지 확인했다. 실제 사용자 만족도 투표가 아니다. **실제 사용자 정성 의견은1건**으로 긴 출처ID 대신 짧은 [근거] 버튼을 요청했고 numeric vote는 없다. 메시지 알림은 설문 응답으로 세지 않았다. UI 변경·별도 배포/캡처는 완료했고 [PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)은 생성했고 [독립 Claude Fable 검토](docs/quest/final-review.md)도 완료했다.
 
 [실제 배포 검증](docs/quest/deployment-verification.md): baseline `briefing-v1`, revision `modu-rich-quest06-00003-sfx`, 수정 build `70159e67-6fe8-4bcc-9908-5bb7bd2589cc`가 확인됐다. [앱](https://modu-rich-quest06-fyzai5fn7a-du.a.run.app) 및 /login은200, 비로그인 보호 경로는 로그인 redirect, 정확한 Origin의 무세션 API는401, 다른 Origin은403이었다. 이는 원래 baseline 복구이며 후보 배포 완료가 아니다.
 
@@ -117,7 +125,7 @@ baseline 원격 browser 경과는10501.8/6589.3/5602ms, server 경과9640/5908/5
 
 최종 revision `modu-rich-quest06-v6-ui-20261109`의 배포 및 390px 브라우저 검증을 완료했다([실측 JSON](docs/quest/evidence/deployed-ui-smoke.json), [UI 배포 기록](docs/quest/citation-ui.md)). 별도 실제 모델 호출1건: trace `319918ec-0917-42e2-9987-5eb336148d56`, input2979/output446, server3961ms, 추정 USD0.0005209다. 기존 전후 원격6건의 분모와 수치는 그대로 유지한다. 로컬 평가와 원격6건 및 이1건의 알려진 합은 USD0.0498650이며 초기 smoke·청구 전체는 제외한다.
 
-근거 버튼5개·긴 ID 숨김·출처 연결 일치·가로 넘침 없음·Escape 닫기·호출 버튼으로 focus 복귀를 확인했다. 모달 초기 focus는 닫기 버튼이 아니라 **모달 안 원문 링크**였다. 렌더된 버튼의 DOM click으로 확인했으며 물리적 터치나 전 브라우저 호환성을 검증했다고 주장하지 않는다. 제공자 자료를 독립 검증된 시장 사실로 보증하지 않는다.
+근거 버튼5개·긴 ID 숨김·출처 연결 일치·가로 넘침 없음·Escape 닫기·호출 버튼으로 focus 복귀를 확인했다. 모달 초기 focus는 닫기 버튼이 아니라 **모달 안 원문 링크**였다. 렌더된 버튼의 DOM click으로 확인했으며 물리적 터치나 전 브라우저 호환성을 검증했다고 주장하지 않는다. 제공자 자료를 독립 검증된 시장 사실로 보증하지 않는다. 구조화된 원격 CSV/JSON의 제목·URL 제외 정책과 달리, 화면 증빙에는 공개 뉴스 제목과 공개 원문 링크가 보인다. 비밀키·사용자 계정 정보는 포함하지 않는다.
 
 ![최종 모바일 근거 버튼](docs/quest/evidence/screenshots/citation-compact-mobile.png)
 
@@ -129,4 +137,17 @@ baseline 원격 browser 경과는10501.8/6589.3/5602ms, server 경과9640/5908/5
 
 배포에서는 빌드 시 고정되는 공개 설정과 runtime 설정을 구별해야 했다. BOM 파싱과 callback의 신뢰 origin 문제는 모델 품질과 분리해 원래 archive로 재현했다. 모델 소스와 관측 도구를 동시에 바꾸면 전후 비교의 정체성이 흐려지므로 동결 artifact·실제 버전·새 trace를 연결했다. 이는 관찰한 기술적 회고이며 사용자의 개인적 느낌이나 직접 수행한 경험을 대신 창작한 것이 아니다.
 
-독립 gate·배포·버전별 새 대화·실제 로그 대조는 완료했다. 실제 사용자 정성 의견1건을 반영한 출처 버튼 UI의 별도 배포·시각 검증도 완료했고 [PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)을 생성했고 독립 검토가 남았다. 만족/보통/불만족 numeric 설문 응답은 아직 없으며 운영자 up 테스트를 사용자 만족으로 합산하지 않는다. 앞으로 동의한 실제 질문과 평가를 최소 범위로 수집하고 보존기간/삭제·접근권한을 정하며, 합성 입력·AI 분석자 판정·사용자 의견을 분리한다. 남은 항목은 [제출 공백 감사](docs/quest/submission-gap-audit.md)에 명시한다.
+독립 gate·배포·버전별 새 대화·실제 로그 대조는 완료했다. 실제 사용자 정성 의견1건을 반영한 출처 버튼 UI의 별도 배포·시각 검증도 완료했고 [PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)을 생성했고 [독립 검토](docs/quest/final-review.md)까지 완료했다. 만족/보통/불만족 numeric 설문 응답은 아직 없으며 운영자 up 테스트를 사용자 만족으로 합산하지 않는다. 앞으로 동의한 실제 질문과 평가를 최소 범위로 수집하고 보존기간/삭제·접근권한을 정하며, 합성 입력·AI 분석자 판정·사용자 의견을 분리한다. 남은 항목은 [제출 공백 감사](docs/quest/submission-gap-audit.md)에 명시한다.
+
+
+### 다음 실제 사용자 관찰 계획(미실행 제안)
+
+| 항목 | 제안 |
+| --- | --- |
+| 수집 | traceId·버전·revision·상태·단계별 지연·토큰·비용 추정, 자발적 만족/보통/불만족과 오류 유형·선택 코멘트 |
+| 동의 | 브리핑 입력·피드백 제출 직전에 목적과 보존기간을 안내하고, 질문·답변 원문 수집은 별도 선택 동의 |
+| 보존·접근 | 원문·코멘트 30일 후 삭제, 비식별 집계 90일 제안; 담당 운영자만 조회하고 삭제 요청 처리 |
+| 중복·구분 | (traceId, version)당 최신 평가 1건을 집계하고 변경 이력 분리; 합성·운영자 테스트·실사용자를 provenance로 구분 |
+| 확인 주기 | 우선 동의한 실제 대화 30건을 모아 주간 분석; 투표 응답 수·전체 노출 수를 함께 공개하고 충분한 표본 확보 전 효과 일반화 금지 |
+
+현재 구현된 기능은 기존 up/down 피드백 API와 metadata 로그이며, 위 3단계 만족도·선택 코멘트·삭제 자동화는 아직 구현하거나 운영한 것으로 주장하지 않는다. 독립 검토의 초기 발견과 교정 내역은 [검토 보고서 §9](docs/quest/final-review.md#9-교정-상태-기록코디네이터-갱신용)에 보존했다.

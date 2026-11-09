@@ -10,7 +10,7 @@ Validation performed 2026-11-09. This is code/integration validation, not model-
 | `node --test tools/quest-evaluation/test/*.test.mjs` | 25/25 pass, exit 0 |
 | `npx tsc --noEmit --incremental false` | pass, exit 0 |
 | ESLint on changed/untracked production TS/TSX and next.config.ts | 22 files, no errors/warnings, exit 0 |
-| `npx eslint .` | fails only on 5 confirmed pre-existing production errors; 0 warnings, 0 new tooling errors |
+| `npx eslint .` | At initial cleanup: 5 pre-existing errors / 0 warnings. Final independent review after public exporter addition: 5 pre-existing errors / 1 tooling warning; see update below. |
 | v6 frozen/current source hashes | all 14 manifest entries match both frozen candidate files and current briefing files |
 
 The twelve scripts were briefing-check, briefing-anthropic-check, briefing-vertex-check, briefing-integration-check, briefing-feedback-delivery-check, briefing-telemetry-check, briefing-v3-check, briefing-v4-check, briefing-v5-check, briefing-v6-check, cloud-run/auth-redirect-check and cloud-run/origin-check. Authentication callback checks cover 43 cases; origin checks cover 40 cases. Provider calls and OTP responses are mocked. Telemetry output seen during tests is synthetic local metadata, not evidence of Cloud Logging ingestion or actual user feedback. The evaluator test with a live-mode name uses mocked transport; it made no live inference.
@@ -49,3 +49,8 @@ The coordinator subsequently authorized cleanup of new tooling lint findings. es
 Final full ESLint result: **5 errors, 0 warnings**. Every remaining error is the same HEAD-reproduced production error listed above; **new tooling errors/warnings: 0/0**. No production file was changed during cleanup. The warning in a newly present q604-v6-holdout-review helper was addressed only by removing its unused local ID suffix variable; its private inputs/outputs and review values were not opened or modified. Live scripts received syntax checks only and were not executed.
 
 Rerun evidence: briefing-check, briefing-vertex-check, auth-redirect-check and briefing-telemetry-check pass; evaluator tests 25/25 pass; offline synthetic CLI smoke passes with networkRequests=0, idempotency/join checks passing; nonincremental typecheck passes; all six edited live helper scripts pass node --check. All fourteen frozen/current briefing per-file hashes were rechecked and remain identical. No frozen manifest was changed. The initial read-only report above remains as historical evidence of what failed before cleanup; its 55/8 counts are superseded by the final 5/0 result.
+
+
+## Independent final review update — 2026-11-09
+
+Q611 reran whole-repository ESLint at a97527a after the final public exporter was added: **5 pre-existing production errors, 1 new tooling warning**. The warning is unused `root` at `tools/quest-evaluation/live/q604-final-export.mjs:6`. The earlier 0-warning result above is the cleanup-time snapshot, not the current final tree. The evaluated/runtime source and hashed public exporter remain unchanged; this correction preserves evidence hashes. Typecheck passed in the independent review. Full lint is not a passing check. See [review](final-review.md#47-코드-품질-검사검토자-재실행).

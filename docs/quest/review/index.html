@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Main Quest 06 독립 검토</title>
+<meta name="description" content="AI 브리핑 개선 과제(Main Quest 06)의 최종 독립 검토: 루브릭 5항목·보고서 7요건 판정, 재검증 수치, 발견 사항과 권고.">
+<style>
+/* 레이아웃: 단일 열 본문(최대 1040px), 상단 결론 카드, 표 중심. 색은 토큰으로만 쓴다. */
+:root {
+  --bg: #f4f6f2;
+  --surface: #ffffff;
+  --surface-2: #eceff0;
+  --ink: #171b20;
+  --ink-2: #4b535b;
+  --muted: #7a838b;
+  --line: #d5dad4;
+  --accent: #1d5c8f;
+  --accent-ink: #ffffff;
+  --series-a: #2a78d6;   /* 기준(baseline) */
+  --series-b: #eb6834;   /* 후보(candidate) */
+  --good: #0ca30c;
+  --good-ink: #006300;
+  --warn: #fab219;
+  --warn-ink: #6b4a00;
+  --crit: #d03b3b;
+  --crit-ink: #8f1f1f;
+  --code-bg: #eef1ea;
+  --shadow: 0 1px 2px rgba(23,27,32,.06), 0 8px 24px rgba(23,27,32,.06);
+  --font-ui: "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", Consolas, "D2Coding", monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1214; --surface: #181c20; --surface-2: #22272c; --ink: #edf0ec; --ink-2: #c1c8ce; --muted: #8f979e; --line: #2e343a;
+    --accent: #5aa0e0; --accent-ink: #0f1214; --series-a: #3987e5; --series-b: #d95926;
+    --good: #0ca30c; --good-ink: #6fd66f; --warn: #fab219; --warn-ink: #ffd36b; --crit: #e66767; --crit-ink: #ff9a9a;
+    --code-bg: #23282d; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1214; --surface: #181c20; --surface-2: #22272c; --ink: #edf0ec; --ink-2: #c1c8ce; --muted: #8f979e; --line: #2e343a;
+  --accent: #5aa0e0; --accent-ink: #0f1214; --series-a: #3987e5; --series-b: #d95926;
+  --good: #0ca30c; --good-ink: #6fd66f; --warn: #fab219; --warn-ink: #ffd36b; --crit: #e66767; --crit-ink: #ff9a9a;
+  --code-bg: #23282d; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.65;
+  padding-block: 0 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  word-break: keep-all; overflow-wrap: anywhere;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.skip { position: absolute; left: -999px; top: 8px; background: var(--surface); padding: 8px 12px; border: 1px solid var(--line); z-index: 20; }
+.skip:focus { left: 16px; }
+.wrap { max-width: 1040px; margin: 0 auto; }
+header.top { padding-block: 36px 8px; }
+.eyebrow { font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+h1 { font-size: clamp(26px, 4vw, 38px); line-height: 1.2; margin: 8px 0 12px; text-wrap: balance; letter-spacing: -.01em; }
+h2 { font-size: clamp(20px, 2.6vw, 26px); margin: 48px 0 12px; line-height: 1.3; text-wrap: balance; padding-top: 8px; border-top: 1px solid var(--line); }
+h3 { font-size: 17px; margin: 28px 0 8px; }
+p { margin: 8px 0; max-width: 72ch; }
+p.lead { font-size: 17px; color: var(--ink-2); max-width: 78ch; }
+.verdict {
+  margin-top: 20px; background: var(--surface); border: 1px solid var(--line); border-left: 6px solid var(--good); border-radius: 10px; padding: 18px 20px; box-shadow: var(--shadow);
+}
+.verdict .big { font-size: 22px; font-weight: 700; margin: 0 0 6px; }
+.verdict p { max-width: none; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin-top: 18px; }
+.fact { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; min-width: 0; }
+.fact .k { font-size: 12px; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; font-weight: 600; }
+.fact .v { margin-top: 4px; font-size: 14px; }
+code, .mono { font-family: var(--font-mono); font-size: .92em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+nav.toc { margin-top: 22px; background: var(--surface-2); border-radius: 10px; padding: 12px 14px; }
+nav.toc ol { margin: 0; padding-left: 20px; columns: 2; column-gap: 24px; }
+nav.toc li { margin: 2px 0; break-inside: avoid; }
+@media (max-width: 640px) { nav.toc ol { columns: 1; } }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); margin: 12px 0; }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+th { background: var(--surface-2); font-weight: 700; white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.nowrap { white-space: nowrap; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px 2px 8px; border-radius: 999px; font-size: 13px; font-weight: 700; white-space: nowrap; border: 1px solid transparent; }
+.chip svg { width: 14px; height: 14px; flex: none; }
+.chip.pass { background: color-mix(in srgb, var(--good) 14%, var(--surface)); color: var(--good-ink); border-color: color-mix(in srgb, var(--good) 40%, transparent); }
+.chip.partial { background: color-mix(in srgb, var(--warn) 22%, var(--surface)); color: var(--warn-ink); border-color: color-mix(in srgb, var(--warn) 55%, transparent); }
+.chip.missing { background: color-mix(in srgb, var(--crit) 14%, var(--surface)); color: var(--crit-ink); border-color: color-mix(in srgb, var(--crit) 45%, transparent); }
+.chip.todo { background: var(--surface-2); color: var(--ink-2); border-color: var(--line); }
+.pri { font-weight: 700; white-space: nowrap; }
+.pri.p1 { color: var(--crit-ink); } .pri.p2 { color: var(--warn-ink); } .pri.p3 { color: var(--ink-2); }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; align-items: start; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; min-width: 0; }
+.card h3 { margin-top: 0; }
+/* 차트: 가로 막대, 4px 둥근 데이터 끝, 2px 간격, 직접 라벨 */
+.chart { margin: 8px 0 4px; }
+.chart .row { display: grid; grid-template-columns: minmax(96px, 150px) 1fr 64px; gap: 10px; align-items: center; padding: 3px 0; font-size: 14px; }
+.chart .lbl { color: var(--ink-2); }
+.chart .track { position: relative; height: 18px; background: transparent; border-left: 2px solid var(--line); }
+.chart .bar { position: absolute; left: 0; top: 2px; height: 14px; border-radius: 0 4px 4px 0; min-width: 2px; }
+.chart .bar.a { background: var(--series-a); }
+.chart .bar.b { background: var(--series-b); }
+.chart .val { font-variant-numeric: tabular-nums; text-align: right; color: var(--ink); }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--ink-2); margin: 4px 0 8px; }
+.legend span::before { content: ""; display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; }
+.legend .a::before { background: var(--series-a); } .legend .b::before { background: var(--series-b); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 12px 0; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.tile .k { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.tile .v { font-size: 26px; font-weight: 700; margin-top: 2px; line-height: 1.1; }
+.tile .s { font-size: 12.5px; color: var(--ink-2); margin-top: 4px; }
+figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px; min-width: 0; }
+figure img { display: block; max-width: 100%; height: auto; margin: 0 auto; border-radius: 6px; border: 1px solid var(--line); }
+figcaption { font-size: 13px; color: var(--ink-2); margin-top: 8px; }
+.shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+ul.tight li { margin: 4px 0; }
+.note { font-size: 14px; color: var(--ink-2); border-left: 3px solid var(--line); padding-left: 12px; margin: 10px 0; max-width: 78ch; }
+footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 13.5px; color: var(--ink-2); }
+@media (prefers-reduced-motion: no-preference) { .chart .bar { transition: width .4s ease; } }
+@media (max-width: 640px) {
+  table { font-size: 13.5px; } th, td { padding: 8px 9px; }
+  .chart .row { grid-template-columns: minmax(80px, 110px) 1fr 52px; }
+}
+@media print { body { background: #fff; } .tablewrap { overflow: visible; } a { color: inherit; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">독립 검토 · Main Quest 06 · 2026-11-09</div>
+  <h1>AI 브리핑 개선 과제 독립 검토</h1>
+  <p class="lead"><code>us-stock-dashboard</code> 저장소의 Main Quest 06 제출물(보고서·공개 증거·소스·배포·PR)을 공개 파일과 읽기 전용 조회만으로 재검증한 결과입니다. 수치는 보고서를 옮겨 적지 않고 CSV·JSON·클라우드 기록에서 다시 계산했습니다.</p>
+
+  <section class="verdict" aria-labelledby="verdict-h">
+    <p class="big" id="verdict-h">판정: 제출 가능 (submission-ready), 한계 명시</p>
+    <p>사용자 루브릭 5항목과 보고서 7요건이 모두 공개 증거로 뒷받침되며, 호출 수·통과 수·정상 회귀·토큰·비용·지연·trace ID·해시·리비전·빌드·Cloud Logging 대조에서 보고서와 어긋나는 핵심 수치는 없었습니다. 발견한 문제는 문서 불일치 2건(경미)과 서술 보강 권고이며 제출을 막는 요인은 아닙니다. 한계(합성 입력, AI 분석자 판정, 소표본, 단일 차폐 맹검)는 보고서가 이미 밝히고 있고 아래에 다시 정리했습니다.</p>
+  </section>
+
+  <div class="facts">
+    <div class="fact"><div class="k">검토 대상 커밋</div><div class="v">구현·증거 <a href="https://github.com/cjwmanelf/us-stock-dashboard/commit/0fcb396b28c435362ed5dc053a48d473f41538bc"><code>0fcb396</code></a> · 보고서 링크 갱신 <a href="https://github.com/cjwmanelf/us-stock-dashboard/commit/a97527ac3638146b5fee398a73b84d71f0e5f56f"><code>a97527a</code></a> (HEAD = origin = PR head)</div></div>
+    <div class="fact"><div class="k">PR</div><div class="v"><a href="https://github.com/cjwmanelf/us-stock-dashboard/pull/7">PR #7</a> OPEN · base <code>main</code> · 커밋 2 · 184파일 · 리뷰 0 · 코멘트 1(Vercel 봇)</div></div>
+    <div class="fact"><div class="k">라이브 배포</div><div class="v"><a href="https://modu-rich-quest06-fyzai5fn7a-du.a.run.app/briefing">modu-rich-quest06 /briefing</a><br>현재 100% 트래픽 <code>modu-rich-quest06-v6-ui-20261109</code></div></div>
+    <div class="fact"><div class="k">검토자 모델</div><div class="v">요청: Claude Fable 5.1, effort max<br>관측: 하네스 보고 모델 ID <code>claude-fable-5-1</code>, 환경변수 <code>CLAUDE_EFFORT=max</code>. API 메타데이터로 교차 확인한 것은 아님</div></div>
+  </div>
+
+  <nav class="toc" aria-label="목차">
+    <ol>
+      <li><a href="#rubric">루브릭 5항목 판정</a></li>
+      <li><a href="#req7">보고서 7요건 판정</a></li>
+      <li><a href="#eval">평가 지표(로컬 합성 평가)</a></li>
+      <li><a href="#deploy">배포 지표(실제 피드)</a></li>
+      <li><a href="#shots">스크린샷 전·후</a></li>
+      <li><a href="#findings">발견 사항·우선순위·상태</a></li>
+      <li><a href="#checks">검토자가 실제로 수행한 검사</a></li>
+      <li><a href="#limits">방법론과 한계</a></li>
+      <li><a href="#links">증거 링크</a></li>
+    </ol>
+  </nav>
+</header>
+
+<main id="main">
+<section class="card" id="remediation" aria-labelledby="remediation-title">
+<h2 id="remediation-title">검토 후 보완 결과</h2>
+<p>2026-11-09 코디네이터가 반영했습니다. 아래 최초 검토 발견은 당시 상태로 보존했으며, 검토자가 수정본을 다시 승인한 것은 아닙니다.</p>
+<ul>
+<li><strong>P1-1 · 반영:</strong> 최종 lint는 기존 오류 5개·export 경고 1개로 문서 정정. 동결 파일과 해시는 보존했습니다.</li>
+<li><strong>P1-2 · 반영:</strong> REPORT 후보 표에 사용자 피드백·관련 trace·의견 1건의 분모·UI 단계와 후속 우선순위를 추가했습니다.</li>
+<li><strong>P2-1~P2-4 · 반영:</strong> 현재 배포 버전, 잠재 오류 노출 여부·공개 재현 한계, 별도 AI 평가자·단일 차폐, 배포 누적 효과를 명시했습니다.</li>
+<li><strong>P3-2~P3-4 · 반영:</strong> 미실행 사용자 로그 수집 계획, 화면의 공개 헤드라인 정책, Cloud Run 평가 범위를 추가했습니다.</li>
+<li><strong>P3-1 · 선택적 후속:</strong> 모달 초기 focus는 원문 링크이며 Escape·포커스 복귀는 검증됐습니다. 제목이나 닫기 버튼으로 초기 focus를 바꾸는 제품 개선은 수행하지 않았습니다.</li>
+</ul>
+<p>모델·배포본·동결 증거 변경 없음. <a href="../final-review.md">독립 검토 원문과 교정 기록</a> · <a href="https://github.com/cjwmanelf/us-stock-dashboard/blob/feat/main-quest-06-briefing-observability/REPORT.md">최종 REPORT.md</a></p>
+</section>
+
+<h2 id="rubric">1. 루브릭 5항목 판정</h2>
+<p>판정 기준: <span class="chip pass"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2"/></svg>충족</span> 공개 증거로 뒷받침되고 재검증에서 어긋남 없음 · <span class="chip partial"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2l6 11H2z" fill="none" stroke="currentColor" stroke-width="2"/></svg>부분</span> 일부 요소 누락 또는 해석 주의 · <span class="chip missing"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2"/></svg>미충족</span> 증거 없음.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th scope="col">#</th><th scope="col">루브릭</th><th scope="col">판정</th><th scope="col">검토자가 확인한 근거</th><th scope="col">한계·비고</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>트레이스·피드백에서 문제 후보 3개 이상, 증거 trace와 반복 횟수</td><td><span class="chip pass">✓ 충족</span><br><small>한계 있음</small></td><td>REPORT §2 후보 4종에 trace ID와 분모(19/19, 1/19, 1/19, 2/19). 다섯 trace가 <a href="../evidence/q610-comparison.csv">q610-comparison.csv</a>의 q610-01/10/15/13/18 baseline 행에 존재. 잠재 후보는 같은 CSV <code>qualityReason</code>에 "Latent raw …"로 주석. 상세 <a href="../live-baseline-analysis.md">live-baseline-analysis.md</a>.</td><td>4종 중 3종은 baseline UI에 노출되지 않은 잠재 오류(보고서 명시). 후보 선정 시점 실사용자 피드백 0건. 배포 후 실사용자 의견 1건(긴 출처 ID)은 §6에서 UI로 처리됐으나 §2 표에는 없음 → 발견 P1-2.</td></tr>
+<tr><td>2</td><td>빈도·영향·수정 비용 비교와 첫 이슈 선택 근거</td><td><span class="chip pass">✓ 충족</span></td><td>REPORT §3 표(빈도·영향·비용·선택). 19/19 native 추출 오류를 단일 수정 v2로 선택, 나머지는 후속 실험으로 분리. 선택 전 사전 기준이 live-baseline-analysis.md에 기록됨.</td><td>영향·비용은 정성 판단(보고서 명시).</td></tr>
+<tr><td>3</td><td>문제·정상 사례를 함께 가진 데이터셋으로 전후 비교</td><td><span class="chip pass">✓ 충족</span></td><td>개발 20(정상 10/문제 10), hold-out 3세트 각 정상 5/문제 5를 공개 JSON에서 재집계. 사전 게이트(≥9/10·중대 0·정상 회귀 0·완전 쌍 10)가 <a href="../evidence/final-q606-protocol.json">protocol</a>·<a href="../evidence/final-gate.json">final-gate.json</a>에서 일치. 실패 v2·v3·v4·v5 보존, v6 hold-out v2 8/10→v6 10/10·정상 회귀 0을 <a href="../evidence/final-blind-review.json">맹검 기록</a>에서 재계산.</td><td>합성 입력, AI 분석자 판정(사람 평가 0), 버전당 1회, 표본 10~20. 맹검은 라벨 차폐만(출력 문체로 버전 추정 가능).</td></tr>
+<tr><td>4</td><td>배포 후 버전별 새 대화와 현상 건수 감소</td><td><span class="chip pass">✓ 충족</span><br><small>소표본</small></td><td>gcloud로 6개 리비전·digest 확인. baseline 3건(v1, 모두 GENERATION_UNAVAILABLE)→candidate 3건(v6, 모두 ok). 검토자가 Cloud Logging에서 briefing_trace 7건·briefing_feedback 1건을 직접 조회해 공개 CSV/JSON과 trace·revision·status·durationMs 일치 확인.</td><td>n=3, AAPL 근거 11→12(hash 변경), asOf 상이. baseline 리비전은 v1 코드라 감소는 v2~v6 누적 효과.</td></tr>
+<tr><td>5</td><td>REPORT.md에 과정과 결과 정리</td><td><span class="chip pass">✓ 충족</span></td><td><a href="https://github.com/cjwmanelf/us-stock-dashboard/blob/feat/main-quest-06-briefing-observability/REPORT.md">REPORT.md</a> 7개 절 존재, 상대 링크 113개 모두 유효, 공개 증거 41개 해시 일치.</td><td>문서 불일치 2건(P1-1, P2-1).</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="req7">2. 보고서 7요건 판정</h2>
+<div class="tablewrap">
+<table>
+<thead><tr><th scope="col">#</th><th scope="col">요건</th><th scope="col">판정</th><th scope="col">검토자가 확인한 근거</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>로그·피드백 건수와 직접 작성 대화 제작 방법</td><td><span class="chip pass">✓ 충족</span></td><td>서비스 183 / 모델 171(60/58+20/18+3/3+20/18+40/37+40/37 재합산 일치), 서로 다른 입력 50개, 원격 3+3+1 분리. 질문·근거·asOf 사전 고정, 호출마다 새 UUID. 실사용자 정성 1건과 운영자 투표 1건 구별(<a href="../evidence/deployed-feedback-summary.json">feedback summary</a>).</td></tr>
+<tr><td>2</td><td>후보별 증상·증거·횟수·최초 분기 단계</td><td><span class="chip pass">✓ 충족</span></td><td>REPORT §2 표에 증상·trace·분모·최초 문제 단계. 잠재 후보는 "잠재"로 표기. v3/v4에서 새로 관찰된 실패 유형도 분리 기록.</td></tr>
+<tr><td>3</td><td>선택 이슈와 빈도·영향·비용 표</td><td><span class="chip pass">✓ 충족</span></td><td>REPORT §3 표.</td></tr>
+<tr><td>4</td><td>데이터셋 문제/정상 수, 통과 예시, 사전 출시 게이트</td><td><span class="chip pass">✓ 충족</span></td><td>통과 예시는 <a href="../v4-output-experiment.md">v4 실험</a> 출력 발췌, <a href="../v5-live-evaluation.md">v5</a>·<a href="../v6-live-evaluation.md">v6</a> 사례 서술, <a href="../evidence/final-v6-responses.json">최종 답변 20건 전문</a>. 게이트는 REPORT §4와 protocol JSON.</td></tr>
+<tr><td>5</td><td>수정 내용·실험(실패 포함)·실제 PR 링크</td><td><span class="chip pass">✓ 충족</span></td><td>REPORT §5 표(v1→v2 … v5→v6, FAIL/PASS), 6개 동결 artifact 해시, PR #7과 커밋 해시. PR은 OPEN이며 승인·병합 아님(보고서도 동일 서술).</td></tr>
+<tr><td>6</td><td>배포 후 버전별 건수·지연·비용·스크린샷</td><td><span class="chip pass">✓ 충족</span></td><td>지연·비용 수치가 <a href="../evidence/deployed-comparison.json">deployed-comparison.json</a>과 CSV 재계산에 일치. 스크린샷 5장 유효, 화면의 asOf·버전·근거 수가 기록과 일치.</td></tr>
+<tr><td>7</td><td>회고와 향후 실사용자 로그·피드백 계획</td><td><span class="chip pass">✓ 충족</span><br><small>보완 권고</small></td><td>REPORT §7 회고는 실제 관찰 기반. 향후 계획은 원칙 한 문단 → 발견 P3-2.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="eval">3. 평가 지표: 로컬 합성 평가 (재집계)</h2>
+<p>모든 값은 <a href="../evidence/q610-comparison.csv">q610-comparison.csv</a>, <a href="../q604-v3-development-evidence.csv">v3</a>·<a href="../q604-v4-development-evidence.csv">v4</a>·<a href="../q604-v5-development-evidence.csv">v5</a>·<a href="../q604-v6-development-evidence.csv">v6</a> 개발 CSV, <a href="../q604-v5-holdout-evidence.csv">v5</a>·<a href="../q604-v6-holdout-evidence.csv">v6</a> hold-out CSV에서 검토자가 다시 계산했으며 보고서 수치와 모두 일치했습니다. 입력은 전부 합성이고 판정은 AI 분석자 판정입니다.</p>
+
+<div class="grid2">
+<div class="card">
+<h3>개발 20건 수동 통과 수 (동일 입력, 버전별)</h3>
+<div class="chart" role="img" aria-label="개발 20건 통과 수: v1 1, v2 17, v3 12, v4 17, v5 20, v6 20">
+  <div class="row"><span class="lbl">v1</span><span class="track"><span class="bar a" style="width:5%" title="v1: 1/20"></span></span><span class="val">1/20</span></div>
+  <div class="row"><span class="lbl">v2</span><span class="track"><span class="bar a" style="width:85%" title="v2: 17/20"></span></span><span class="val">17/20</span></div>
+  <div class="row"><span class="lbl">v3</span><span class="track"><span class="bar a" style="width:60%" title="v3: 12/20 (정상 회귀 5)"></span></span><span class="val">12/20</span></div>
+  <div class="row"><span class="lbl">v4</span><span class="track"><span class="bar a" style="width:85%" title="v4: 17/20 (정상 회귀 2)"></span></span><span class="val">17/20</span></div>
+  <div class="row"><span class="lbl">v5</span><span class="track"><span class="bar a" style="width:100%" title="v5: 20/20"></span></span><span class="val">20/20</span></div>
+  <div class="row"><span class="lbl">v6</span><span class="track"><span class="bar a" style="width:100%" title="v6: 20/20"></span></span><span class="val">20/20</span></div>
+</div>
+<p class="note">정상 회귀(baseline 통과→후보 실패): v3 5건(03·04·06·07·08), v4 2건(03·07), v5·v6 0건. v3 가용성 회귀 4건은 모두 정상 사례.</p>
+</div>
+<div class="card">
+<h3>hold-out 10건 통과 수 (세트마다 새 입력)</h3>
+<div class="legend"><span class="a">기준(baseline)</span><span class="b">후보(candidate)</span></div>
+<div class="chart" role="img" aria-label="hold-out 통과 수: q610 세트 v1 0 대 v2 8, q604 세트 v2 7 대 v5 9, q606 세트 v2 8 대 v6 10">
+  <div class="row"><span class="lbl">q610 · v1→v2</span><span class="track"><span class="bar a" style="width:2%" title="v1: 0/10"></span></span><span class="val">0/10</span></div>
+  <div class="row"><span class="lbl"></span><span class="track"><span class="bar b" style="width:80%" title="v2: 8/10 (FAIL, 9/10 미만)"></span></span><span class="val">8/10</span></div>
+  <div class="row"><span class="lbl">q604 · v2→v5</span><span class="track"><span class="bar a" style="width:70%" title="v2: 7/10"></span></span><span class="val">7/10</span></div>
+  <div class="row"><span class="lbl"></span><span class="track"><span class="bar b" style="width:90%" title="v5: 9/10 (FAIL, 정상 회귀 1)"></span></span><span class="val">9/10</span></div>
+  <div class="row"><span class="lbl">q606 · v2→v6</span><span class="track"><span class="bar a" style="width:80%" title="v2: 8/10"></span></span><span class="val">8/10</span></div>
+  <div class="row"><span class="lbl"></span><span class="track"><span class="bar b" style="width:100%" title="v6: 10/10 (PASS, 중대 0·정상 회귀 0)"></span></span><span class="val">10/10</span></div>
+</div>
+<p class="note">v3·v4는 개발 게이트 실패로 hold-out을 실행하지 않았습니다(미평가). 세 세트는 서로 다른 입력이므로 세트 간 점수를 직접 비교하지 않습니다.</p>
+</div>
+</div>
+
+<div class="tablewrap">
+<table>
+<caption class="eyebrow" style="text-align:left;padding:10px 12px 0">호출·토큰·비용·지연 재집계 (단가 USD 0.10/M input, 0.50/M output)</caption>
+<thead><tr><th scope="col">구간</th><th scope="col" class="num">서비스/모델</th><th scope="col" class="num">input / output 토큰</th><th scope="col" class="num">추정 USD</th><th scope="col">모델 호출 지연(중앙값 / p95·최대)</th><th scope="col">판정 요약</th></tr></thead>
+<tbody>
+<tr><td>v1/v2 개발·hold-out</td><td class="num">60 / 58</td><td class="num">28846 / 25812</td><td class="num">0.0157906</td><td>v1 개발 2514 / 4096ms · v2 개발 2754 / 4684ms</td><td>v2 hold-out 8/10 → FAIL</td></tr>
+<tr><td>v3 개발</td><td class="num">20 / 18</td><td class="num">18557 / 10869</td><td class="num">0.0072902</td><td>3367 / 4981ms</td><td>12/20, 정상 회귀 5 → FAIL</td></tr>
+<tr><td>v4 파일럿 + 개발</td><td class="num">3 / 3 + 20 / 18</td><td class="num">3978 / 373 + 23309 / 2157</td><td class="num">0.0005843 + 0.0034094</td><td>1292 / 2127ms</td><td>17/20, 정상 회귀 2 → FAIL</td></tr>
+<tr><td>v5 개발 + hold-out</td><td class="num">40 / 37</td><td class="num">47628 / 8514</td><td class="num">0.0090198</td><td>개발 1434.5 / 4720ms · hold-out v5 1440 / 2084ms</td><td>개발 20/20, hold-out 9/10이나 정상 회귀 1 → FAIL</td></tr>
+<tr><td>v6 개발 + hold-out</td><td class="num">40 / 37</td><td class="num">46837 / 9830</td><td class="num">0.0095987</td><td>개발 1385.5 / 5320ms · hold-out v6 1376 / 1656ms</td><td>개발 20/20, hold-out 10/10 → PASS</td></tr>
+<tr><td><strong>로컬 누계</strong></td><td class="num"><strong>183 / 171</strong></td><td class="num">—</td><td class="num"><strong>0.0456930</strong></td><td>—</td><td>초기 smoke·계정 청구 제외(보고서 명시)</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="deploy">4. 배포 지표: 실제 제공자 피드 (재집계·로그 대조)</h2>
+<p>같은 질문 3개(AAPL·MSFT·NVDA)를 baseline 리비전과 v6 리비전에서 각각 새 대화로 실행한 기록입니다. 질문은 코디네이터가 작성한 합성 평가 질문이고 근거는 배포 앱이 조회한 실제 제공자 메타데이터입니다(시장 사실성 미검증). 검토자는 Cloud Logging을 직접 읽어 7개 trace와 1개 피드백 이벤트가 공개 기록과 일치함을 확인했습니다.</p>
+<div class="tiles">
+  <div class="tile"><div class="k">생성 실패 (unavailable)</div><div class="v">3/3 → 0/3</div><div class="s">baseline v1 → candidate v6 · n=3</div></div>
+  <div class="tile"><div class="k">Cloud Logging 정확 결합</div><div class="v">3/3 + 3/3</div><div class="s">+ UI smoke 1/1 · 검토자 재조회</div></div>
+  <div class="tile"><div class="k">원격 추정 비용</div><div class="v">USD 0.0036511</div><div class="s">baseline 0.0020803 + candidate 0.0015708</div></div>
+  <div class="tile"><div class="k">피드백 이벤트</div><div class="v">1건 (score 1)</div><div class="s">운영자 기능 테스트 · 사용자 만족도 투표 0</div></div>
+</div>
+<div class="tablewrap">
+<table>
+<thead><tr><th scope="col">종목</th><th scope="col">단계</th><th scope="col">revision · 버전</th><th scope="col">상태</th><th scope="col" class="num">근거 수</th><th scope="col" class="num">서버 / 브라우저 ms</th><th scope="col" class="num">input / output</th><th scope="col" class="num">USD</th><th scope="col">로그 결합</th></tr></thead>
+<tbody>
+<tr><td rowspan="2">AAPL</td><td>baseline</td><td>00004-72l · briefing-v1</td><td>unavailable</td><td class="num">11</td><td class="num">9640 / 10501.8</td><td class="num">1715 / 1000</td><td class="num">0.0006715</td><td>일치</td></tr>
+<tr><td>candidate</td><td>v6-20261109 · v6-temporal-notice</td><td>ok</td><td class="num">12</td><td class="num">5137 / 5570.7</td><td class="num">2979 / 543</td><td class="num">0.0005694</td><td>일치 · 근거 hash 변경</td></tr>
+<tr><td rowspan="2">MSFT</td><td>baseline</td><td>00004-72l · briefing-v1</td><td>unavailable</td><td class="num">12</td><td class="num">5908 / 6589.3</td><td class="num">1981 / 1000</td><td class="num">0.0006981</td><td>일치</td></tr>
+<tr><td>candidate</td><td>v6-20261109 · v6-temporal-notice</td><td>ok</td><td class="num">12</td><td class="num">3554 / 3984.2</td><td class="num">3004 / 497</td><td class="num">0.0005489</td><td>일치 · 근거 hash 동일</td></tr>
+<tr><td rowspan="2">NVDA</td><td>baseline</td><td>00004-72l · briefing-v1</td><td>unavailable</td><td class="num">12</td><td class="num">5297 / 5602</td><td class="num">2107 / 1000</td><td class="num">0.0007107</td><td>일치</td></tr>
+<tr><td>candidate</td><td>v6-20261109 · v6-temporal-notice</td><td>ok</td><td class="num">12</td><td class="num">3464 / 4197.9</td><td class="num">3130 / 279</td><td class="num">0.0004525</td><td>일치 · 근거 hash 동일</td></tr>
+<tr><td>AAPL</td><td>UI smoke</td><td>v6-ui-20261109 · v6-temporal-notice</td><td>ok</td><td class="num">12</td><td class="num">3961 / —</td><td class="num">2979 / 446</td><td class="num">0.0005209</td><td>일치 · 쌍 비교와 분리</td></tr>
+</tbody>
+</table>
+</div>
+<p class="note">baseline 출력 토큰이 셋 다 정확히 1000(상한)이지만 native stop_reason은 수집되지 않아 truncation 여부를 단정하지 않습니다(보고서 명시). 검토자 gcloud 조회: 리비전 6개와 digest 일치, Cloud Build <code>405955c5…</code>(03:14:13Z, v6 이미지)·<code>0b3bf33e…</code>(03:33:25Z, UI 이미지) SUCCESS, 런타임 LANGFUSE_ENABLED=false·BRIEFING_EVAL_MODE=false·provider anthropic·model claude-haiku-5-5·secret 4개 버전 1 고정.</p>
+
+<h2 id="shots">5. 스크린샷 전·후 (정적 캡처, 검토자 판독)</h2>
+<div class="shots">
+  <figure><img loading="lazy" src="../evidence/screenshots/baseline-live-unavailable.png" alt="배포 baseline 화면: '브리핑 생성 불가' 제목, 기준 시각 2026-11-09T03:01:29.580Z와 briefing-v1 표시, 일반 생성실패 안내문과 제공된 공개 근거 11건 목록" width="481" height="756"><figcaption><strong>전 · baseline v1</strong> — "브리핑 생성 불가", asOf 03:01:29.580Z, 근거 11. AAPL baseline CSV 행과 일치.</figcaption></figure>
+  <figure><img loading="lazy" src="../evidence/screenshots/candidate-live-ok.png" alt="배포 v6 화면: 'AI 브리핑' 제목, 기준 시각 2026-11-09T03:22:26.214Z와 briefing-v6-temporal-notice 표시, 긴 출처 ID가 대괄호로 섞인 답변과 날짜 안내 단락" width="481" height="756"><figcaption><strong>후 · candidate v6</strong> — "AI 브리핑", asOf 03:22:26.214Z. 긴 출처 ID가 본문을 끊는 모습이 사용자 의견의 배경.</figcaption></figure>
+  <figure><img loading="lazy" src="../evidence/screenshots/citation-compact-mobile.png" alt="390px 모바일 화면: 답변 본문의 출처 ID가 짧은 [근거] 버튼 5개로 바뀌어 표시되고, 기준 시각 2026-11-09T03:35:38.948Z와 제공된 공개 근거 12건" width="390" height="844"><figcaption><strong>UI 개선 · 근거 버튼</strong> — [근거] 버튼 5개, asOf 03:35:38.948Z, 근거 12. UI smoke JSON과 일치.</figcaption></figure>
+  <figure><img loading="lazy" src="../evidence/screenshots/citation-source-dialog-mobile.png" alt="390px 모바일 화면의 '근거 상세' 모달: 출처 제목, 날짜 메타데이터, 원문 보기(새 탭) 링크, 원본 ID, 닫기 버튼" width="390" height="844"><figcaption><strong>UI 개선 · 출처 모달</strong> — 제목·날짜 메타데이터·원문 링크·원본 ID·닫기. 초기 focus는 원문 링크(관측 기록과 일치).</figcaption></figure>
+</div>
+<p class="note">다섯 번째 캡처 <a href="../evidence/screenshots/baseline-authenticated-form.png">baseline-authenticated-form.png</a>는 로그인 상태의 입력 폼이며 개인정보는 보이지 않습니다. 캡처에 보이는 제공자 헤드라인은 공개 뉴스 제목이지만 공개 CSV/JSON은 제목·URL을 제외했으므로 정책 문장을 맞추는 편이 좋습니다(P3-3).</p>
+
+<h2 id="findings">6. 발견 사항 · 우선순위 · 상태</h2>
+<p>상태는 검토 시점(2026-11-09) 기준 <span class="chip todo">초기 발견 · 미적용</span>입니다. 코디네이터가 교정을 적용하면 <a href="../final-review.md">final-review.md</a> §9에 날짜와 함께 기록하고, 여기의 초기 판정은 그대로 둡니다. 현재 조치 상태는 <a href="#remediation">검토 후 보완 결과</a>를 확인하세요.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th scope="col">ID</th><th scope="col">우선순위</th><th scope="col">발견</th><th scope="col">근거</th><th scope="col">권고</th><th scope="col">상태</th></tr></thead>
+<tbody>
+<tr><td>P1-1</td><td><span class="pri p1">높음 · 문서 정정</span></td><td><a href="../final-validation.md">final-validation.md</a> 최종 문장 "5 errors, 0 warnings"가 현재 트리와 다름. 검토자 실행은 오류 5·경고 1.</td><td><code>npx eslint .</code> at a97527a. 경고는 <code>tools/quest-evaluation/live/q604-final-export.mjs:6</code> 미사용 변수 <code>root</code>. production 오류 5건은 문서와 동일 위치.</td><td>문서에 "공개 export 스크립트 추가 후 경고 1건, production 오류 5 동일"을 추기. 코드 수정은 <a href="../evidence/final-validation.json">final-validation.json</a> 해시 갱신이 따르므로 문서 추기를 권함.</td><td><span class="chip todo">미적용</span></td></tr>
+<tr><td>P1-2</td><td><span class="pri p1">높음 · 루브릭 명시성</span></td><td>루브릭 1의 "피드백" 유래 후보가 §2 표에 없음. 실사용자 의견 1건(긴 출처 ID→근거 버튼)은 §6에만 서술.</td><td>REPORT §2 표 4행 모두 trace 유래. <a href="../evidence/deployed-feedback-summary.json">feedback summary</a> realUserQualitative.count=1.</td><td>§2 표에 5번째 행 추가(출처 ID 가독성 · 사용자 의견 1건 03:27:11Z, 관련 trace b7e3c76e… · 1/1 · UI 표시 단계 · 수정 작음, v6-ui로 배포). §2 서두에 "선정 시점 실사용자 피드백 0건" 명시.</td><td><span class="chip todo">미적용</span></td></tr>
+<tr><td>P2-1</td><td><span class="pri p2">중간 · 현재 상태</span></td><td>REPORT §6 서두는 v6-20261109 100% 트래픽을 서술하지만 현재 100%는 v6-ui-20261109(digest 13567eff…).</td><td><code>gcloud run services describe</code> traffic.</td><td>§6 첫 문단에 "현재 라이브 리비전: v6-ui-20261109(UI만 변경, 추론 동일)" 한 줄 추가.</td><td><span class="chip todo">미적용</span></td></tr>
+<tr><td>P2-2</td><td><span class="pri p2">중간 · 해석 보조</span></td><td>후보 4종 중 3종이 미노출 잠재 오류라는 점이 표에는 없음. 잠재 후보 원문은 비공개라 공개 파일에서는 CSV 주석·발췌로만 확인.</td><td>q610-comparison.csv qualityReason, live-baseline-analysis.md 발췌 6개.</td><td>§2 표에 "노출 여부" 열 추가, 공개 재현 범위를 한 문장으로 명시.</td><td><span class="chip todo">미적용</span></td></tr>
+<tr><td>P2-3</td><td><span class="pri p2">중간 · 평가자 성격</span></td><td>"독립 평가자/분석자"가 같은 오케스트레이션의 별도 AI 워커이고 사람 채점 0, 맹검은 단일 차폐라는 점이 분산 서술.</td><td><a href="../evidence/final-README.md">final-README.md</a>, <a href="../v6-live-evaluation.md">v6-live-evaluation.md</a>.</td><td>REPORT §4 한계 문단에 한 문장으로 모음.</td><td><span class="chip todo">미적용</span></td></tr>
+<tr><td>P2-4</td><td><span class="pri p2">중간 · 인과 해석</span></td><td>배포 비교의 baseline은 v1 코드이므로 3/3→0/3은 v2 추출 수정과 v3~v6 누적 효과.</td><td><a href="../deployment-verification.md">deployment-verification.md</a> baseline service.ts 9f1352bf… = v1.</td><td>§6에 "감소한 현상은 §2 후보 1 범주, 배포본은 v2~v6 누적 변경" 명시.</td><td><span class="chip todo">미적용</span></td></tr>
+<tr><td>P3-1</td><td><span class="pri p3">낮음 · 접근성</span></td><td>모달 초기 focus가 "원문 보기 (새 탭)" 링크. Enter 시 의도치 않은 새 탭 이동 가능.</td><td><a href="https://github.com/cjwmanelf/us-stock-dashboard/blob/feat/main-quest-06-briefing-observability/src/components/BriefingCitations.tsx">BriefingCitations.tsx</a> 38행 React <code>autoFocus</code>(HTML autofocus 속성 미생성), <a href="../evidence/deployed-ui-smoke.json">smoke JSON</a> initialFocus.</td><td><code>showModal()</code> 직후 제목(tabindex=-1) 또는 닫기 버튼으로 명시적 focus. UI 전용, 추론 코드·해시 무관.</td><td><span class="chip todo">미적용</span></td></tr>
+<tr><td>P3-2</td><td><span class="pri p3">낮음 · 계획 구체화</span></td><td>§7 향후 실사용자 로그·피드백 계획이 원칙 수준.</td><td>REPORT §7 마지막 문단.</td><td>수집 항목(traceId·version·vote·선택 코멘트), 동의 문구 위치, 보존 일수, (traceId, version) 중복 제거, 3단계 만족도 UI, 목표 표본 수를 표로.</td><td><span class="chip todo">미적용</span></td></tr>
+<tr><td>P3-3</td><td><span class="pri p3">낮음 · 공개 정책</span></td><td>공개 CSV/JSON은 제목·URL 제외, 스크린샷에는 제공자 헤드라인 노출.</td><td><a href="../deployed-live-verification.md">deployed-live-verification.md</a> vs candidate-live-ok.png.</td><td>"스크린샷의 헤드라인은 공개 뉴스 제목, export 제외 규칙은 구조화 데이터 대상"을 한 문장으로 명시.</td><td><span class="chip todo">미적용</span></td></tr>
+<tr><td>P3-4</td><td><span class="pri p3">낮음 · 제출 맥락</span></td><td>저장소가 PUBLIC이고 CLAUDE.md는 비공개로 기술. PR에 Vercel 봇 preview 알림 1건.</td><td><code>gh repo view</code> visibility, PR 코멘트.</td><td>PR 본문/REPORT에 "평가 대상 배포는 Cloud Run URL, Vercel preview는 범위 밖" 명시. CLAUDE.md 갱신은 과제 범위 밖(선택).</td><td><span class="chip todo">미적용</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="checks">7. 검토자가 실제로 수행한 검사</h2>
+<div class="tablewrap">
+<table>
+<thead><tr><th scope="col">검사</th><th scope="col">결과</th></tr></thead>
+<tbody>
+<tr><td>SHA-256 재계산: <a href="../evidence/final-export-manifest.json">final-export-manifest</a> 41개, versions/v1·v2 28개, 현재 service.ts·BriefingForm.tsx·BriefingCitations.tsx, <a href="../evidence/q610-export-hashes.json">q610-export-hashes</a> 4개</td><td>전부 일치. v1↔v2 차이는 VERSION 1줄과 provider의 thinking 블록 허용·text 결합뿐(service.ts 바이트 동일)</td></tr>
+<tr><td><code>node tools/quest-evaluation/live/q604-final-export.mjs --verify-public</code> / <code>--smoke-public</code></td><td>exit 0 · 41파일·10사례·20응답·28소스, 모델 호출 0 / mock fetch 3, 네트워크 0, 작업 트리 변경 없음</td></tr>
+<tr><td>공개 CSV/JSON 재집계(통과·회귀·상태·토큰·비용·지연·trace 고유성)</td><td>보고서 §1·§5·§6 수치와 모두 일치(위 §3·§4 표)</td></tr>
+<tr><td>맹검 기록: rubric frozenAt 03:11:41Z → 실행 03:14:32~03:15:18Z → gradedAt 03:16:24Z(labelsOpened=false) → gate 03:16:51Z; 20 판정 ↔ 20 응답 결합</td><td>순서·결합 정합, v2 8/10(p02·p05 일반 실패 문구), v6 10/10, 정상 회귀 0</td></tr>
+<tr><td><code>gcloud run revisions list</code> / <code>services describe</code> / <code>builds describe</code> (읽기 전용)</td><td>리비전 6개·digest 일치, 트래픽 100% v6-ui-20261109, 빌드 2건 SUCCESS·digest 일치, 런타임 플래그 이름 확인(비밀값 미조회)</td></tr>
+<tr><td><code>gcloud logging read</code> briefing_trace·briefing_feedback (24h)</td><td>trace 7건(3 baseline·3 candidate·1 UI smoke) 모두 공개 기록과 traceId·revision·status·durationMs 일치, feedback 1건 score 1</td></tr>
+<tr><td>비로그인 HTTP: / · /login · /briefing · /dashboard · /portfolio · /feed · POST /api/briefing(동일·타 Origin) · POST /api/briefing/feedback · GET /api/briefing</td><td>200 · 200 · 200(로그인 안내만 렌더) · 307→/login ×3 · 401/403 · 401 · 405</td></tr>
+<tr><td><code>npx tsc --noEmit --incremental false</code></td><td>exit 0</td></tr>
+<tr><td><code>npx eslint .</code></td><td>오류 5(기존 production, 문서와 동일 위치) · 경고 1(q604-final-export.mjs:6 미사용 변수) → P1-1</td></tr>
+<tr><td>추적 파일 자격증명 패턴·개인 경로 스캔, <code>git check-ignore</code>(private/, .briefing-eval/, .env*)</td><td>0건 · 0건 · 모두 제외 확인. 추적 env 파일은 .env.briefing.example뿐</td></tr>
+<tr><td>REPORT.md + docs/quest/*.md 상대 링크 113개, GitHub 브랜치 경로 존재</td><td>깨진 링크 0, 경로 존재 확인</td></tr>
+<tr><td>스크린샷 5장 판독(축소본)</td><td>asOf·버전·근거 수·버튼 수가 CSV/JSON 기록과 일치, 개인정보 없음</td></tr>
+</tbody>
+</table>
+</div>
+<p class="note">수행하지 않은 것: 모델 호출, 피드백 투표, 배포·트래픽·Git 변경, 원격 코멘트, 비공개 디렉터리·env·native 원문 열람, 25개 평가 도구 테스트·12개 검사 스크립트·replay dry-run 재실행, 물리적 터치·교차 브라우저 시험.</p>
+
+<h2 id="limits">8. 방법론과 한계</h2>
+<div class="grid2">
+<div class="card">
+<h3>제출물의 한계(보고서가 밝힌 것, 검토자 확인)</h3>
+<ul class="tight">
+  <li>로컬 입력 50개는 합성. 배포 비교 근거는 실제 제공자 메타데이터지만 사실성 미검증.</li>
+  <li>모든 품질 판정은 AI 분석자 판정. 사람의 숫자 만족도 투표 0건, 운영자 기능 테스트 1건은 만족도로 집계되지 않음.</li>
+  <li>표본은 개발 20·hold-out 10·배포 3, 각 1회 실행. v2의 hold-out 점수가 세트마다 8/10·7/10·8/10으로 달라 소표본 변동이 보임.</li>
+  <li>맹검은 라벨 차폐뿐. v2의 일반 실패 문구와 v6의 "날짜 안내" 단락으로 버전 추정 가능.</li>
+  <li>native 원문·thinking·헤더 비공개. 잠재 후보 원문 재채점은 공개 파일만으로 불가.</li>
+  <li>전체 lint는 기존 production 오류 5건 잔존. Langfuse 수집 없음. UI smoke는 1회·DOM click·390px.</li>
+  <li>비용은 토큰 단가 추정치이며 계정 청구액이 아님.</li>
+</ul>
+</div>
+<div class="card">
+<h3>이 검토의 한계</h3>
+<ul class="tight">
+  <li>읽기 전용 검토이며 모델을 호출하지 않았으므로 응답 품질을 재생산하지 않았습니다. 최종 답변 20건은 공개 전문을 읽고 기록된 판정 사유와 대조했을 뿐 재채점하지 않았습니다.</li>
+  <li>"archive 14개 inference 파일 일치" 같은 비공개 아카이브 대조는 이미지 digest와 현재 소스 해시로만 간접 확인했습니다.</li>
+  <li>25개 테스트·12개 검사 스크립트는 재실행하지 않았습니다(typecheck·lint·공개 검증·smoke로 충분하다고 판단).</li>
+  <li>검토자 모델·effort는 하네스 자기 보고와 환경변수로만 확인했고 API 메타데이터로 검증하지 않았습니다.</li>
+  <li>이 페이지는 평가 점수나 등급을 부여하지 않습니다. 루브릭 충족 여부와 근거만 기록합니다.</li>
+</ul>
+</div>
+</div>
+
+<h2 id="links">9. 증거 링크</h2>
+<div class="grid2">
+<div class="card">
+<h3>저장소(GitHub, 브랜치 feat/main-quest-06-briefing-observability)</h3>
+<ul class="tight">
+  <li><a href="https://github.com/cjwmanelf/us-stock-dashboard/pull/7">PR #7</a> · <a href="https://github.com/cjwmanelf/us-stock-dashboard/commit/0fcb396b28c435362ed5dc053a48d473f41538bc">커밋 0fcb396</a> · <a href="https://github.com/cjwmanelf/us-stock-dashboard/commit/a97527ac3638146b5fee398a73b84d71f0e5f56f">커밋 a97527a</a></li>
+  <li><a href="https://github.com/cjwmanelf/us-stock-dashboard/blob/feat/main-quest-06-briefing-observability/REPORT.md">REPORT.md</a></li>
+  <li><a href="https://github.com/cjwmanelf/us-stock-dashboard/blob/feat/main-quest-06-briefing-observability/src/lib/briefing/service.ts">src/lib/briefing/service.ts</a> · <a href="https://github.com/cjwmanelf/us-stock-dashboard/blob/feat/main-quest-06-briefing-observability/src/lib/briefing/anthropic-provider.ts">anthropic-provider.ts</a> · <a href="https://github.com/cjwmanelf/us-stock-dashboard/blob/feat/main-quest-06-briefing-observability/src/components/BriefingCitations.tsx">BriefingCitations.tsx</a></li>
+  <li><a href="https://github.com/cjwmanelf/us-stock-dashboard/blob/feat/main-quest-06-briefing-observability/tools/quest-evaluation/live/q604-final-export.mjs">q604-final-export.mjs</a> · <a href="https://github.com/cjwmanelf/us-stock-dashboard/blob/feat/main-quest-06-briefing-observability/tools/quest-evaluation/versions/v2/manifest.json">versions/v2/manifest.json</a></li>
+  <li><a href="https://modu-rich-quest06-fyzai5fn7a-du.a.run.app/briefing">배포 앱 /briefing</a></li>
+</ul>
+</div>
+<div class="card">
+<h3>docs/quest 공개 증거(상대 경로)</h3>
+<ul class="tight">
+  <li><a href="../final-review.md">final-review.md</a> (이 검토의 Markdown 원본·교정 기록)</li>
+  <li><a href="../evidence/final-README.md">evidence/final-README.md</a> · <a href="../evidence/final-gate.json">final-gate.json</a> · <a href="../evidence/final-blind-review.json">final-blind-review.json</a> · <a href="../evidence/final-v6-responses.json">final-v6-responses.json</a> · <a href="../evidence/final-q606-cases.json">final-q606-cases.json</a></li>
+  <li><a href="../evidence/q610-comparison.csv">q610-comparison.csv</a> · <a href="../evidence/q610-synthetic-cases.json">q610-synthetic-cases.json</a> · <a href="../live-baseline-analysis.md">live-baseline-analysis.md</a></li>
+  <li><a href="../v3-live-evaluation.md">v3</a> · <a href="../v4-live-evaluation.md">v4</a> · <a href="../v5-live-evaluation.md">v5</a> · <a href="../v6-live-evaluation.md">v6</a> 실제 평가 · <a href="../submission-gap-audit.md">submission-gap-audit.md</a></li>
+  <li><a href="../deployment-verification.md">deployment-verification.md</a> · <a href="../deployed-live-verification.md">deployed-live-verification.md</a> · <a href="../evidence/deployed-comparison.json">deployed-comparison.json</a> · <a href="../evidence/deployed-ui-smoke.json">deployed-ui-smoke.json</a> · <a href="../citation-ui.md">citation-ui.md</a></li>
+  <li><a href="../final-validation.md">final-validation.md</a> · <a href="../publication-verification.md">publication-verification.md</a></li>
+</ul>
+</div>
+</div>
+
+</main>
+<footer>
+  <p>독립 검토 워커 Q611 · 2026-11-09 · 요청 모델 Claude Fable 5.1 (effort max) · 관측: 하네스 보고 모델 ID claude-fable-5-1, 환경변수 CLAUDE_EFFORT=max. 이 페이지는 외부 스크립트·폰트·이미지를 로드하지 않으며 docs/quest 웹루트 기준 상대 경로와 GitHub·배포 링크만 사용합니다. 평가 점수나 등급은 부여하지 않습니다.</p>
+</footer>
+</div>
+</body>
+</html>

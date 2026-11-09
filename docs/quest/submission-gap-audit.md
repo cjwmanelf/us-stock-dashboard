@@ -1,6 +1,6 @@
 # 제출 근거·공백 감사 — 2026-11-09 중간 통합
 
-## 최종 실측 갱신: v6 PASS·원격 양쪽 및 UI 완료, PR/독립 검토 후속
+## 최종 실측 갱신: v6 PASS·원격 양쪽 및 UI 완료, PR·독립 검토 완료
 
 이 절이 아래 역사적 중간 상태를 대체한다. [v6 독립 평가](v6-live-evaluation.md)는40서비스37모델, 개발20/20·새 독립 hold-out v2 8/10→v6 10/10·중대0·정상회귀0으로 사전 gate PASS다. 추가 추정USD0.0095987, 로컬 누계 **183서비스171모델 USD0.0456930**이며 다른 smoke/계정 청구는 제외다. 원격은 baseline3건USD0.0020803+candidate3건USD0.0015708=**USD0.0036511**로 별도 표시한다. 알려진 로컬+원격 합USD0.0493441은 전체 계정 청구가 아니다.
 
@@ -10,9 +10,9 @@
 
 [피드백 안전 요약](evidence/deployed-feedback-summary.json)은 **운영자 기능 테스트1건**(202/accepted 후 Cloud Logging score1 read-back)과 **실제 사용자 정성 의견1건**(긴ID 대신 짧은 근거버튼 요청)을 분리한다. 숫자 만족도표로 바꾸지 않았고 메시지 도착 알림은 응답에서 제외했다. raw 사용자 문장·기사 본문·native reasoning·인증정보를 공개하지 않았다.
 
-[최종 코드검증](final-validation.md):12스크립트/25테스트/typecheck 통과, 변경 production·새 tooling lint0; whole-repo는 확인된 기존 오류5개가 남는다. 예전 tooling lint 실패 기록은 해결 이력을 포함한 역사적 기록이며 최종 상태와 구별한다.
+[최종 코드검증](final-validation.md):12스크립트/25테스트/typecheck 통과, 변경 production 검사 통과; 최종 독립 검토의 whole-repo lint는 기존 오류5개·공개 export 도구 경고1개다. 예전 tooling lint 실패 기록은 해결 이력을 포함한 역사적 기록이며 최종 상태와 구별한다.
 
-**현재 남은 공백:** [PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)은 생성했으며 요청된 독립 Claude 검토는 후속이다. 최종 UI 배포·390px 브라우저 검증은 완료했고 [별도 smoke](evidence/deployed-ui-smoke.json) 1모델/input2979/output446/USD0.0005209를 전후 원격6건과 분리한다. 알려진 로컬+원격6+UI1 비용 합은 USD0.0498650이다. [공개 최종 입력·rubric·응답·판정](evidence/final-README.md)과 v1/v2 원본 소스28개가 제공되어 과거 fixture 부재 공백은 해소됐다. native 원문은 의도적으로 비공개이며 모델 재실행 답변 동일성을 보장하지 않는다. 초기 focus는 모달의 원문 링크, Escape/focus 복귀는 확인했고 DOM click만 사용했다. 아래 중간 기록의 미완료 표시는 당시 상태다.
+**현재 남은 공백:** [PR #7](https://github.com/cjwmanelf/us-stock-dashboard/pull/7)은 생성했으며 [독립 Claude 검토](final-review.md)는 제출 가능(한계 명시)으로 완료됐다. P1 문서 정정·피드백 후보 추가 및 주요 서술 보완을 반영했고, 모달 초기 focus 변경 등 선택적 제품 개선은 미실행으로 남긴다. 최종 UI 배포·390px 브라우저 검증은 완료했고 [별도 smoke](evidence/deployed-ui-smoke.json) 1모델/input2979/output446/USD0.0005209를 전후 원격6건과 분리한다. 알려진 로컬+원격6+UI1 비용 합은 USD0.0498650이다. [공개 최종 입력·rubric·응답·판정](evidence/final-README.md)과 v1/v2 원본 소스28개가 제공되어 과거 fixture 부재 공백은 해소됐다. native 원문은 의도적으로 비공개이며 모델 재실행 답변 동일성을 보장하지 않는다. 초기 focus는 모달의 원문 링크, Escape/focus 복귀는 확인했고 DOM click만 사용했다. 아래 중간 기록의 미완료 표시는 당시 상태다.
 
 ## 아래 기록은 이전 단계의 역사적 감사
 
