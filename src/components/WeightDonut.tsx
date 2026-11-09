@@ -50,16 +50,15 @@ export function WeightDonut({ rows }: { rows: HoldingRow[] }) {
   const r = 64;
   const C = 2 * Math.PI * r;
   const gap = 2; // 조각 사이 간격(px)
-  let cum = 0;
-  const arcs = slices.map((s) => {
+  const arcs = slices.map((s, index) => {
+    const precedingAmount = slices.slice(0, index).reduce((sum, slice) => sum + slice.amount, 0);
     const full = (s.amount / total) * C;
     const visible = Math.max(full - gap, 0.75);
     const arc = {
       ...s,
       dasharray: `${visible} ${C - visible}`,
-      offset: -cum,
+      offset: -(precedingAmount / total) * C,
     };
-    cum += full;
     return arc;
   });
 

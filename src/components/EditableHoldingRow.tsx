@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useState } from "react";
 import { deleteHolding, updateHolding } from "@/app/portfolio/actions";
 import { SubmitButton } from "@/components/SubmitButton";
 import type { HoldingRow } from "@/lib/portfolio";
@@ -24,87 +24,7 @@ const initialState: FormState = {};
 export function EditableHoldingRow({ row }: { row: HoldingRow }) {
   const { holding: h, cost, price, value, gain, gainPct } = row;
   const [editing, setEditing] = useState(false);
-  const [state, formAction, pending] = useActionState(
-    updateHolding,
-    initialState,
-  );
-
-  // 수정 성공 시 편집 모드 종료
-  useEffect(() => {
-    if (state.success) setEditing(false);
-  }, [state.success]);
-
-  if (editing) {
-    return (
-      <tr className="border-b border-line">
-        <td colSpan={8} className="py-3">
-          <form action={formAction} className="flex flex-wrap items-end gap-3">
-            <input type="hidden" name="id" value={h.id} />
-            <span className="w-12 pb-1 font-medium">{h.ticker}</span>
-
-            <label className="flex flex-col gap-0.5 text-xs text-muted">
-              수량
-              <input
-                name="quantity"
-                type="number"
-                step="any"
-                min="0"
-                required
-                defaultValue={h.quantity}
-                className={inputCls}
-              />
-            </label>
-
-            <label className="flex flex-col gap-0.5 text-xs text-muted">
-              평균단가 (USD)
-              <input
-                name="avg_price"
-                type="number"
-                step="any"
-                min="0"
-                required
-                defaultValue={h.avg_price}
-                className={inputCls}
-              />
-            </label>
-
-            <label className="flex flex-col gap-0.5 text-xs text-muted">
-              매수환율 (선택)
-              <input
-                name="buy_fx_rate"
-                type="number"
-                step="any"
-                min="0"
-                defaultValue={h.buy_fx_rate ?? ""}
-                placeholder="비우면 미입력"
-                className={inputCls}
-              />
-            </label>
-
-            <div className="flex gap-2 pb-1">
-              <button
-                type="submit"
-                disabled={pending}
-                className="rounded-lg bg-brand px-3 py-1 text-sm font-semibold text-brand-fg hover:bg-brand-strong disabled:opacity-50"
-              >
-                {pending ? "저장 중…" : "저장"}
-              </button>
-              <button
-                type="button"
-                onClick={() => setEditing(false)}
-                className="rounded-lg border border-line px-3 py-1 text-sm text-muted hover:bg-surface-2"
-              >
-                취소
-              </button>
-            </div>
-            {state.error && (
-              <p className="w-full text-sm text-up">{state.error}</p>
-            )}
-          </form>
-        </td>
-      </tr>
-    );
-  }
+  if (editing) return <HoldingEditor row={row} onClose={() => setEditing(false)} />;
 
   return (
     <tr className="border-b border-line">
@@ -170,4 +90,85 @@ export function EditableHoldingRow({ row }: { row: HoldingRow }) {
       </td>
     </tr>
   );
+}
+
+function HoldingEditor({ row, onClose }: { row: HoldingRow; onClose: () => void }) {
+  const h = row.holding;
+  const [state, formAction, pending] = useActionState(
+    async (previous: FormState, data: FormData) => {
+      const next = await updateHolding(previous, data);
+      if (next.success) onClose();
+      return next;
+    }, initialState,
+  );
+    return (
+      <tr className="border-b border-line">
+        <td colSpan={8} className="py-3">
+          <form action={formAction} className="flex flex-wrap items-end gap-3">
+            <input type="hidden" name="id" value={h.id} />
+            <span className="w-12 pb-1 font-medium">{h.ticker}</span>
+
+            <label className="flex flex-col gap-0.5 text-xs text-muted">
+              수량
+              <input
+                name="quantity"
+                type="number"
+                step="any"
+                min="0"
+                required
+                defaultValue={h.quantity}
+                className={inputCls}
+              />
+            </label>
+
+            <label className="flex flex-col gap-0.5 text-xs text-muted">
+              평균단가 (USD)
+              <input
+                name="avg_price"
+                type="number"
+                step="any"
+                min="0"
+                required
+                defaultValue={h.avg_price}
+                className={inputCls}
+              />
+            </label>
+
+            <label className="flex flex-col gap-0.5 text-xs text-muted">
+              매수환율 (선택)
+              <input
+                name="buy_fx_rate"
+                type="number"
+                step="any"
+                min="0"
+                defaultValue={h.buy_fx_rate ?? ""}
+                placeholder="비우면 미입력"
+                className={inputCls}
+              />
+            </label>
+
+            <div className="flex gap-2 pb-1">
+              <button
+                type="submit"
+                disabled={pending}
+                className="rounded-lg bg-brand px-3 py-1 text-sm font-semibold text-brand-fg hover:bg-brand-strong disabled:opacity-50"
+              >
+                {pending ? "저장 중…" : "저장"}
+              </button>
+              <button
+                type="button"
+                disabled={pending}
+                onClick={onClose}
+                className="rounded-lg border border-line px-3 py-1 text-sm text-muted hover:bg-surface-2"
+              >
+                취소
+              </button>
+            </div>
+            {state.error && (
+              <p className="w-full text-sm text-up">{state.error}</p>
+            )}
+          </form>
+        </td>
+      </tr>
+    );
 }

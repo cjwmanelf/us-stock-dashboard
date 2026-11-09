@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const LINKS = [
+  { href: "/briefing", label: "AI 브리핑" },
   { href: "/dashboard", label: "대시보드" },
   { href: "/portfolio", label: "포트폴리오" },
   { href: "/feed", label: "관심 & 소식" },

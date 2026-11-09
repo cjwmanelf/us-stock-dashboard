@@ -1,0 +1,48 @@
+{
+  "schema": "independent-holdout-protocol-v1",
+  "frozenAt": "2026-11-09T03:11:41.636Z",
+  "inputOrigin": "synthetic",
+  "owner": "Q606 independent evaluator",
+  "isolation": {
+    "readForPreparation": [
+      "dispatch functional requirements",
+      "repository AGENTS.md"
+    ],
+    "notRead": [
+      "previous held-out input/output",
+      "private q610/q604",
+      "public old held-out CSV rows",
+      "current v5/v6 app source or prompts"
+    ],
+    "note": "Prior Q606 replay-tool engineering context exists; this preparation did not open any earlier held-out artifacts or current application implementation. All ten texts, dates, tickers and ids were authored anew for this dispatch."
+  },
+  "dataset": {
+    "total": 10,
+    "normal": 5,
+    "problem": 5,
+    "split": "held-out",
+    "fictional": "All source titles and facts are synthetic; ticker names are identifiers, not assertions about actual companies."
+  },
+  "execution": {
+    "status": "not-run",
+    "modelCalls": 0,
+    "versions": "Follow-up only after source-ready; record exact supplied implementation identities and confirmed response versions.",
+    "pairs": "Identical request/evidence/asOf/caseId across versions, one fresh isolated invocation per case per version; fresh trace and conversation UUIDs.",
+    "blindReview": "Judge both response sets independently against this frozen rubric before opening version labels or comparing scores. Preserve verbatim responses privately. Record reason and supporting answer span for every failure/critical.",
+    "noTuning": "Do not expose raw cases/rubrics to implementation coders before the final source version is frozen. No edits, replacement cases or selective reruns after responses are seen. A necessary correction requires a new protocol and explicit invalidation of this run.",
+    "failurePolicy": "Provider/transport/configuration failures are operational failures, not successes. Any missing pair leaves gate PENDING rather than dropping denominator. Retry only in an explicitly recorded new full evaluation run; retain original records."
+  },
+  "gate": {
+    "requiredCompletePairs": 10,
+    "candidatePassMinimum": 9,
+    "candidateCriticalMaximum": 0,
+    "normalRegressionMaximum": 0,
+    "normalRegression": "A normal case that passes for baseline and fails for candidate. Both are judged under the same rubric; baseline failures do not excuse candidate failures.",
+    "decision": "PASS only when all complete-pair, candidate pass count, critical count and normal regression conditions hold; otherwise FAIL, except incomplete or disputed grading is PENDING.",
+    "disagreement": "Record disputed criteria and seek independent adjudication without rewriting rubric; do not silently award a pass."
+  },
+  "reporting": {
+    "coordinator": "Only artifact directory, file/manifest SHA-256, count and frozen timestamp until authorized independent evaluation follow-up.",
+    "implementationCoder": "No raw cases, rubrics, protocol content or outputs before version freeze."
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "version": "synthetic-suite-v1",
+  "provenance": "synthetic-test-inputs-not-observations",
+  "files": { "cases.json": "add0cdcfa8d7a15d67f019ce7c36bb5c991dbc5b204073b9ecc1685ae86b13ae" },
+  "developmentCount": 6,
+  "heldOutCount": 3
+}

@@ -1,0 +1,209 @@
+{
+  "schema": "public-blind-review-v1",
+  "gradedAt": "2026-11-09T03:16:24.952Z",
+  "labelsOpenedAtGrading": false,
+  "originalJudgmentsSha256": "083efeaa8e83bc8098f76d524a75f5266b95dec7cebf6a63af4f43659cd849c4",
+  "reviewer": "independent assistant analyst",
+  "records": [
+    {
+      "blindId": "7b032704-70f3-4923-bdfb-da41b7129de1",
+      "caseId": "ind6-n01",
+      "pass": true,
+      "critical": false,
+      "note": "Contract announcement and undisclosed amount are supported. Date wording is imprecise but grammatically frames dated material reporting an announcement, not a clear independent contract execution date; not assigned critical or fail.",
+      "label": "v2",
+      "traceId": "9aa91401-16ec-4e6d-a731-68acf491570f",
+      "version": "briefing-v2-anthropic-text"
+    },
+    {
+      "blindId": "889ff40c-bd1b-4902-b003-1a6730c3781d",
+      "caseId": "ind6-p04",
+      "pass": true,
+      "critical": false,
+      "note": "All applicable global and case-specific semantics satisfied; supported partial facts and limitations with valid citations, no material unsupported inference.",
+      "label": "v6",
+      "traceId": "b7b5323b-922f-4a34-9048-fc15dab550ad",
+      "version": "briefing-v6-temporal-notice"
+    },
+    {
+      "blindId": "30b6ed69-722c-4059-92cc-74d0ba342e86",
+      "caseId": "ind6-n04",
+      "pass": true,
+      "critical": false,
+      "note": "All applicable global and case-specific semantics satisfied; supported partial facts and limitations with valid citations, no material unsupported inference.",
+      "label": "v2",
+      "traceId": "c9292894-4cfc-4853-b853-b57e0b9e7afc",
+      "version": "briefing-v2-anthropic-text"
+    },
+    {
+      "blindId": "499e29df-bc47-49f6-b9b5-71598bdba056",
+      "caseId": "ind6-n04",
+      "pass": true,
+      "critical": false,
+      "note": "All applicable global and case-specific semantics satisfied; supported partial facts and limitations with valid citations, no material unsupported inference.",
+      "label": "v6",
+      "traceId": "cbfafdc5-e6cb-4eb3-be3b-a8c54561c42d",
+      "version": "briefing-v6-temporal-notice"
+    },
+    {
+      "blindId": "29bcdc4a-4a84-4ee7-9283-365dac98462b",
+      "caseId": "ind6-p03",
+      "pass": true,
+      "critical": false,
+      "note": "All applicable global and case-specific semantics satisfied; supported partial facts and limitations with valid citations, no material unsupported inference.",
+      "label": "v6",
+      "traceId": "0c76fae7-abe7-49f8-ba2f-680a38d46284",
+      "version": "briefing-v6-temporal-notice"
+    },
+    {
+      "blindId": "e2e7160a-eb1c-48d9-885d-e3b54e23db14",
+      "caseId": "ind6-p04",
+      "pass": true,
+      "critical": false,
+      "note": "All applicable global and case-specific semantics satisfied; supported partial facts and limitations with valid citations, no material unsupported inference.",
+      "label": "v2",
+      "traceId": "c0859bf5-8289-4613-ac76-3f902448ddbf",
+      "version": "briefing-v2-anthropic-text"
+    },
+    {
+      "blindId": "45d139a5-36b6-424d-97a9-21a502954e3c",
+      "caseId": "ind6-p05",
+      "pass": false,
+      "critical": false,
+      "note": "Generic generation failure does not answer required semantics; source list alone is not a completed answer.",
+      "label": "v2",
+      "traceId": "8ef51513-0d1c-4087-a2ba-7d5f06cd2518",
+      "version": "briefing-v2-anthropic-text"
+    },
+    {
+      "blindId": "9ca6a046-a1a8-4274-9b99-2d1ff98f74b9",
+      "caseId": "ind6-p01",
+      "pass": true,
+      "critical": false,
+      "note": "All applicable global and case-specific semantics satisfied; supported partial facts and limitations with valid citations, no material unsupported inference.",
+      "label": "v6",
+      "traceId": "a6c81265-b464-417e-9784-192cc30444ea",
+      "version": "briefing-v6-temporal-notice"
+    },
+    {
+      "blindId": "be0b95ef-a4dd-4380-953b-91dc86d50b25",
+      "caseId": "ind6-n01",
+      "pass": true,
+      "critical": false,
+      "note": "All applicable global and case-specific semantics satisfied; supported partial facts and limitations with valid citations, no material unsupported inference.",
+      "label": "v6",
+      "traceId": "1c1b482a-ede1-4151-b42b-f75118b20ad8",
+      "version": "briefing-v6-temporal-notice"
+    },
+    {
+      "blindId": "40674e1f-c43a-41aa-b755-f0d1a2fc65e0",
+      "caseId": "ind6-n02",
+      "pass": true,
+      "critical": false,
+      "note": "Page update and absence of fee-change information are distinguished; no fee freeze/increase/decrease asserted.",
+      "label": "v2",
+      "traceId": "770d5627-8277-4a2a-9528-74831f535cc1",
+      "version": "briefing-v2-anthropic-text"
+    },
+    {
+      "blindId": "84e55f92-5ca1-4074-b836-c9ffd7c89963",
+      "caseId": "ind6-p05",
+      "pass": true,
+      "critical": false,
+      "note": "Final answer preserves scheduled KST event date, distinguishes metadata and explicitly warns metadata is after asOf; no completion inference.",
+      "label": "v6",
+      "traceId": "8a6a7210-093c-479a-a4e8-8e5b87834814",
+      "version": "briefing-v6-temporal-notice"
+    },
+    {
+      "blindId": "e97be19e-5768-4b4b-b444-cadd78906251",
+      "caseId": "ind6-n02",
+      "pass": true,
+      "critical": false,
+      "note": "All applicable global and case-specific semantics satisfied; supported partial facts and limitations with valid citations, no material unsupported inference.",
+      "label": "v6",
+      "traceId": "c7913b96-252f-4b99-b7fb-ece36acca75f",
+      "version": "briefing-v6-temporal-notice"
+    },
+    {
+      "blindId": "4bc43f98-912a-463d-b40f-3b7643876bc4",
+      "caseId": "ind6-p03",
+      "pass": true,
+      "critical": false,
+      "note": "All applicable global and case-specific semantics satisfied; supported partial facts and limitations with valid citations, no material unsupported inference.",
+      "label": "v2",
+      "traceId": "8685310e-9614-4da8-8ef3-26f7bfd0928d",
+      "version": "briefing-v2-anthropic-text"
+    },
+    {
+      "blindId": "f37304b4-c88f-41da-b023-dba76d4bc1b0",
+      "caseId": "ind6-n05",
+      "pass": true,
+      "critical": false,
+      "note": "All applicable global and case-specific semantics satisfied; supported partial facts and limitations with valid citations, no material unsupported inference.",
+      "label": "v2",
+      "traceId": "47477895-cc53-4d22-b2ae-5f60e14500b4",
+      "version": "briefing-v2-anthropic-text"
+    },
+    {
+      "blindId": "8e00d54c-e8f7-465a-b140-5f36f5bba545",
+      "caseId": "ind6-p02",
+      "pass": false,
+      "critical": false,
+      "note": "Generic generation failure does not answer required semantics; source list alone is not a completed answer.",
+      "label": "v2",
+      "traceId": "b3fc013d-920c-4b4d-a330-08ea413161fb",
+      "version": "briefing-v2-anthropic-text"
+    },
+    {
+      "blindId": "de1071ff-e9be-40b0-a57c-92e4eca04976",
+      "caseId": "ind6-n03",
+      "pass": true,
+      "critical": false,
+      "note": "All applicable global and case-specific semantics satisfied; supported partial facts and limitations with valid citations, no material unsupported inference.",
+      "label": "v2",
+      "traceId": "29fe2cb7-a45f-4310-b521-094f25e2952b",
+      "version": "briefing-v2-anthropic-text"
+    },
+    {
+      "blindId": "a00245f8-9149-413b-8c78-08a92caf91c7",
+      "caseId": "ind6-n05",
+      "pass": true,
+      "critical": false,
+      "note": "All applicable global and case-specific semantics satisfied; supported partial facts and limitations with valid citations, no material unsupported inference.",
+      "label": "v6",
+      "traceId": "02a4001f-e8a0-4257-89f1-d9e46cfaf3e2",
+      "version": "briefing-v6-temporal-notice"
+    },
+    {
+      "blindId": "78c25b4c-50b8-47eb-94ee-bab88202e9dd",
+      "caseId": "ind6-p01",
+      "pass": true,
+      "critical": false,
+      "note": "All applicable global and case-specific semantics satisfied; supported partial facts and limitations with valid citations, no material unsupported inference.",
+      "label": "v2",
+      "traceId": "55d58e7d-3b04-47fc-bc9b-8ed14f5db96e",
+      "version": "briefing-v2-anthropic-text"
+    },
+    {
+      "blindId": "8a6e40dc-824f-4399-9f5c-70882a838a82",
+      "caseId": "ind6-n03",
+      "pass": true,
+      "critical": false,
+      "note": "Explicit Nov6 planned event plus inability to confirm completion/results conveys future scheduled status relative to supplied Nov2 asOf; semantic-equivalent wording allowed, exact after-asOf phrase not required for event schedule.",
+      "label": "v6",
+      "traceId": "81ae9763-b65f-44a8-a070-e865e704230d",
+      "version": "briefing-v6-temporal-notice"
+    },
+    {
+      "blindId": "9be4733e-0bb3-4f3e-babd-f1362e006f56",
+      "caseId": "ind6-p02",
+      "pass": true,
+      "critical": false,
+      "note": "States all source tickers differ from requested ticker and refuses requested company attribution; source list identifies sole KO item. Meets semantic requirement without repeating names.",
+      "label": "v6",
+      "traceId": "bef6d425-972f-4d0f-acfe-067307ef7cda",
+      "version": "briefing-v6-temporal-notice"
+    }
+  ]
+}

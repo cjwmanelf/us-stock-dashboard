@@ -10,7 +10,7 @@
 ## 스택 / 배포
 - Next.js 16(App Router, TS, Tailwind v4) + Supabase(Auth·Postgres·RLS) + Vercel.
 - 공개 URL: https://us-stock-dashboard-modu-rich.vercel.app
-- repo: github.com/cjwmanelf/us-stock-dashboard (**비공개**), `main` push → Vercel 자동 배포(~30초). gh CLI 로그인됨(cjwmanelf).
+- repo: github.com/cjwmanelf/us-stock-dashboard (**공개/PUBLIC**, 2026-11-09 Q611 독립 검토 확인), `main` push → Vercel 자동 배포(~30초). gh CLI 로그인됨(cjwmanelf).
 - 로컬: `npm run dev` (localhost:3000). 배포 확인: `npx vercel ls`.
 
 ## ⚠️ 필수 주의사항 (재실수 방지)

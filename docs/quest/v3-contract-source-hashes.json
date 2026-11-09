@@ -1,0 +1,28 @@
+{
+  "version": "briefing-v3-evidence-contract",
+  "promptVersion": "briefing-prompt-v3-contract",
+  "algorithm": "sha256",
+  "aggregateDefinition": "SHA256 of JSON.stringify(files map sorted lexically by path)",
+  "aggregate": "b913e6b35ddc218a91d026b736217725b1c40f788491b86b7f0e366ef9be3934",
+  "files": {
+    "scripts/briefing-integration-check.cjs": "b3061be8ca65f1fd9b1eeb9027e25e3f4fb7020480decfafcd3ca16b8d6c1f0e",
+    "scripts/briefing-v3-check.cjs": "a2e1221586a8dcd793b02908eea55abf273645150d0f80b9c62e9ebeec7ef4fd",
+    "src/components/BriefingForm.tsx": "ef10b57cd816ca4c3bcbcf858927fe515b4e8955853d95740e9da8507a4d72ae",
+    "src/lib/briefing/anthropic-provider.ts": "05409172a0bba2f162b88ff420f428f5eb81d0f7d3232757dc9b60e7b0d61f6f",
+    "src/lib/briefing/evaluation-auth.ts": "a24f246587afbefc31b510c80c4cc013e4b3975ddf79113ae9824a65eccef15e",
+    "src/lib/briefing/evaluation.ts": "173e87b06606070d8c9a898b25b023ddcbaf56fa28bf62437c82d00c7c491bfe",
+    "src/lib/briefing/feedback.ts": "8fc8032dc7ae5b0937310713e074ce213058c58265cd40ac2a2af357ed1f7b1f",
+    "src/lib/briefing/guards.ts": "5b657df618145d1f31ee7e815815525d42003748843dacd37f86746b17ffb75b",
+    "src/lib/briefing/http.ts": "1f402fcf351802f8b7f265b61745562d746a332dc4c567e1cabf2d0289e37461",
+    "src/lib/briefing/observability.ts": "c937d75c3f8eceda382061c78236e2da32f39e9fe02cfb75703765e55b5b647f",
+    "src/lib/briefing/provider-config.ts": "1814bff2dc8d5d7c22c0a37e027f0992af6b395c167c2049fa346a50539a0fd0",
+    "src/lib/briefing/service.ts": "64dbdcfe315b05bb0d9821d9fdbb0bd5ead10115b3647de5033a715c1f9d0890",
+    "src/lib/briefing/telemetry/adapter.ts": "74099c16119aa57db92fb2c11acd3e6b1d8229da6abe854298616ccaa095ecf3",
+    "src/lib/briefing/telemetry/index.ts": "abb3d4759f991be318870e7fe5bdecbff94251e1b1f844a71d9346ac86fc4fcc",
+    "src/lib/briefing/telemetry/sdk.ts": "c33ae2b8b285a32eac9b7ea2ba08936b6d4c0ed1c3c21aee8b62f370249e7eb1",
+    "src/lib/briefing/types.ts": "79de0f078d04d0bb594ac0e380c2152b8b3910b7be97dad2970cb6a97d611e73",
+    "src/lib/briefing/vertex-provider.ts": "30c9f2c71dfdb475485539f634b39a1f6f634e06e024c167d08ee5617d6fd398",
+    "tools/quest-evaluation/src/evaluate.mjs": "618afe4a0f0a2a3b10704807f455e2fa8c536e18618c19c2b26cbe3ad6b9c600",
+    "tools/quest-evaluation/src/replay.mjs": "9d164f837b43c19ba3d0292da5b7818b6df8d90280af531e3158283ef73ac448"
+  }
+}

@@ -1,0 +1,7 @@
+private/
+reports/
+node_modules/
+captures/
+traces/
+*.jsonl
+.env*

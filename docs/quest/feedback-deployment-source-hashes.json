@@ -1,0 +1,22 @@
+{
+  "purpose": "deployment-only feedback delivery; not a new model candidate",
+  "frozenEvaluationManifestSha256": "81e2cb6f2ada528d45234d7a48fe4075e8122c751d64416a1de87ed2c59fe06e",
+  "unchangedInferenceFiles": {
+    "src/lib/briefing/service.ts": "64dbdcfe315b05bb0d9821d9fdbb0bd5ead10115b3647de5033a715c1f9d0890",
+    "src/lib/briefing/types.ts": "79de0f078d04d0bb594ac0e380c2152b8b3910b7be97dad2970cb6a97d611e73",
+    "src/lib/briefing/provider-config.ts": "1814bff2dc8d5d7c22c0a37e027f0992af6b395c167c2049fa346a50539a0fd0",
+    "src/lib/briefing/anthropic-provider.ts": "05409172a0bba2f162b88ff420f428f5eb81d0f7d3232757dc9b60e7b0d61f6f",
+    "src/lib/briefing/vertex-provider.ts": "30c9f2c71dfdb475485539f634b39a1f6f634e06e024c167d08ee5617d6fd398"
+  },
+  "deploymentFiles": {
+    "scripts/briefing-check.cjs": "a8a32fb2d74856fade8b16f31a7b6a9912f678f2335df2224a990834a2480622",
+    "scripts/briefing-feedback-delivery-check.cjs": "f4e331f2b3b75aa270b585d74ea388c80a7be72d240b5ef95d70eaa2ed2ba029",
+    "scripts/briefing-integration-check.cjs": "e6b09e4bb69ad10874765b54e58ee31997e038de775bf2f5b2ec50a9b6e95d8f",
+    "src/app/api/briefing/feedback/route.ts": "a237ed8705f3a88ee2530ac1adeb6b7f19796383b965f5cd8c823a62904ade69",
+    "src/app/api/briefing/route.ts": "bad6dceb3b78b92fa7d6b6b99c232142f4bb51beaf4bbe1800215c04ddf446ce",
+    "src/components/BriefingForm.tsx": "83bb844ab4f994009975c5b0263dd90d438727a01be91c0dd640e7a467373d8a",
+    "src/lib/briefing/feedback.ts": "853affac974cb6cb1bfe76bcda6ed2f23d1e372826bfdd9de0dbb659d7e2a409",
+    "src/lib/briefing/observability.ts": "667f6b4b886e97e59013589b83259c91861b92750f04596da48b5d68c886651b"
+  },
+  "aggregate": "a4586ef2e8a0faba47873c7fd7c9660520aa2ed0ba7a927a2d860cd8cdeb01b8"
+}

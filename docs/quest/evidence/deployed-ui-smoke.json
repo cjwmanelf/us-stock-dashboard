@@ -1,0 +1,64 @@
+{
+    "checkedAt":  "2026-11-09T03:42:44.5817860Z",
+    "purpose":  "Separate post-deployment citation UI smoke; not part of paired model-quality comparison",
+    "trace":  {
+                  "contractVersion":  "briefing-v6-temporal-notice",
+                  "durationMs":  3961,
+                  "event":  "briefing_trace",
+                  "evidenceCount":  12,
+                  "model":  "claude-haiku-5-5",
+                  "promptVersion":  "briefing-prompt-v5-partial",
+                  "revision":  "modu-rich-quest06-v6-ui-20261109",
+                  "stages":  [
+                                 {
+                                     "endedAt":  "2026-11-09T03:35:38.948Z",
+                                     "name":  "retrieval",
+                                     "startedAt":  "2026-11-09T03:35:37.856Z",
+                                     "status":  "ok"
+                                 },
+                                 {
+                                     "endedAt":  "2026-11-09T03:35:38.948Z",
+                                     "name":  "input_assembly",
+                                     "startedAt":  "2026-11-09T03:35:38.948Z",
+                                     "status":  "ok"
+                                 },
+                                 {
+                                     "endedAt":  "2026-11-09T03:35:41.817Z",
+                                     "name":  "generation",
+                                     "startedAt":  "2026-11-09T03:35:38.949Z",
+                                     "status":  "ok"
+                                 }
+                             ],
+                  "status":  "ok",
+                  "traceId":  "319918ec-0917-42e2-9987-5eb336148d56",
+                  "usage":  {
+                                "cache_creation_input_tokens":  0,
+                                "cache_read_input_tokens":  0,
+                                "completion_tokens":  446,
+                                "input_tokens":  2979,
+                                "output_tokens":  446,
+                                "prompt_tokens":  2979,
+                                "total_tokens":  3425
+                            }
+              },
+    "loggingTimestamp":  "2026-11-09T03:35:41.817319Z",
+    "estimatedUsd":  0.0005209,
+    "browser":  {
+                    "httpStatus":  200,
+                    "viewportWidth":  390,
+                    "citationButtons":  5,
+                    "longIdsHiddenInAnswer":  true,
+                    "dialogOpenedVia":  "DOM click on rendered evidence button",
+                    "sourceMatchesResult":  true,
+                    "safeSourceLinkMatches":  true,
+                    "initialFocus":  "Source link inside dialog",
+                    "escapeCloses":  true,
+                    "focusReturnsToEvidence":  true,
+                    "horizontalOverflow":  false
+                },
+    "screenshots":  [
+                        "screenshots/citation-compact-mobile.png",
+                        "screenshots/citation-source-dialog-mobile.png"
+                    ],
+    "limitation":  "One browser smoke; physical touch and cross-browser coverage not claimed"
+}

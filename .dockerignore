@@ -1,0 +1,28 @@
+# Allowlist: only compiler inputs and public assets enter the build context.
+**
+!Dockerfile
+!package.json
+!package-lock.json
+!next.config.ts
+!next-env.d.ts
+!tsconfig.json
+!postcss.config.mjs
+!src/
+!src/**
+!public/
+!public/**
+# Defense in depth inside allowed trees.
+**/.env*
+**/.vercel/**
+**/.briefing-eval/**
+**/private/**
+**/raw/**
+**/evidence/**
+**/*credential*
+**/*service-account*
+**/*.pem
+**/*.key
+**/*.p12
+**/*.log
+**/*.test.*
+**/*.spec.*

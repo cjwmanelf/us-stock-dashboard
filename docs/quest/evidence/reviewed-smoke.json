@@ -1,0 +1,170 @@
+{
+  "recordedAt": "2026-11-09T05:35:01.037Z",
+  "purpose": "Post-review deployment smoke after UI/lint and dependency changes; separate from historical paired quality evaluation",
+  "revision": "modu-rich-quest06-reviewed-20261109",
+  "framework": "Next 16.4.5",
+  "records": [
+    {
+      "ticker": "AAPL",
+      "question": "최근 공개 소식을 근거와 함께 요약해 주세요.",
+      "traceId": "82aefa54-5f1f-46d7-a306-a9dacbc358c3",
+      "revision": "modu-rich-quest06-reviewed-20261109",
+      "version": "briefing-v6-temporal-notice",
+      "status": "ok",
+      "httpStatus": 200,
+      "asOf": "2026-11-09T05:31:04.965Z",
+      "startedAt": "2026-11-09T05:31:02.534Z",
+      "endedAt": "2026-11-09T05:31:06.807Z",
+      "browserDurationMs": 4272.2,
+      "serverDurationMs": 3876,
+      "evidenceCount": 12,
+      "inputTokens": 2979,
+      "outputTokens": 429,
+      "estimatedUsd": 0.0005124,
+      "cloudTimestamp": "2026-11-09T05:31:07.896222Z",
+      "stages": [
+        {
+          "endedAt": "2026-11-09T05:31:04.964Z",
+          "name": "retrieval",
+          "startedAt": "2026-11-09T05:31:04.020Z",
+          "status": "ok"
+        },
+        {
+          "endedAt": "2026-11-09T05:31:04.964Z",
+          "name": "input_assembly",
+          "startedAt": "2026-11-09T05:31:04.964Z",
+          "status": "ok"
+        },
+        {
+          "endedAt": "2026-11-09T05:31:07.896Z",
+          "name": "generation",
+          "startedAt": "2026-11-09T05:31:04.966Z",
+          "status": "ok"
+        }
+      ],
+      "exactLogJoin": true
+    },
+    {
+      "ticker": "MSFT",
+      "question": "공개 근거에서 확인되는 최근 소식과 확인할 수 없는 내용을 구분해 주세요.",
+      "traceId": "a6ff2228-5406-4a1e-ae56-0bea08afa660",
+      "revision": "modu-rich-quest06-reviewed-20261109",
+      "version": "briefing-v6-temporal-notice",
+      "status": "ok",
+      "httpStatus": 200,
+      "asOf": "2026-11-09T05:31:18.094Z",
+      "startedAt": "2026-11-09T05:31:15.886Z",
+      "endedAt": "2026-11-09T05:31:19.606Z",
+      "browserDurationMs": 3720.3,
+      "serverDurationMs": 3249,
+      "evidenceCount": 12,
+      "inputTokens": 2983,
+      "outputTokens": 461,
+      "estimatedUsd": 0.0005288,
+      "cloudTimestamp": "2026-11-09T05:31:20.557855Z",
+      "stages": [
+        {
+          "endedAt": "2026-11-09T05:31:18.094Z",
+          "name": "retrieval",
+          "startedAt": "2026-11-09T05:31:17.309Z",
+          "status": "ok"
+        },
+        {
+          "endedAt": "2026-11-09T05:31:18.094Z",
+          "name": "input_assembly",
+          "startedAt": "2026-11-09T05:31:18.094Z",
+          "status": "ok"
+        },
+        {
+          "endedAt": "2026-11-09T05:31:20.558Z",
+          "name": "generation",
+          "startedAt": "2026-11-09T05:31:18.094Z",
+          "status": "ok"
+        }
+      ],
+      "exactLogJoin": true
+    },
+    {
+      "ticker": "NVDA",
+      "question": "공개 근거에서 이미 발표된 실적과 앞으로 예정된 일정을 구분해 주세요.",
+      "traceId": "2159675d-389b-40a5-9de9-d1d7ec579b74",
+      "revision": "modu-rich-quest06-reviewed-20261109",
+      "version": "briefing-v6-temporal-notice",
+      "status": "ok",
+      "httpStatus": 200,
+      "asOf": "2026-11-09T05:31:21.338Z",
+      "startedAt": "2026-11-09T05:31:19.606Z",
+      "endedAt": "2026-11-09T05:31:22.254Z",
+      "browserDurationMs": 2647.4,
+      "serverDurationMs": 2424,
+      "evidenceCount": 12,
+      "inputTokens": 3125,
+      "outputTokens": 296,
+      "estimatedUsd": 0.0004605,
+      "cloudTimestamp": "2026-11-09T05:31:23.335935Z",
+      "stages": [
+        {
+          "endedAt": "2026-11-09T05:31:21.338Z",
+          "name": "retrieval",
+          "startedAt": "2026-11-09T05:31:20.912Z",
+          "status": "ok"
+        },
+        {
+          "endedAt": "2026-11-09T05:31:21.338Z",
+          "name": "input_assembly",
+          "startedAt": "2026-11-09T05:31:21.338Z",
+          "status": "ok"
+        },
+        {
+          "endedAt": "2026-11-09T05:31:23.336Z",
+          "name": "generation",
+          "startedAt": "2026-11-09T05:31:21.339Z",
+          "status": "ok"
+        }
+      ],
+      "exactLogJoin": true
+    }
+  ],
+  "summary": {
+    "serviceCalls": 3,
+    "actualModelCalls": 3,
+    "ok": 3,
+    "unavailable": 0,
+    "exactLogJoins": 3,
+    "inputTokens": 9087,
+    "outputTokens": 1186,
+    "estimatedUsd": 0.0015017,
+    "knownPriorPlusThisUsd": 0.0513667,
+    "pricing": "input USD0.10/M output USD0.50/M; token estimate, not billed account total"
+  },
+  "ui": {
+    "browser": "Orca embedded Chromium surface",
+    "viewportWidth": 390,
+    "sourceDialogOpenedVia": "Orca click on rendered evidence button",
+    "initialFocus": "close button",
+    "enterClosesWithoutNavigation": true,
+    "escapeCloses": true,
+    "focusReturnsToEvidence": true,
+    "horizontalOverflow": false,
+    "themeToggles": true,
+    "themeRestoredToOriginalDefault": true,
+    "hydrationConsoleEntries": 0,
+    "autocompleteLiveSearchAndKeyboardSelection": true,
+    "blankRequiredQuantityBlocksSubmit": true,
+    "autocompleteClears": true,
+    "rowEditorOpenCancelReopenCancel": true,
+    "portfolioWrites": 0,
+    "feedbackVotes": 0
+  },
+  "screenshots": [
+    "screenshots/reviewed-citation-close-focus.png",
+    "screenshots/reviewed-live-ok.png"
+  ],
+  "limitations": [
+    "Three synthetic operator-authored questions with real provider metadata; not independent market fact verification",
+    "No new holdout or human satisfaction score; no feedback vote",
+    "Success/failure add/edit saves tested offline only; live portfolio data not modified",
+    "One browser viewport; no cross-browser or physical-device touch claim",
+    "Historical memory/startup measurements belong prior image"
+  ]
+}

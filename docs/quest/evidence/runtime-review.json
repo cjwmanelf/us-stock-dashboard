@@ -1,0 +1,398 @@
+{
+  "schema": "quest-runtime-review-v1",
+  "query": {
+    "start": "2026-11-09T03:33:00Z",
+    "end": "2026-11-09T05:17:15.960Z",
+    "revision": "modu-rich-quest06-v6-ui-20261109",
+    "types": [
+      "run.googleapis.com/container/memory/utilizations",
+      "run.googleapis.com/container/startup_latencies",
+      "run.googleapis.com/request_latencies",
+      "run.googleapis.com/container/instance_count"
+    ]
+  },
+  "settings": {
+    "checkedAt": "2026-11-09T05:20:48.753Z",
+    "revision": "modu-rich-quest06-v6-ui-20261109",
+    "image": "asia-northeast3-docker.pkg.dev/vast-incline-499901-j3/quest06/briefing@sha256:13567eff66569a7da6a5d3198b222e8a6243b726fdbcf650877893688240512b",
+    "serviceMax": "1",
+    "serviceMin": "unset-default-0",
+    "revisionMax": "1",
+    "revisionMin": "unset-default-0",
+    "concurrency": 8,
+    "timeoutSeconds": 300,
+    "resources": {
+      "limits": {
+        "cpu": "1",
+        "memory": "512Mi"
+      }
+    },
+    "cpuThrottling": "true",
+    "startupCpuBoost": "true",
+    "deployedNext": "16.2.10",
+    "checkoutNext": "16.4.5",
+    "guardsMatchDeployed": true
+  },
+  "memory": {
+    "series": 1,
+    "points": 80,
+    "nonzeroPoints": 75,
+    "count": 79,
+    "weightedMean": 0.27694042754007714,
+    "minPointMean": 0.1905364990234375,
+    "maxPointMean": 0.3183288574218768,
+    "p50Bucket": [
+      0.31,
+      0.32
+    ],
+    "p95Bucket": [
+      0.31,
+      0.32
+    ],
+    "highestOccupiedBucket": [
+      0.31,
+      0.32
+    ]
+  },
+  "startup": {
+    "series": 1,
+    "points": 80,
+    "nonzeroPoints": 2,
+    "count": 3,
+    "weightedMean": 1073.2646666666667,
+    "minPointMean": 1020.33,
+    "maxPointMean": 1179.134,
+    "p50Bucket": [
+      1173.9085287969579,
+      1291.2993816766539
+    ],
+    "p95Bucket": [
+      1173.9085287969579,
+      1291.2993816766539
+    ],
+    "highestOccupiedBucket": [
+      1173.9085287969579,
+      1291.2993816766539
+    ]
+  },
+  "requests": {
+    "series": 8,
+    "points": 365,
+    "nonzeroPoints": 27,
+    "count": 162,
+    "weightedMean": 88.80178447530868,
+    "minPointMean": 0,
+    "maxPointMean": 585.0734457500032,
+    "p50Bucket": [
+      12.100000000000001,
+      13.310000000000004
+    ],
+    "p95Bucket": [
+      309.12680532870763,
+      340.0394858615784
+    ],
+    "highestOccupiedBucket": [
+      4052.6506222962958,
+      4457.915684525926
+    ]
+  },
+  "requestByCode": [
+    {
+      "code": "200",
+      "series": 1,
+      "points": 79,
+      "nonzeroPoints": 14,
+      "count": 135,
+      "weightedMean": 104.16722218518524,
+      "minPointMean": 11.566570153846214,
+      "maxPointMean": 585.0734457500032,
+      "p50Bucket": [
+        13.310000000000004,
+        14.641000000000004
+      ],
+      "p95Bucket": [
+        662.6407607736666,
+        728.9048368510332
+      ],
+      "highestOccupiedBucket": [
+        4052.6506222962958,
+        4457.915684525926
+      ]
+    },
+    {
+      "code": "302",
+      "series": 1,
+      "points": 8,
+      "nonzeroPoints": 3,
+      "count": 4,
+      "weightedMean": 0,
+      "minPointMean": 0,
+      "maxPointMean": 0,
+      "p50Bucket": [
+        null,
+        10
+      ],
+      "p95Bucket": [
+        null,
+        10
+      ],
+      "highestOccupiedBucket": [
+        null,
+        10
+      ]
+    },
+    {
+      "code": "304",
+      "series": 1,
+      "points": 51,
+      "nonzeroPoints": 1,
+      "count": 1,
+      "weightedMean": 4.634743,
+      "minPointMean": 4.634743,
+      "maxPointMean": 4.634743,
+      "p50Bucket": [
+        null,
+        10
+      ],
+      "p95Bucket": [
+        null,
+        10
+      ],
+      "highestOccupiedBucket": [
+        null,
+        10
+      ]
+    },
+    {
+      "code": "307",
+      "series": 1,
+      "points": 52,
+      "nonzeroPoints": 2,
+      "count": 9,
+      "weightedMean": 11.613353444444444,
+      "minPointMean": 4.2176933333333295,
+      "maxPointMean": 15.3111835,
+      "p50Bucket": [
+        null,
+        10
+      ],
+      "p95Bucket": [
+        45.949729863572216,
+        50.54470284992945
+      ],
+      "highestOccupiedBucket": [
+        45.949729863572216,
+        50.54470284992945
+      ]
+    },
+    {
+      "code": "401",
+      "series": 1,
+      "points": 52,
+      "nonzeroPoints": 2,
+      "count": 5,
+      "weightedMean": 16.413100599999996,
+      "minPointMean": 10.869654499999992,
+      "maxPointMean": 20.10873133333333,
+      "p50Bucket": [
+        14.641000000000004,
+        16.105100000000007
+      ],
+      "p95Bucket": [
+        25.937424601000025,
+        28.531167061100025
+      ],
+      "highestOccupiedBucket": [
+        25.937424601000025,
+        28.531167061100025
+      ]
+    },
+    {
+      "code": "403",
+      "series": 1,
+      "points": 52,
+      "nonzeroPoints": 2,
+      "count": 4,
+      "weightedMean": 9.877252,
+      "minPointMean": 5.697049,
+      "maxPointMean": 11.270653000000001,
+      "p50Bucket": [
+        null,
+        10
+      ],
+      "p95Bucket": [
+        12.100000000000001,
+        13.310000000000004
+      ],
+      "highestOccupiedBucket": [
+        12.100000000000001,
+        13.310000000000004
+      ]
+    },
+    {
+      "code": "404",
+      "series": 1,
+      "points": 40,
+      "nonzeroPoints": 2,
+      "count": 3,
+      "weightedMean": 27.812166,
+      "minPointMean": 26.8576975,
+      "maxPointMean": 29.721103,
+      "p50Bucket": [
+        28.531167061100025,
+        31.38428376721003
+      ],
+      "p95Bucket": [
+        31.38428376721003,
+        34.52271214393104
+      ],
+      "highestOccupiedBucket": [
+        31.38428376721003,
+        34.52271214393104
+      ]
+    },
+    {
+      "code": "405",
+      "series": 1,
+      "points": 31,
+      "nonzeroPoints": 1,
+      "count": 1,
+      "weightedMean": 9.148157,
+      "minPointMean": 9.148157,
+      "maxPointMean": 9.148157,
+      "p50Bucket": [
+        null,
+        10
+      ],
+      "p95Bucket": [
+        null,
+        10
+      ],
+      "highestOccupiedBucket": [
+        null,
+        10
+      ]
+    }
+  ],
+  "instances": {
+    "gaugePoints": 158,
+    "timestamps": 79,
+    "maxObserved": 2,
+    "overOne": [
+      [
+        "2026-11-09T04:55:00Z",
+        2
+      ],
+      [
+        "2026-11-09T04:54:00Z",
+        2
+      ],
+      [
+        "2026-11-09T04:53:00Z",
+        2
+      ],
+      [
+        "2026-11-09T04:52:00Z",
+        2
+      ],
+      [
+        "2026-11-09T04:51:00Z",
+        2
+      ]
+    ],
+    "overOneStates": [
+      {
+        "state": "active",
+        "points": [
+          {
+            "time": "2026-11-09T04:55:00Z",
+            "value": 0
+          },
+          {
+            "time": "2026-11-09T04:54:00Z",
+            "value": 0
+          },
+          {
+            "time": "2026-11-09T04:53:00Z",
+            "value": 0
+          },
+          {
+            "time": "2026-11-09T04:52:00Z",
+            "value": 0
+          },
+          {
+            "time": "2026-11-09T04:51:00Z",
+            "value": 2
+          }
+        ]
+      },
+      {
+        "state": "idle",
+        "points": [
+          {
+            "time": "2026-11-09T04:55:00Z",
+            "value": 2
+          },
+          {
+            "time": "2026-11-09T04:54:00Z",
+            "value": 2
+          },
+          {
+            "time": "2026-11-09T04:53:00Z",
+            "value": 2
+          },
+          {
+            "time": "2026-11-09T04:52:00Z",
+            "value": 2
+          },
+          {
+            "time": "2026-11-09T04:51:00Z",
+            "value": 0
+          }
+        ]
+      }
+    ]
+  },
+  "startupLogRecords": 9,
+  "starts": [
+    {
+      "instanceHash": "0709c04c2406",
+      "start": "2026-11-09T04:49:33.578123Z",
+      "probe": "2026-11-09T04:49:34.678386Z",
+      "reason": "AUTOSCALING",
+      "startToProbeMs": 1100
+    },
+    {
+      "instanceHash": "1dd90c20dc9e",
+      "start": "2026-11-09T04:49:30.558143Z",
+      "probe": "2026-11-09T04:49:32.012826Z",
+      "reason": "AUTOSCALING",
+      "startToProbeMs": 1454
+    },
+    {
+      "instanceHash": "92eb16d61ca2",
+      "start": "2026-11-09T03:33:39.826113Z",
+      "probe": "2026-11-09T03:33:41.279580Z",
+      "reason": "DEPLOYMENT_ROLLOUT",
+      "startToProbeMs": 1453
+    }
+  ],
+  "offlineGuards": {
+    "checkedAt": "2026-11-09T05:19:13.843Z",
+    "passed": true,
+    "checked": [
+      "third simultaneous acquisition rejected",
+      "release restores capacity",
+      "five per-user acquisitions per fixed 60s; users independent",
+      "reset at 60s",
+      "new module resets history",
+      "10000-entry cap; cleanup at expiry"
+    ],
+    "compilerVersion": "5.9.3",
+    "compilerSource": "existing isolated build dependency tree; repo node_modules unavailable",
+    "networkCalls": 0
+  },
+  "permissions": "Monitoring GET and Logging read succeeded; no changes",
+  "newAppRequests": 0,
+  "modelCalls": 0
+}

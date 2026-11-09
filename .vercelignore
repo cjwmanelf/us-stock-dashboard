@@ -1,0 +1,15 @@
+.env*
+.vercel
+.git
+.next
+node_modules
+.briefing-eval
+tools
+.orca*
+**/.orca*/**
+**/private/**
+**/conversations/**
+**/snapshots/**
+docs
+REPORT.md
+*.tsbuildinfo
